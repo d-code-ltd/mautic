@@ -68,7 +68,6 @@ class MAConsumerCommand extends ModeratedCommand
         $logger = $this->getContainer()->get('logger')->withName('AMQP');
         while(true){
             try{
-                
                 while($this->connection===null){
                     try{
                         $this->baseConnectionTry++;
@@ -150,6 +149,7 @@ class MAConsumerCommand extends ModeratedCommand
 
                 $this->callback = function($msg) use ($input, $output, $integrationObject, $leadModel, $fieldModel, $stageModel, $listModel, $questionHelper, $questionTryAgain, $logger) {
                     $repeat = true;
+                    $mysql_error_no = 0;
                     while($repeat){
                         $repeat=false;
                         try{
@@ -285,8 +285,11 @@ class MAConsumerCommand extends ModeratedCommand
                                     $em->getConnection()->close();
                                     $em->getConnection()->connect();
                                 }
-                                $repeat = true;
-                                $output->writeln("<info>Reconnected to DB, current message will be repeated.</info>");
+                                $mysql_error_no++;
+                                if($mysql_error_no<2){
+                                    $repeat = true;
+                                    $output->writeln("<info>Reconnected to DB, current message will be repeated.</info>");
+                                }
                             }else{
                                 $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag']);
 
