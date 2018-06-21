@@ -11,7 +11,11 @@
 ?>
 <!DOCTYPE html>
 <html>
-    <?php echo $view->render('MauticCoreBundle:Default:head.html.php'); ?>
+    <?php echo $view->render('MauticCoreBundle:Default:head.html.php', array(
+        'whitelabelBrandingName' => $whitelabelBrandingName,
+        'whitelabelBrandingFavicon' => $whitelabelBrandingFavicon,
+        'whitelabelBrandingAppleFavicon' => $whitelabelBrandingAppleFavicon
+    )); ?>
     <body class="header-fixed">
         <!-- start: app-wrapper -->
         <section id="app-wrapper">
@@ -19,7 +23,9 @@
 
             <!-- start: app-sidebar(left) -->
             <aside class="app-sidebar sidebar-left">
-                <?php echo $view->render('MauticCoreBundle:LeftPanel:index.html.php'); ?>
+                <?php echo $view->render('MauticCoreBundle:LeftPanel:index.html.php', array(
+                    'whitelabelBrandingLeftLogo' => $whitelabelBrandingLeftLogo
+                )); ?>
             </aside>
             <!--/ end: app-sidebar(left) -->
 
@@ -41,7 +47,7 @@
             <footer id="app-footer">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-xs-6 text-muted"><?php echo $view['translator']->trans('mautic.core.copyright', ['%date%' => date('Y')]); ?></div>
+                        <div class="col-xs-6 text-muted"><?php echo $whitelabelBrandingCopyright?:$view['translator']->trans('mautic.core.copyright', ['%date%' => date('Y')]); ?></div>
                         <div class="col-xs-6 text-muted text-right small">v<?php
                             /** @var \Mautic\CoreBundle\Templating\Helper\VersionHelper $version */
                             $version = $view['version'];

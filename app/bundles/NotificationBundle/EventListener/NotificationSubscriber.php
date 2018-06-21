@@ -22,6 +22,7 @@ use Mautic\NotificationBundle\NotificationEvents;
 use Mautic\PageBundle\Entity\Trackable;
 use Mautic\PageBundle\Helper\TokenHelper as PageTokenHelper;
 use Mautic\PageBundle\Model\TrackableModel;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class NotificationSubscriber.
@@ -49,6 +50,11 @@ class NotificationSubscriber extends CommonSubscriber
     protected $auditLogModel;
 
     /**
+     * @var integrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
      * NotificationSubscriber constructor.
      *
      * @param AuditLogModel    $auditLogModel
@@ -56,12 +62,13 @@ class NotificationSubscriber extends CommonSubscriber
      * @param PageTokenHelper  $pageTokenHelper
      * @param AssetTokenHelper $assetTokenHelper
      */
-    public function __construct(AuditLogModel $auditLogModel, TrackableModel $trackableModel, PageTokenHelper $pageTokenHelper, AssetTokenHelper $assetTokenHelper)
+    public function __construct(AuditLogModel $auditLogModel, TrackableModel $trackableModel, PageTokenHelper $pageTokenHelper, AssetTokenHelper $assetTokenHelper, integrationHelper $integrationHelper)
     {
         $this->auditLogModel    = $auditLogModel;
         $this->trackableModel   = $trackableModel;
         $this->pageTokenHelper  = $pageTokenHelper;
         $this->assetTokenHelper = $assetTokenHelper;
+        $this->integrationHelper = $integrationHelper;
     }
 
     /**
@@ -83,6 +90,11 @@ class NotificationSubscriber extends CommonSubscriber
      */
     public function onPostSave(NotificationEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         $entity = $event->getNotification();
         if ($details = $event->getChanges()) {
             $log = [
@@ -103,6 +115,12 @@ class NotificationSubscriber extends CommonSubscriber
      */
     public function onDelete(NotificationEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
+
         $entity = $event->getNotification();
         $log    = [
             'bundle'   => 'notification',
@@ -119,6 +137,11 @@ class NotificationSubscriber extends CommonSubscriber
      */
     public function onTokenReplacement(TokenReplacementEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         /** @var Lead $lead */
         $lead         = $event->getLead();
         $content      = $event->getContent();
