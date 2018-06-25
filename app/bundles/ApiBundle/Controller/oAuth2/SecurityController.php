@@ -58,6 +58,13 @@ class SecurityController extends CommonController
             [
                 'last_username' => $session->get(SecurityContext::LAST_USERNAME),
                 'route'         => 'mautic_oauth2_server_auth_login_check',
+                'whitelabelBrandingName' => $this->coreParametersHelper->getParameter('whitelabel_branding_name','Mautic'),
+                'whitelabelBrandingVersion' => $this->coreParametersHelper->getParameter('whitelabel_branding_version',MAUTIC_VERSION),
+                'whitelabelBrandingCopyright' => $this->coreParametersHelper->getParameter('whitelabel_branding_copyright', 'Mautic '.MAUTIC_VERSION),
+                'whitelabelBrandingFavicon' => $this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico'),       
+                'whitelabelBrandingAppleFavicon' => $this->coreParametersHelper->getParameter('whitelabel_branding_apple_favicon', 'media/images/apple-touch-icon.png'),
+                'whitelabelBrandingLogo' => $this->coreParametersHelper->getParameter('whitelabel_branding_logo', 'media/images/apple-touch-icon.png'),
+                'whitelabelBrandingLeftLogo' => $this->coreParametersHelper->getParameter('whitelabel_branding_left_logo', 'media/images/apple-touch-icon.png')
             ]
         );
     }
