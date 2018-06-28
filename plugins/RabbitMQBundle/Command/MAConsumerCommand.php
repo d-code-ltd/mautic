@@ -114,7 +114,7 @@ class MAConsumerCommand extends ModeratedCommand
                         $this->channel->queue_declare('mautic.contact', false, true, false, false);
 
                         // Declare the route_keys to listen to
-                        $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.news'];
+                        $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.*'];
 
                         foreach($routing_keys as $routing_key) {
                             $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
@@ -328,7 +328,7 @@ class MAConsumerCommand extends ModeratedCommand
                                             $this->channel->queue_declare('mautic.contact', false, true, false, false);
 
                                             // Declare the route_keys to listen to
-                                            $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.news'];
+                                            $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.*'];
 
                                             foreach($routing_keys as $routing_key) {
                                                 $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
