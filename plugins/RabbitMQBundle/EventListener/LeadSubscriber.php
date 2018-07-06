@@ -45,7 +45,10 @@ class LeadSubscriber extends CommonSubscriber
     {
         return [
             LeadEvents::LEAD_POST_SAVE      => ['onLeadPostSave', 0],
-            LeadEvents::LEAD_POST_DELETE     => ['onLeadPostDelete', 0]
+            LeadEvents::LEAD_POST_DELETE     => ['onLeadPostDelete', 0],
+            LeadEvents::LIST_POST_SAVE     => ['onListPostSave', 0],
+            LeadEvents::LIST_POST_DELETE     => ['onListPostDelete', 0],
+            LeadEvents::TAG_POST_SAVE       => ['onTagPostSave', 0]
         ];
     }
 
@@ -71,20 +74,26 @@ class LeadSubscriber extends CommonSubscriber
         else
             $leadData['stage'] = '';
 
+        $tags = array();
+        if(!empty($lead['tags'])){
+            foreach ($lead['tags'] as $key => $tag) {
+                $tags[] = $tag->getTag();
+            }
+        }
+
         $leadData = $integrationObject->formatData($leadData);
+        $leadData['tags'] = $tags;
 
-        // There is a solution for sending only the changed data.        
-        // $changes = $event->getChanges();
+        // Get lead segments
+        $repo = $this->em->getRepository('MauticLeadBundle:LeadList');
+        $segments = $repo->getLeadLists($lead['id']);
 
-        // if(isset($changes['fields']) && !empty($changes['fields'])){
-        //     $leadData = $integrationObject->formatData($changes['fields']);
-        //     if(!isset($leadData['email'])){
-        //         $leadData['email'] = $lead->getEmail();
-        //     }
-        // } else {
-        //     // There were no changes. Abort mission.
-        //     return;
-        // }
+        $leadSegments = array();
+        foreach ($segments as $key => $value) {
+            $leadSegments[] = $value->getName();
+        }
+
+        $leadData['segments'] = $leadSegments;
 
         // Email is primary key, so if its not set don't send anything to RabbitMQ. (Helps with some unexpected event triggering)
         if(!empty($leadData['email'])){
@@ -120,10 +129,68 @@ class LeadSubscriber extends CommonSubscriber
         }
     }
 
+    public function onListPostSave(Events\LeadListEvent $event)
+    {
+        $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $list = $event->getList();
+
+        // Geofence segments are not supposed to be updated trough mautic
+        if(substr($list->getAlias(), 0, 9) !== 'geofence'){
+            if(!empty($list->getAlias()) && !empty($list->getName())){
+                $data = json_encode([
+                    "source" => "mautic",
+                    "entity" => "segment",
+                    "operation" => $event->isNew() ? 'new' : 'update',
+                    "data" => array(
+                        'id' => $list->getAlias(),
+                        'name' => $list->getName()
+                    )
+                ]);
+                
+                $this->publish($data, 'list');
+            }
+        }
+    }
+
+    /**
+     * @param Events\LeadEvent $event
+     */
+    public function onListPostDelete(Events\LeadListEvent $event)
+    {
+        $list = $event->getList();
+        if(!empty($list->getAlias()) && !empty($list->getName())){
+            $data = json_encode([
+                "source" => "mautic",
+                "entity" => "segment",
+                "operation" => "delete",
+                "data" => [
+                    'id' => $list->getAlias()
+                ]
+            ]);
+
+            $this->publish($data, 'list');
+        }
+    }
+
+    public function onTagPostSave(Events\TagEvent $event){
+        $tag = $event->getTag();
+        if(!empty($tag->getTag())){
+            $data = json_encode([
+                "source" => "mautic",
+                "entity" => "tag",
+                "operation" => $event->isNew() ? "new" : "update",
+                "data" => [
+                    "name" => $tag->getTag()
+                ]
+            ]);
+            $this->publish($data, 'tag');
+        }
+    }
+
     /**
      * @param array $data The data/message to be sent.
      */
-    private function publish($data){
+    private function publish($data, $dataType='contact'){
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
         $settings = $integrationObject->getIntegrationSettings();
 
@@ -149,8 +216,18 @@ class LeadSubscriber extends CommonSubscriber
         $channel->exchange_declare('kiazaki', 'topic', false, true, false);
 
         $msg = new AMQPMessage($data);
-        
-        $channel->basic_publish($msg, 'kiazaki', 'mautic.contact');
+        switch ($dataType) {
+            case 'list':
+                $channel->basic_publish($msg, 'kiazaki', 'mautic.segment');
+                break;
+            case 'tag':
+                $channel->basic_publish($msg, 'kiazaki', 'mautic.tag');
+                break;
+            
+            default:
+                $channel->basic_publish($msg, 'kiazaki', 'mautic.contact');
+                break;
+        }
 
         $channel->close();
         $connection->close();

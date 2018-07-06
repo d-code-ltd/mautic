@@ -20,6 +20,7 @@ use Mautic\LeadBundle\Entity\LeadList;
 use Mautic\LeadBundle\Entity\ListModel;
 use Mautic\StageBundle\Entity\Stage;
 use Mautic\StageBundle\Model\StageModel;
+use Mautic\LeadBundle\Entity\Tag;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -159,24 +160,34 @@ class MAConsumerCommand extends ModeratedCommand
                             $leadFields = json_decode($msg->body, true);
 
                             // Checking entity to see what to update
-                            if($leadFields['entity']=='geofence'){
+                            if($leadFields['entity']=='geofence' || $leadFields['entity']=='segment'){
                                 // Geofence as segment
                                 $list;
                                 $gAlias = $leadFields['data']['id'];
+                                $gAlias = str_replace(' ', '-', $gAlias);
+                                if($leadFields['source']==='kiazaki_ws'){
+                                    $gAlias = "geofence-" . $gAlias;
+                                }
                                 $gName = $leadFields['data']['name'];
 
                                 if($leadFields['operation']=='new' || $leadFields['operation']=='update'){
                                     $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
-                                    if($list===null)
+                                    //var_dump($list);die;
+                                    if($list===null){
+                                        $output->writeln("New");
                                         $list = new leadList();
+                                    }else{
+                                        $output->writeln("Updating");
+                                    }
+                                    //var_dump($list->getId());die;
                                     $list->setName($gName);
                                     $list->setDescription($gName);
                                     $list->setAlias($gAlias);
-                                    $listModel->saveEntity($list);
+                                    $listModel->saveEntity($list, true, false);
                                 }else if($leadFields['operation']=='delete'){
                                     $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
                                     if($list!==null)
-                                        $listModel->deleteEntity($list);
+                                        $listModel->deleteEntity($list, false);
                                 }else{
 
                                 }
@@ -184,6 +195,36 @@ class MAConsumerCommand extends ModeratedCommand
                             else if($leadFields['entity']=='news'){
                                 // TODO 
 
+                            }else if($leadFields['entity']=='tag'){
+                                if(empty($leadFields['data']['name'])){
+                                    throw new \Exception("Message is missing the 'data' part!");   
+                                }
+
+                                if($leadFields['operation']==='delete'){
+                                    $tag = $leadModel->getTagRepository()->findOneBy(['tag' => $leadFields['data']['name']]);
+                                    if($tag){
+                                        $leadModel->getTagRepository()->deleteEntity($tag);
+                                        $output->writeln("<info>Tag deleted</info>");
+                                    }else{
+                                        $output->writeln("<info>Tag not found</info>");
+                                    }
+                                }else if($leadFields['operation']==='update'){
+                                    $tag = $leadModel->getTagRepository()->findOneBy(['tag' => $leadFields['data']['old_name']]);
+                                    if(!$tag){
+                                        $tag = new Tag($leadFields['data']['name']);
+                                        $output->writeln("<info>Tag not found so created</info>");
+                                    }else{
+                                        $tag->setTag($leadFields['data']['name']);
+                                        $output->writeln("<info>Tag found</info>");
+                                    }
+                                    $leadModel->getTagRepository()->saveEntity($tag);
+                                    $output->writeln("<info>Tag updated</info>");
+                                }else if($leadFields['operation']==='new'){
+                                    // new
+                                    $tag = new Tag($leadFields['data']['name']);
+                                    $leadModel->getTagRepository()->saveEntity($tag);
+                                    $output->writeln("<info>New tag saved</info>");
+                                }
                             }else{
                                 /* If entity is not geofence than update contact. */
                                 $lead = new Lead();
@@ -214,7 +255,7 @@ class MAConsumerCommand extends ModeratedCommand
                                 foreach ($uniqueLeadFields as $field) {
                                     if(isset($data[$field])) {
                                         $checkContactWithData[$field] = $data[$field];
-                                    } else {    
+                                    } else {
                                         throw new \Exception("'$field' field is not defined but is marked as unique!");
                                     }
                                 }
@@ -229,6 +270,10 @@ class MAConsumerCommand extends ModeratedCommand
                                 } else {
                                     if(!empty($existingLead)){
                                         $lead = $leadModel->mergeLeads($lead, reset($existingLead), true, false);
+                                        //$lead = reset($existingLead);
+                                    }else{
+                                        //$lead = new Lead();
+                                        //$lead->setNewlyCreated(true);
                                     }
                                     // Save the lead.
                                     $leadModel->setFieldValues($lead, $data);
@@ -251,9 +296,11 @@ class MAConsumerCommand extends ModeratedCommand
                                         }
                                         //Getting lead segments
                                         $leadSegments = $leadModel->getLists($lead);
-                                        //Removing all lead semgnts
+                                        //Removing only geofence segments from lead
                                         foreach ($leadSegments as $key => $value) {
-                                            $fenceIds[] = $value->getId();
+                                            if(substr($value->getAlias(), 0, 9)!=="geofence-"){
+                                                $fenceIds[] = $value->getId();   
+                                            }
                                         }
                                         $leadModel->removeFromLists($lead, $fenceIds);
                                         //Reseting array
@@ -266,6 +313,36 @@ class MAConsumerCommand extends ModeratedCommand
                                         }
                                         //Adding new segments to lead
                                         $leadModel->addToLists($lead, $fenceIds);
+                                    }else if(isset($leadFields['data']['segments']) && $leadFields['source']=="pimcore" ){
+                                        foreach ($leadFields['data']['segments'] as $key => $value) {
+                                            $fenceNames[] = $value;
+                                        }
+                                        //Getting lead segments
+                                        $leadSegments = $leadModel->getLists($lead);
+                                        //Removing only geofence segments from lead
+                                        foreach ($leadSegments as $key => $value) {
+                                                $fenceIds[] = $value->getId();   
+                                        }
+                                        $leadModel->removeFromLists($lead, $fenceIds);
+                                        //Reseting array
+                                        $fenceIds = [];
+                                        //Selecting new segments
+                                        $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
+                                        //Getting segments ids for adding leads to them
+                                        foreach ($fences as $key => $value) {
+                                            $fenceIds[] = $value->getId();
+                                        }
+                                        //Adding new segments to lead
+                                        $leadModel->addToLists($lead, $fenceIds);
+                                    }
+                                    if($leadFields['source']=="pimcore"){
+                                        if(!isset($leadFields['data']['tags'])){
+                                            $leadFields['data']['tags'] = array();
+                                            $output->writeln("Tags not found");
+                                        }
+                                        $newTags = $leadFields['data']['tags'];
+                                        
+                                        $leadModel->setTags($lead, $newTags);
                                     }
                                 }
 
@@ -333,7 +410,7 @@ class MAConsumerCommand extends ModeratedCommand
                                             foreach($routing_keys as $routing_key) {
                                                 $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
                                             }
-                                            $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
+                                            $this->channel->basic_consume('mautic.contact.test', '', false, false, false, false, $this->callback);
                                             $output->writeln("<info>AMQP Reconnected!</info>");
                                             $this->baseConnectionTry = 0;
                                         }catch(\Exception $e){
@@ -354,7 +431,7 @@ class MAConsumerCommand extends ModeratedCommand
                     }
                 };
 
-                $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
+                $this->channel->basic_consume('mautic.contact.test', '', false, false, false, false, $this->callback);
 
                 while(count($this->channel->callbacks)) {
                     $this->channel->wait();

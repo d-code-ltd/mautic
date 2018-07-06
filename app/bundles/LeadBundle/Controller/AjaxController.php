@@ -656,7 +656,9 @@ class AjaxController extends CommonAjaxController
             }
 
             if (!empty($newTags)) {
-                $leadModel->getTagRepository()->saveEntities($newTags);
+                $tagModel = $this->getModel('lead.tag');
+                $tagModel->saveEntities($newTags);
+                //$leadModel->getTagRepository()->saveEntities($newTags);
             }
 
             // Get an updated list of tags
