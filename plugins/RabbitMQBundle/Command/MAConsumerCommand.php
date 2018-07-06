@@ -410,7 +410,7 @@ class MAConsumerCommand extends ModeratedCommand
                                             foreach($routing_keys as $routing_key) {
                                                 $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
                                             }
-                                            $this->channel->basic_consume('mautic.contact.test', '', false, false, false, false, $this->callback);
+                                            $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
                                             $output->writeln("<info>AMQP Reconnected!</info>");
                                             $this->baseConnectionTry = 0;
                                         }catch(\Exception $e){
@@ -431,7 +431,7 @@ class MAConsumerCommand extends ModeratedCommand
                     }
                 };
 
-                $this->channel->basic_consume('mautic.contact.test', '', false, false, false, false, $this->callback);
+                $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
 
                 while(count($this->channel->callbacks)) {
                     $this->channel->wait();
