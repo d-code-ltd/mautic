@@ -227,8 +227,8 @@ class MAConsumerCommand extends ModeratedCommand
                                 }
                             }else{
                                 /* If entity is not geofence than update contact. */
-                                $lead = new Lead();
-                                $lead->setNewlyCreated(true);
+                                //$lead = new Lead();
+                                //$lead->setNewlyCreated(true);
 
                                 // Check if the data is set.
                                 if(isset($leadFields['data'])){
@@ -269,11 +269,11 @@ class MAConsumerCommand extends ModeratedCommand
                                     }
                                 } else {
                                     if(!empty($existingLead)){
-                                        $lead = $leadModel->mergeLeads($lead, reset($existingLead), true, false);
-                                        //$lead = reset($existingLead);
+                                        //$lead = $leadModel->mergeLeads($lead, reset($existingLead), true, false);
+                                        $lead = reset($existingLead);
                                     }else{
-                                        //$lead = new Lead();
-                                        //$lead->setNewlyCreated(true);
+                                        $lead = new Lead();
+                                        $lead->setNewlyCreated(true);
                                     }
                                     // Save the lead.
                                     $leadModel->setFieldValues($lead, $data);
