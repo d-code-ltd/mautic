@@ -20,6 +20,7 @@ use Mautic\LeadBundle\Entity\LeadList;
 use Mautic\LeadBundle\Entity\ListModel;
 use Mautic\StageBundle\Entity\Stage;
 use Mautic\StageBundle\Model\StageModel;
+use Mautic\LeadBundle\Entity\Tag;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -68,7 +69,6 @@ class MAConsumerCommand extends ModeratedCommand
         $logger = $this->getContainer()->get('logger')->withName('AMQP');
         while(true){
             try{
-                
                 while($this->connection===null){
                     try{
                         $this->baseConnectionTry++;
@@ -115,7 +115,7 @@ class MAConsumerCommand extends ModeratedCommand
                         $this->channel->queue_declare('mautic.contact', false, true, false, false);
 
                         // Declare the route_keys to listen to
-                        $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.news'];
+                        $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.*'];
 
                         foreach($routing_keys as $routing_key) {
                             $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
@@ -149,187 +149,284 @@ class MAConsumerCommand extends ModeratedCommand
                 $output->writeln('<info>[*] Waiting for messages. To exit press CTRL+C</info>');
 
                 $this->callback = function($msg) use ($input, $output, $integrationObject, $leadModel, $fieldModel, $stageModel, $listModel, $questionHelper, $questionTryAgain, $logger) {
-                    try{
-                        $output->writeln("<info>[x] " . date("Y-m-d H:i:s") . " Received message from '" . $msg->delivery_info['routing_key'] . "': " . $msg->body . "</info>");
+                    $repeat = true;
+                    $mysql_error_no = 0;
+                    while($repeat){
+                        $repeat=false;
+                        try{
+                            $output->writeln("<info>[x] " . date("Y-m-d H:i:s") . " Received message from '" . $msg->delivery_info['routing_key'] . "': " . $msg->body . "</info>");
 
-                        // Decode the message.
-                        $leadFields = json_decode($msg->body, true);
+                            // Decode the message.
+                            $leadFields = json_decode($msg->body, true);
 
-                        // Checking entity to see what to update
-                        if($leadFields['entity']=='geofence'){
-                            // Geofence as segment
-                            $list;
-                            $gAlias = $leadFields['data']['id'];
-                            $gName = $leadFields['data']['name'];
+                            // Checking entity to see what to update
+                            if($leadFields['entity']=='geofence' || $leadFields['entity']=='segment'){
+                                // Geofence as segment
+                                $list;
+                                $gAlias = $leadFields['data']['id'];
+                                $gAlias = str_replace(' ', '-', $gAlias);
+                                if($leadFields['source']==='kiazaki_ws'){
+                                    $gAlias = "geofence-" . $gAlias;
+                                }
+                                $gName = $leadFields['data']['name'];
 
-                            if($leadFields['operation']=='new' || $leadFields['operation']=='update'){
-                                $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
-                                if($list===null)
-                                    $list = new leadList();
-                                $list->setName($gName);
-                                $list->setDescription($gName);
-                                $list->setAlias($gAlias);
-                                $listModel->saveEntity($list);
-                            }else if($leadFields['operation']=='delete'){
-                                $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
-                                if($list!==null)
-                                    $listModel->deleteEntity($list);
+                                if($leadFields['operation']=='new' || $leadFields['operation']=='update'){
+                                    $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
+                                    //var_dump($list);die;
+                                    if($list===null){
+                                        $output->writeln("New");
+                                        $list = new leadList();
+                                    }else{
+                                        $output->writeln("Updating");
+                                    }
+                                    //var_dump($list->getId());die;
+                                    $list->setName($gName);
+                                    $list->setDescription($gName);
+                                    $list->setAlias($gAlias);
+                                    $listModel->saveEntity($list, true, false);
+                                }else if($leadFields['operation']=='delete'){
+                                    $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
+                                    if($list!==null)
+                                        $listModel->deleteEntity($list, false);
+                                }else{
+
+                                }
+                            }
+                            else if($leadFields['entity']=='news'){
+                                // TODO 
+
+                            }else if($leadFields['entity']=='tag'){
+                                if(empty($leadFields['data']['name'])){
+                                    throw new \Exception("Message is missing the 'data' part!");   
+                                }
+
+                                if($leadFields['operation']==='delete'){
+                                    $tag = $leadModel->getTagRepository()->findOneBy(['tag' => $leadFields['data']['name']]);
+                                    if($tag){
+                                        $leadModel->getTagRepository()->deleteEntity($tag);
+                                        $output->writeln("<info>Tag deleted</info>");
+                                    }else{
+                                        $output->writeln("<info>Tag not found</info>");
+                                    }
+                                }else if($leadFields['operation']==='update'){
+                                    $tag = $leadModel->getTagRepository()->findOneBy(['tag' => $leadFields['data']['old_name']]);
+                                    if(!$tag){
+                                        $tag = new Tag($leadFields['data']['name']);
+                                        $output->writeln("<info>Tag not found so created</info>");
+                                    }else{
+                                        $tag->setTag($leadFields['data']['name']);
+                                        $output->writeln("<info>Tag found</info>");
+                                    }
+                                    $leadModel->getTagRepository()->saveEntity($tag);
+                                    $output->writeln("<info>Tag updated</info>");
+                                }else if($leadFields['operation']==='new'){
+                                    // new
+                                    $tag = new Tag($leadFields['data']['name']);
+                                    $leadModel->getTagRepository()->saveEntity($tag);
+                                    $output->writeln("<info>New tag saved</info>");
+                                }
                             }else{
+                                /* If entity is not geofence than update contact. */
+                                //$lead = new Lead();
+                                //$lead->setNewlyCreated(true);
 
-                            }
-                        }
-                        else if($leadFields['entity']=='news'){
-                            // TODO 
-
-                        }else{
-                            /* If entity is not geofence than update contact. */
-                            $lead = new Lead();
-                            $lead->setNewlyCreated(true);
-
-                            // Check if the data is set.
-                            if(isset($leadFields['data'])){
-                                $data = $leadFields['data'];
-                            } else {
-                                throw new \Exception("Message is missing the 'data' part!");
-                            }
-
-                            // Check if the data is set.
-                            if(isset($leadFields['operation'])){
-                                $operation = $leadFields['operation'];
-                            } else {
-                                throw new \Exception("Message is missing the 'operation' part!");
-                            }
-
-                            // Get the MA unique fields.
-                            $uniqueLeadFields = array_keys($fieldModel->getUniqueIdentiferFields());
-
-                            // Convert the data from the standardized format.
-                            $data = $integrationObject->formatData($data, false);
-
-                            // Check if the data contains the unique fields.
-                            $checkContactWithData = array();
-                            foreach ($uniqueLeadFields as $field) {
-                                if(isset($data[$field])) {
-                                    $checkContactWithData[$field] = $data[$field];
-                                } else {    
-                                    throw new \Exception("'$field' field is not defined but is marked as unique!");
-                                }
-                            }
-
-                            // Check if a lead exists by the unique fields.
-                            $existingLead = $leadModel->getRepository()->getLeadsByUniqueFields($checkContactWithData);
-
-                            if ($operation == 'delete') {
-                                if(!empty($existingLead)){
-                                    $leadModel->deleteEntity(reset($existingLead), false);
-                                }
-                            } else {
-                                if(!empty($existingLead)){
-                                    $lead = $leadModel->mergeLeads($lead, reset($existingLead), true, false);
-                                }
-                                // Save the lead.
-                                $leadModel->setFieldValues($lead, $data);
-
-                                // Adding stage to lead
-                                if(isset($data['stage'])){
-                                    $stage = $stageModel->getRepository()->find($data['stage']);
-                                    $lead->setStage($stage);
+                                // Check if the data is set.
+                                if(isset($leadFields['data'])){
+                                    $data = $leadFields['data'];
+                                } else {
+                                    throw new \Exception("Message is missing the 'data' part!");
                                 }
 
-                                $leadModel->saveEntity($lead, true, false);
+                                // Check if the data is set.
+                                if(isset($leadFields['operation'])){
+                                    $operation = $leadFields['operation'];
+                                } else {
+                                    throw new \Exception("Message is missing the 'operation' part!");
+                                }
 
-                                // Adding lead to segments (fences)
-                                $fenceIds = [];
-                                $fenceNames = [];
-                                // Work with fences only when message is sent from kiazaki_ws
-                                if(isset($leadFields['data']['in_fence']) && $leadFields['source']=="kiazaki_ws" ){
-                                    foreach ($leadFields['data']['in_fence'] as $key => $value) {
-                                        $fenceNames[] = $value;
+                                // Get the MA unique fields.
+                                $uniqueLeadFields = array_keys($fieldModel->getUniqueIdentiferFields());
+
+                                // Convert the data from the standardized format.
+                                $data = $integrationObject->formatData($data, false);
+
+                                // Check if the data contains the unique fields.
+                                $checkContactWithData = array();
+                                foreach ($uniqueLeadFields as $field) {
+                                    if(isset($data[$field])) {
+                                        $checkContactWithData[$field] = $data[$field];
+                                    } else {
+                                        throw new \Exception("'$field' field is not defined but is marked as unique!");
                                     }
-                                    //Getting lead segments
-                                    $leadSegments = $leadModel->getLists($lead);
-                                    //Removing all lead semgnts
-                                    foreach ($leadSegments as $key => $value) {
-                                        $fenceIds[] = $value->getId();
+                                }
+
+                                // Check if a lead exists by the unique fields.
+                                $existingLead = $leadModel->getRepository()->getLeadsByUniqueFields($checkContactWithData);
+
+                                if ($operation == 'delete') {
+                                    if(!empty($existingLead)){
+                                        $leadModel->deleteEntity(reset($existingLead), false);
                                     }
-                                    $leadModel->removeFromLists($lead, $fenceIds);
-                                    //Reseting array
+                                } else {
+                                    if(!empty($existingLead)){
+                                        //$lead = $leadModel->mergeLeads($lead, reset($existingLead), true, false);
+                                        $lead = reset($existingLead);
+                                    }else{
+                                        $lead = new Lead();
+                                        $lead->setNewlyCreated(true);
+                                    }
+                                    // Save the lead.
+                                    $leadModel->setFieldValues($lead, $data);
+
+                                    // Adding stage to lead
+                                    if(isset($data['stage'])){
+                                        $stage = $stageModel->getRepository()->find($data['stage']);
+                                        $lead->setStage($stage);
+                                    }
+
+                                    $leadModel->saveEntity($lead, true, false);
+
+                                    // Adding lead to segments (fences)
                                     $fenceIds = [];
-                                    //Selecting new segments
-                                    $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
-                                    //Getting segments ids for adding leads to them
-                                    foreach ($fences as $key => $value) {
-                                        $fenceIds[] = $value->getId();
+                                    $fenceNames = [];
+                                    // Work with fences only when message is sent from kiazaki_ws
+                                    if(isset($leadFields['data']['in_fence']) && $leadFields['source']=="kiazaki_ws" ){
+                                        foreach ($leadFields['data']['in_fence'] as $key => $value) {
+                                            $fenceNames[] = $value;
+                                        }
+                                        //Getting lead segments
+                                        $leadSegments = $leadModel->getLists($lead);
+                                        //Removing only geofence segments from lead
+                                        foreach ($leadSegments as $key => $value) {
+                                            if(substr($value->getAlias(), 0, 9)!=="geofence-"){
+                                                $fenceIds[] = $value->getId();   
+                                            }
+                                        }
+                                        $leadModel->removeFromLists($lead, $fenceIds);
+                                        //Reseting array
+                                        $fenceIds = [];
+                                        //Selecting new segments
+                                        $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
+                                        //Getting segments ids for adding leads to them
+                                        foreach ($fences as $key => $value) {
+                                            $fenceIds[] = $value->getId();
+                                        }
+                                        //Adding new segments to lead
+                                        $leadModel->addToLists($lead, $fenceIds);
+                                    }else if(isset($leadFields['data']['segments']) && $leadFields['source']=="pimcore" ){
+                                        foreach ($leadFields['data']['segments'] as $key => $value) {
+                                            $fenceNames[] = $value;
+                                        }
+                                        //Getting lead segments
+                                        $leadSegments = $leadModel->getLists($lead);
+                                        //Removing only geofence segments from lead
+                                        foreach ($leadSegments as $key => $value) {
+                                                $fenceIds[] = $value->getId();   
+                                        }
+                                        $leadModel->removeFromLists($lead, $fenceIds);
+                                        //Reseting array
+                                        $fenceIds = [];
+                                        //Selecting new segments
+                                        $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
+                                        //Getting segments ids for adding leads to them
+                                        foreach ($fences as $key => $value) {
+                                            $fenceIds[] = $value->getId();
+                                        }
+                                        //Adding new segments to lead
+                                        $leadModel->addToLists($lead, $fenceIds);
                                     }
-                                    //Adding new segments to lead
-                                    $leadModel->addToLists($lead, $fenceIds);
+                                    if($leadFields['source']=="pimcore"){
+                                        if(!isset($leadFields['data']['tags'])){
+                                            $leadFields['data']['tags'] = array();
+                                            $output->writeln("Tags not found");
+                                        }
+                                        $newTags = $leadFields['data']['tags'];
+                                        
+                                        $leadModel->setTags($lead, $newTags);
+                                    }
                                 }
-                            }
 
+                            }
+                            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
                         }
-                        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                    }
-                    catch(\Exception $e){
-                        $logger->error('Error:'.$e->getMessage() . ' |Occured while working with message: ' . $msg->body);
-                        $output->writeln('<error>Error:'.$e->getMessage() . ' |Occured while working with message: ' . $msg->body."</error>");
+                        catch(\Exception $e){
+                            $logger->error('Error:'.$e->getMessage() . ' |Occured while working with message: ' . $msg->body);
+                            $output->writeln('<error>Error:'.$e->getMessage()."</error>");
 
-                        $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag']);
+                            // Check if its MySQL connection error
+                            if(strpos($e->getMessage(), "2006 MySQL server has gone away")!==false){
+                                $output->writeln("<info>Reconnecting to DB</info>");
+                                // MySQL server closed connection, reconnect
+                                $em = $this->getContainer()->get('doctrine')->getManager();
+                                if ($em->getConnection()->ping() === false) {
+                                    $em->getConnection()->close();
+                                    $em->getConnection()->connect();
+                                }
+                                $mysql_error_no++;
+                                if($mysql_error_no<2){
+                                    $repeat = true;
+                                    $output->writeln("<info>Reconnected to DB, current message will be repeated.</info>");
+                                }
+                            }else{
+                                $msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag']);
 
-                        if($e instanceof AMQPRuntimeException){
-                            // Some error happened with amqp. Reinitialize connection and channed
-                            // Close connection
-                            $this->channel->close();
-                            $this->connection->close();
-                            // Initialize
-                            $this->connection = null;
-                            while($this->connection===null){
-                                try{
-                                    $this->baseConnectionTry++;
-                                    $this->connection = new AMQPSSLConnection(
-                                        $integrationObject->getLocation(), 
-                                        5672, 
-                                        $integrationObject->getUser(), 
-                                        $integrationObject->getPassword(),
-                                        '/',
-                                        [
-                                            'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
-                                            'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),
-                                            'local_pk'=>getenv("RABBITMQ_SSL_KEY_FILE"),
-                                            'verify_peer_name'=>false,
-                                        ],
-                                        [
-                                            "heartbeat"=>1
-                                        ]);
-                                    
-                                    $this->channel = $this->connection->channel();
-
-                                    // exchange, type, passive, durable, auto_delete
-                                    $this->channel->exchange_declare('kiazaki', 'topic', false, true, false);
-
-                                    // queue, passive, durable, exclusive, auto_delete
-                                    $this->channel->queue_declare('mautic.contact', false, true, false, false);
-
-                                    // Declare the route_keys to listen to
-                                    $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.news'];
-
-                                    foreach($routing_keys as $routing_key) {
-                                        $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
-                                    }
-                                    $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
-                                    $output->writeln("<info>AMQP Reconnected!</info>");
-                                    $this->baseConnectionTry = 0;
-                                }catch(\Exception $e){
-                                    if($this->baseConnectionTry==1){
-                                        $logger->error('Error:'.$e->getMessage() . ' |Occured while working with message: ' . $msg->body);
-                                    }
-                                    $output->writeln("<error>Error occurred while trying to connect to amqp: ".$e->getMessage()."</error>");
-                                    $output->writeln("<info>Retrying...</info>");
+                                if($e instanceof AMQPRuntimeException){
+                                    // Some error happened with amqp. Reinitialize connection and channed
+                                    // Close connection
+                                    $this->channel->close();
+                                    $this->connection->close();
+                                    // Initialize
                                     $this->connection = null;
+                                    while($this->connection===null){
+                                        try{
+                                            $this->baseConnectionTry++;
+                                            $this->connection = new AMQPSSLConnection(
+                                                $integrationObject->getLocation(), 
+                                                5672, 
+                                                $integrationObject->getUser(), 
+                                                $integrationObject->getPassword(),
+                                                '/',
+                                                [
+                                                    'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
+                                                    'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),
+                                                    'local_pk'=>getenv("RABBITMQ_SSL_KEY_FILE"),
+                                                    'verify_peer_name'=>false,
+                                                ],
+                                                [
+                                                    "heartbeat"=>1
+                                                ]);
+                                            
+                                            $this->channel = $this->connection->channel();
+
+                                            // exchange, type, passive, durable, auto_delete
+                                            $this->channel->exchange_declare('kiazaki', 'topic', false, true, false);
+
+                                            // queue, passive, durable, exclusive, auto_delete
+                                            $this->channel->queue_declare('mautic.contact', false, true, false, false);
+
+                                            // Declare the route_keys to listen to
+                                            $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.*'];
+
+                                            foreach($routing_keys as $routing_key) {
+                                                $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
+                                            }
+                                            $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
+                                            $output->writeln("<info>AMQP Reconnected!</info>");
+                                            $this->baseConnectionTry = 0;
+                                        }catch(\Exception $e){
+                                            if($this->baseConnectionTry==1){
+                                                $logger->error('Error:'.$e->getMessage() . ' |Occured while working with message: ' . $msg->body);
+                                            }
+                                            $output->writeln("<error>Error occurred while trying to connect to amqp: ".$e->getMessage()."</error>");
+                                            $output->writeln("<info>Retrying...</info>");
+                                            $this->connection = null;
+                                        }
+                                    }
+                                    try{
+                                        $this->channel->basic_publish(new AMQPMessage($msg->body), 'kiazaki', 'mautic.contact.error');
+                                    }catch(\Exception $e){}
                                 }
                             }
-                            try{
-                                $this->channel->basic_publish(new AMQPMessage($msg->body), 'kiazaki', 'mautic.contact.error');
-                            }catch(\Exception $e){}
                         }
                     }
                 };
