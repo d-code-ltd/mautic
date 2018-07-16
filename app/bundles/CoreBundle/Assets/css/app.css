@@ -1839,6 +1839,7 @@ ul.dropdown-menu-form {
 .mautic-brand {
   display: block;
   height: 60px;
+  line-height: 60px;
   padding-left: 35px;
   padding-right: 32px;
   width: 100%;

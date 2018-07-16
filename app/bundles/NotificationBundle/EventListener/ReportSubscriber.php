@@ -19,6 +19,7 @@ use Mautic\ReportBundle\Event\ReportBuilderEvent;
 use Mautic\ReportBundle\Event\ReportGeneratorEvent;
 use Mautic\ReportBundle\Event\ReportGraphEvent;
 use Mautic\ReportBundle\ReportEvents;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class ReportSubscriber.
@@ -39,15 +40,21 @@ class ReportSubscriber extends CommonSubscriber
     private $companyReportData;
 
     /**
+     * @var integrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
      * ReportSubscriber constructor.
      *
      * @param Connection        $db
      * @param CompanyReportData $companyReportData
      */
-    public function __construct(Connection $db, CompanyReportData $companyReportData)
+    public function __construct(Connection $db, CompanyReportData $companyReportData, integrationHelper $integrationHelper)
     {
         $this->db                = $db;
         $this->companyReportData = $companyReportData;
+        $this->integrationHelper = $integrationHelper;
     }
 
     /**
@@ -69,6 +76,11 @@ class ReportSubscriber extends CommonSubscriber
      */
     public function onReportBuilder(ReportBuilderEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         if (!$event->checkContext([self::MOBILE_NOTIFICATIONS, self::MOBILE_NOTIFICATIONS_STATS])) {
             return;
         }
@@ -201,6 +213,11 @@ class ReportSubscriber extends CommonSubscriber
      */
     public function onReportGenerate(ReportGeneratorEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         if (!$event->checkContext([self::MOBILE_NOTIFICATIONS, self::MOBILE_NOTIFICATIONS_STATS])) {
             return;
         }
@@ -271,6 +288,11 @@ class ReportSubscriber extends CommonSubscriber
      */
     public function onReportGraphGenerate(ReportGraphEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         // Context check, we only want to fire for Mobile Notification reports
         if (!$event->checkContext(self::MOBILE_NOTIFICATIONS_STATS)) {
             return;
