@@ -126,6 +126,13 @@ class RabbitMQIntegration extends AbstractIntegration
         ];
     }
 
+    public function getListFieldMap(){
+        return [
+            'alias'=>'id',
+            'name'=>'name'
+        ];
+    }
+
     /**
      * Format the lead data to the structure that RabbitMQ requires.
      *
@@ -134,9 +141,18 @@ class RabbitMQIntegration extends AbstractIntegration
      * 
      * @return array
      */
-    public function formatData($data, $to_standard = true)
+    public function formatData($data, $to_standard = true, $dataType = 'contact')
     {
-
+        $fieldMap = null;
+        switch ($dataType) {
+            case 'list':
+                $fieldMap = $this->getListFieldMap();
+                break;
+            // default == contact
+            default:
+                $fieldMap = $this->getFieldMap();
+                break;
+        }
         $fieldMap = $this->getFieldMap();
 
         if(!$to_standard){
@@ -150,23 +166,25 @@ class RabbitMQIntegration extends AbstractIntegration
                 $formattedLeadData[$fieldMap[$key]] = $value;
             }
         }
-        if($to_standard)
-            $formattedLeadData['address'] = $this->formatAddressData($data, $to_standard);
-        else if(isset($data['address'])){
-            $formattedLeadData = array_merge($formattedLeadData, $this->formatAddressData($data['address'], $to_standard));
-        }
+        if($dataType==='contact'){
+            if($to_standard)
+                $formattedLeadData['address'] = $this->formatAddressData($data, $to_standard);
+            else if(isset($data['address'])){
+                $formattedLeadData = array_merge($formattedLeadData, $this->formatAddressData($data['address'], $to_standard));
+            }
 
-        if(!$to_standard && isset($data['stage'])){
-            if(isset($data['stage'])){
-                $stages = $this->em->getRepository('MauticStageBundle:Stage')->findBy(['name'=>$data['stage']]);
-                
-                if(count($stages)>0){
-                    $formattedLeadData['stage']=$stages[0]->getId();
+            if(!$to_standard && isset($data['stage'])){
+                if(isset($data['stage'])){
+                    $stages = $this->em->getRepository('MauticStageBundle:Stage')->findBy(['name'=>$data['stage']]);
+                    
+                    if(count($stages)>0){
+                        $formattedLeadData['stage']=$stages[0]->getId();
+                    }else{
+                        unset($formattedLeadData['stage']);
+                    }
                 }else{
                     unset($formattedLeadData['stage']);
                 }
-            }else{
-                unset($formattedLeadData['stage']);
             }
         }
         

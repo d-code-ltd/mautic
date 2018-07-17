@@ -110,7 +110,7 @@ class ListModel extends FormModel
      *
      * @return mixed|void
      */
-    public function saveEntity($entity, $unlock = true)
+    public function saveEntity($entity, $unlock = true, $dispatch = true)
     {
         $isNew = ($entity->getId()) ? false : true;
 
@@ -141,9 +141,15 @@ class ListModel extends FormModel
         }
         $entity->setAlias($alias);
 
-        $event = $this->dispatchEvent('pre_save', $entity, $isNew);
+        if($dispatch){
+            $event = $this->dispatchEvent('pre_save', $entity, $isNew);
+        }
+
         $repo->saveEntity($entity);
-        $this->dispatchEvent('post_save', $entity, $isNew, $event);
+
+        if($dispatch){
+            $this->dispatchEvent('post_save', $entity, $isNew, $event);
+        }
     }
 
     /**
