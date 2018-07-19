@@ -54,10 +54,10 @@ class FCMIntegration extends AbstractIntegration
     public function getSupportedFeatures()
     {
         return [
-            //'mobile',
+            'mobile',
             'landing_page_enabled',
             'welcome_notification_enabled',
-            'tracking_page_enabled',            
+            'tracking_page_enabled'            
         ];
     }
 
@@ -145,6 +145,21 @@ class FCMIntegration extends AbstractIntegration
                 ]
             );
 
+
+            $builder->add(
+                'tracking_page_autoprompt',
+                IntegerType::class,
+                [
+                    'label' => 'mautic.plugin.integration.form.features.tracking_page_autoprompt',
+                    'attr'  => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.tracking_page_autoprompt.tooltip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
+                    ],
+                    'required' => false,
+                ]
+            );
+
             $builder->add(
                 'sample_notification_title',
                 TextType::class,
@@ -154,7 +169,7 @@ class FCMIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.sample_notification_title.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
                     ],
                 ]
             );
@@ -168,7 +183,7 @@ class FCMIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.sample_notification_text.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
                     ],
                 ]
             );
@@ -182,7 +197,7 @@ class FCMIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.welcome_notification_title.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
                     ],
                 ]
             );
@@ -196,7 +211,7 @@ class FCMIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.welcome_notification_text.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
                     ],
                 ]
             );
@@ -204,7 +219,7 @@ class FCMIntegration extends AbstractIntegration
             
 
             
-            /*
+            
             $builder->add(
                 'platforms',
                 ChoiceType::class,
@@ -224,7 +239,7 @@ class FCMIntegration extends AbstractIntegration
                     'required'    => false,
                 ]
             );
-            */
+            
         }
     }
 }

@@ -122,6 +122,7 @@ class NotificationHelper
             $welcomeNotificationIcon = $featureSettings['notification_icon'];
             $landingPageEnabled = intval(in_array('landing_page_enabled', $supported));
             $trackingPageEnabled = intval(in_array('tracking_page_enabled', $supported));
+            $trackingPageAutoprompt = intval(in_array('tracking_page_autoprompt', $supported));
 
 
             
@@ -181,14 +182,15 @@ MauticJS.conditionalAsyncQueue(function(){
         var fcmLandingPageEnabled = {$landingPageEnabled};
         var fcmTrackingPageEnabled = {$trackingPageEnabled};
         var welcomenotificationEnabled = {$welcomenotificationEnabled};
+        var fcmTrackingPageAutoprompt = {$trackingPageAutoprompt};
         if ((MauticDomain.replace(/https?:\/\//,'') == location.host && (fcmLandingPageEnabled || location == '{$notificationPopupUrl}'))
             ||
             (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
             
             this.messaging.getToken().then(function(currentToken){
-                console.log(currentToken);
+                //console.log(currentToken);
                 if (currentToken) {
-                    console.log('refreshToken');
+                    //console.log('refreshToken');
                     MauticJS.postUserIdToMautic(currentToken);          
                 } else {
                     this.messaging.requestPermission().then(function() {

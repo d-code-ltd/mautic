@@ -245,6 +245,22 @@ return [
                     'parent'   => 'mautic.core.channels',
                     'priority' => 80,
                 ],
+                'mautic.plugin.fcmnotification.mobile_notifications' => [
+                    'route'  => 'mautic_mobile_notification_index',
+                    'access' => ['notification:mobile_notifications:viewown', 'notification:mobile_notifications:viewother'],
+                    'checks' => [
+                        'integration' => [
+                            'FCM' => [
+                                'enabled'  => true,
+                                'features' => [
+                                    'mobile',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'parent'   => 'mautic.core.channels',
+                    'priority' => 65,
+                ],
             ],
         ],
     ],
