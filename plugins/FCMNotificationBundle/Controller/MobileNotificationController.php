@@ -364,11 +364,11 @@ class MobileNotificationController extends FormController
         return $this->delegateView(
             [
                 'viewParameters' => [
-                    'form'         => $this->setFormTheme($form, 'MauticNotificationBundle:MobileNotification:form.html.php', 'MauticNotificationBundle:FormTheme\MobileNotification'),
+                    'form'         => $this->setFormTheme($form, 'FCMNotificationBundle:MobileNotification:form.html.php', 'FCMNotificationBundle:FormTheme\MobileNotification'),
                     'notification' => $entity,
                     'integration'  => $integration,
                 ],
-                'contentTemplate' => 'MauticNotificationBundle:MobileNotification:form.html.php',
+                'contentTemplate' => 'FCMNotificationBundle:MobileNotification:form.html.php',
                 'passthroughVars' => [
                     'activeLink'    => '#mautic_mobile_notification_index',
                     'mauticContent' => 'mobile_notification',
