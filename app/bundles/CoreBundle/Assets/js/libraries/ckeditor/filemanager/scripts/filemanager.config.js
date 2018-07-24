@@ -37,7 +37,8 @@
             "png",
             "svg",
             "css",
-            "js"
+            "js",
+            "ico",
         ]
     },
     "upload": {
@@ -67,7 +68,8 @@
             "jpeg",
             "gif",
             "png",
-            "svg"
+            "svg",
+            "ico"
         ],
             "resize": {
             "enabled":true,
