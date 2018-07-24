@@ -232,7 +232,7 @@ MauticJS.conditionalAsyncQueue(function(){
                     MauticJS.notification.postUserIdToMautic(currentToken);          
                 } else {
                     if (fcmTrackingPageAutoprompt){
-                        MauticJS.notification.RequestPermission(this, welcomenotificationEnabled)
+                        MauticJS.notification.requestPermission(this, welcomenotificationEnabled)
                     }
                 }
             }).catch(function(err) {
