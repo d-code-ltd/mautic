@@ -153,7 +153,7 @@ class FCMIntegration extends AbstractIntegration
                 [
                     'label' => 'mautic.plugin.integration.form.features.tracking_page_autoprompt',
                     'attr'  => [
-                        'class'        => 'form-control',
+                        'class'        => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.tracking_page_autoprompt.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
                     ],
