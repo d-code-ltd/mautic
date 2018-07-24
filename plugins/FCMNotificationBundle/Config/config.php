@@ -84,7 +84,7 @@ return [
                 'alias' => 'notification',
             ],
             'mauticplugin.fcmnotification.form.type.mobile.notification' => [
-                'class' => \Mautic\NotificationBundle\Form\Type\MobileNotificationType::class,
+                'class' => \MauticPlugin\FCMNotificationBundle\Form\Type\MobileNotificationType::class,
                 'alias' => 'mobile_notification',
             ],
             'mauticplugin.fcmnotification.form.type.mobile.notification_details' => [
