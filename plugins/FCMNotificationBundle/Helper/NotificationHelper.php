@@ -167,7 +167,7 @@ MauticJS.conditionalAsyncQueue(function(){
       firebase.initializeApp(config);
       
       this.messaging = firebase.messaging();            
-
+    var me = this;
 
     MauticJS.notification.postUserIdToMautic = function(userId, successCallback) {
         var data = [];
@@ -179,7 +179,7 @@ MauticJS.conditionalAsyncQueue(function(){
         }
     };
     
-    MauticJS.notification.requestPermission = function(me, welcomenotificationEnabled){
+    MauticJS.notification.requestPermission = function(){
         me.messaging.requestPermission().then(function() {
             me.messaging.getToken().then(function(currentToken){
                 if (currentToken) {
