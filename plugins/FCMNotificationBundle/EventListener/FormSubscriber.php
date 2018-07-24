@@ -194,8 +194,10 @@ class FormSubscriber extends CommonSubscriber
         }
         */
        
-        /* FCM PHP API uses Guzzlehttp instead of joomla/http thus response differs */
+        /* FCM PHP API uses Guzzlehttp instead of joomla/http therefore response is different */
         if ($response) {
+            var_dump($response);
+            var_dump($playerID,$notificationId);
             return $event->setResult(false);
         }
 

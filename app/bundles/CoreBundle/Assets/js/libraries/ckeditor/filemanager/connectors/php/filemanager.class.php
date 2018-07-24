@@ -671,7 +671,7 @@ class Filemanager
             if (!($size = @getimagesize($_FILES['fileR']['tmp_name']))) {
                 $this->error(sprintf($this->lang('UPLOAD_IMAGES_ONLY')), true);
             }
-            if (!in_array($size[2], [1, 2, 3, 7, 8])) {
+            if (!in_array($size[2], [1, 2, 3, 7, 8, 9, 17])) {
                 $this->error(sprintf($this->lang('UPLOAD_IMAGES_TYPE_JPEG_GIF_PNG')), true);
             }
         }
@@ -774,7 +774,7 @@ class Filemanager
             if (!($size = @getimagesize($_FILES['newfile']['tmp_name']))) {
                 $this->error(sprintf($this->lang('UPLOAD_IMAGES_ONLY')), true);
             }
-            if (!in_array($size[2], [1, 2, 3, 7, 8])) {
+            if (!in_array($size[2], [1, 2, 3, 7, 8, 9, 17])) {
                 $this->error(sprintf($this->lang('UPLOAD_IMAGES_TYPE_JPEG_GIF_PNG')), true);
             }
         }

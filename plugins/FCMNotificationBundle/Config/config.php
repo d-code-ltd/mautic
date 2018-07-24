@@ -84,13 +84,13 @@ return [
                 'alias' => 'notification',
             ],
             'mauticplugin.fcmnotification.form.type.mobile.notification' => [
-                'class' => \Mautic\NotificationBundle\Form\Type\MobileNotificationType::class,
+                'class' => \MauticPlugin\FCMNotificationBundle\Form\Type\MobileNotificationType::class,
                 'alias' => 'mobile_notification',
             ],
             'mauticplugin.fcmnotification.form.type.mobile.notification_details' => [
-                'class'     => \Mautic\NotificationBundle\Form\Type\MobileNotificationDetailsType::class,
+                'class'     => \MauticPlugin\FCMNotificationBundle\Form\Type\MobileNotificationDetailsType::class,
                 'arguments' => [
-                    'mauticplugin.fcmnotification.helper.notification',
+                    'mautic.helper.integration',
                 ],
                 'alias' => 'mobile_notification_details',
             ],
@@ -244,6 +244,22 @@ return [
                     ],
                     'parent'   => 'mautic.core.channels',
                     'priority' => 80,
+                ],
+                'mautic.plugin.fcmnotification.mobile_notifications' => [
+                    'route'  => 'mautic_mobile_notification_index',
+                    'access' => ['notification:mobile_notifications:viewown', 'notification:mobile_notifications:viewother'],
+                    'checks' => [
+                        'integration' => [
+                            'FCM' => [
+                                'enabled'  => true,
+                                'features' => [
+                                    'mobile',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'parent'   => 'mautic.core.channels',
+                    'priority' => 65,
                 ],
             ],
         ],
