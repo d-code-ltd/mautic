@@ -16,6 +16,7 @@ use Mautic\PluginBundle\Integration\AbstractIntegration;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
@@ -148,7 +149,7 @@ class FCMIntegration extends AbstractIntegration
 
             $builder->add(
                 'tracking_page_autoprompt',
-                IntegerType::class,
+                CheckboxType::class,
                 [
                     'label' => 'mautic.plugin.integration.form.features.tracking_page_autoprompt',
                     'attr'  => [
