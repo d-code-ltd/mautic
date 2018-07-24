@@ -38,7 +38,7 @@
             "svg",
             "css",
             "js",
-            "ico",
+            "svg"
         ]
     },
     "upload": {
