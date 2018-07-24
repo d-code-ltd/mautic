@@ -48,6 +48,7 @@ class MobileNotificationDetailsType extends AbstractType
         $settings    = $integration->getIntegrationSettings()->getFeatureSettings();
 
         var_dump($settings);
+        exit;
 
         $builder->add(
             'additional_data',
