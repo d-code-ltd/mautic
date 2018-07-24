@@ -18,7 +18,7 @@ $header = ($notification->getId()) ?
 
 $view['slots']->set('headerTitle', $header);
 
-/** @var \Mautic\NotificationBundle\Integration\OneSignalIntegration $integration */
+/** @var \MauticPlugin\FCMNotificationBundle\Integration\FCMIntegration $integration */
 $integrationSettings = $integration->getIntegrationSettings()->getFeatureSettings();
 ?>
 
