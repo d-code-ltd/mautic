@@ -47,6 +47,8 @@ class MobileNotificationDetailsType extends AbstractType
         $integration = $this->integrationHelper->getIntegrationObject('FCM');
         $settings    = $integration->getIntegrationSettings()->getFeatureSettings();
 
+        var_dump($settings);        
+
         $builder->add(
             'additional_data',
             SortableListType::class,
