@@ -47,7 +47,7 @@ class MobileNotificationDetailsType extends AbstractType
         $integration = $this->integrationHelper->getIntegrationObject('FCM');
         $settings    = $integration->getIntegrationSettings()->getFeatureSettings();
 
-        var_dump($settings);        
+        var_dump($settings['platforms'], in_array('ios', $settings['platforms']), in_array('android', $settings['platforms']));        
 
         $builder->add(
             'additional_data',
