@@ -178,11 +178,47 @@ MauticJS.conditionalAsyncQueue(function(){
             MauticJS.makeCORSRequest('GET', '{$leadAssociationUrl}', data);
         }
     };
-        
+    
+    MauticJS.notificationRequestPermission = function(me, welcomenotificationEnabled){
+        me.messaging.requestPermission().then(function() {
+            me.messaging.getToken().then(function(currentToken){
+                if (currentToken) {
+                    if (welcomenotificationEnabled){
+                        MauticJS.postUserIdToMautic(currentToken, function(){                                        
+                            var notificationTitle = '{$welcomeNotificationTitle}';
+                            var notificationOptions = {
+                                body: '{$welcomeNotificationBody}',                                                                
+                            };
+                            if ('{$welcomeNotificationIcon}'){
+                                notificationOptions.icon = '{$welcomeNotificationIcon}';
+                            }
+
+                            var notification = new Notification(
+                                notificationTitle,
+                                notificationOptions
+                            );
+
+                            return notification;                                        
+                        });          
+                    }else{
+                        MauticJS.postUserIdToMautic(currentToken);
+                    }
+
+                    return currentToken;
+                }
+            });
+        }).catch(function(err) {
+            console.log('Unable to get permission to notify.', err);
+        }); 
+
+        return null;
+    }
+
         var fcmLandingPageEnabled = {$landingPageEnabled};
         var fcmTrackingPageEnabled = {$trackingPageEnabled};
         var welcomenotificationEnabled = {$welcomenotificationEnabled};
         var fcmTrackingPageAutoprompt = {$trackingPageAutoprompt};
+
         if ((MauticDomain.replace(/https?:\/\//,'') == location.host && (fcmLandingPageEnabled || location == '{$notificationPopupUrl}'))
             ||
             (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
@@ -193,34 +229,9 @@ MauticJS.conditionalAsyncQueue(function(){
                     //console.log('refreshToken');
                     MauticJS.postUserIdToMautic(currentToken);          
                 } else {
-                    this.messaging.requestPermission().then(function() {
-                        this.messaging.getToken().then(function(currentToken){
-                            if (currentToken) {
-                                if (welcomenotificationEnabled){
-                                    MauticJS.postUserIdToMautic(currentToken, function(){                                        
-                                        var notificationTitle = '{$welcomeNotificationTitle}';
-                                        var notificationOptions = {
-                                            body: '{$welcomeNotificationBody}',                                                                
-                                        };
-                                        if ('{$welcomeNotificationIcon}'){
-                                            notificationOptions.icon = '{$welcomeNotificationIcon}';
-                                        }
-
-                                        var notification = new Notification(
-                                            notificationTitle,
-                                            notificationOptions
-                                        );
-
-                                        return notification;                                        
-                                    });          
-                                }else{
-                                    MauticJS.postUserIdToMautic(currentToken);
-                                }
-                            }
-                        });
-                    }).catch(function(err) {
-                        console.log('Unable to get permission to notify.', err);
-                    });          
+                    if (fcmTrackingPageAutoprompt){
+                        MauticJS.notificationRequestPermission(this, welcomenotificationEnabled)
+                    }
                 }
             }).catch(function(err) {
                 console.log('An error occurred while retrieving token. ', err);        
