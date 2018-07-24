@@ -122,7 +122,8 @@ class NotificationHelper
             $welcomeNotificationIcon = $featureSettings['notification_icon'];
             $landingPageEnabled = intval(in_array('landing_page_enabled', $supported));
             $trackingPageEnabled = intval(in_array('tracking_page_enabled', $supported));
-            $trackingPageAutoprompt = intval(in_array('tracking_page_autoprompt', $supported));
+            $trackingPageAutoprompt = intval($featureSettings['tracking_page_autoprompt']);
+            
 
 
             
