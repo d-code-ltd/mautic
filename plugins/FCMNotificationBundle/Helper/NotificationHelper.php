@@ -123,7 +123,7 @@ class NotificationHelper
             $landingPageEnabled = intval(in_array('landing_page_enabled', $supported));
             $trackingPageEnabled = intval(in_array('tracking_page_enabled', $supported));
             $trackingPageAutoprompt = intval($featureSettings['tracking_page_autoprompt']);
-            
+
 
 
             
@@ -170,7 +170,7 @@ MauticJS.conditionalAsyncQueue(function(){
       this.messaging = firebase.messaging();            
     var me = this;
 
-    MauticJS.notification.postUserIdToMautic = function(userId, successCallback) {
+    MauticJS.postUserIdToMautic = function(userId, successCallback) {
         var data = [];
         data['fcm_id'] = userId;
         if (typeof successCallback == 'function'){
@@ -179,6 +179,7 @@ MauticJS.conditionalAsyncQueue(function(){
             MauticJS.makeCORSRequest('GET', '{$leadAssociationUrl}', data);
         }
     };
+    MauticJS.notification.postUserIdToMautic = MauticJS.postUserIdToMautic;
     
     MauticJS.notification.requestPermission = function(){
         me.messaging.requestPermission().then(function() {
@@ -231,7 +232,7 @@ MauticJS.conditionalAsyncQueue(function(){
                     MauticJS.notification.postUserIdToMautic(currentToken);          
                 } else {
                     if (fcmTrackingPageAutoprompt){
-                        MauticJS.notificationRequestPermission(this, welcomenotificationEnabled)
+                        MauticJS.notification.RequestPermission(this, welcomenotificationEnabled)
                     }
                 }
             }).catch(function(err) {
