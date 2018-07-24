@@ -169,7 +169,7 @@ MauticJS.conditionalAsyncQueue(function(){
       this.messaging = firebase.messaging();            
 
 
-    MauticJS.postUserIdToMautic = function(userId, successCallback) {
+    MauticJS.notification.postUserIdToMautic = function(userId, successCallback) {
         var data = [];
         data['fcm_id'] = userId;
         if (typeof successCallback == 'function'){
@@ -179,12 +179,12 @@ MauticJS.conditionalAsyncQueue(function(){
         }
     };
     
-    MauticJS.notificationRequestPermission = function(me, welcomenotificationEnabled){
+    MauticJS.notification.requestPermission = function(me, welcomenotificationEnabled){
         me.messaging.requestPermission().then(function() {
             me.messaging.getToken().then(function(currentToken){
                 if (currentToken) {
                     if (welcomenotificationEnabled){
-                        MauticJS.postUserIdToMautic(currentToken, function(){                                        
+                        MauticJS.notification.postUserIdToMautic(currentToken, function(){                                        
                             var notificationTitle = '{$welcomeNotificationTitle}';
                             var notificationOptions = {
                                 body: '{$welcomeNotificationBody}',                                                                
@@ -201,7 +201,7 @@ MauticJS.conditionalAsyncQueue(function(){
                             return notification;                                        
                         });          
                     }else{
-                        MauticJS.postUserIdToMautic(currentToken);
+                        MauticJS.notification.postUserIdToMautic(currentToken);
                     }
 
                     return currentToken;
@@ -227,7 +227,7 @@ MauticJS.conditionalAsyncQueue(function(){
                 //console.log(currentToken);
                 if (currentToken) {
                     //console.log('refreshToken');
-                    MauticJS.postUserIdToMautic(currentToken);          
+                    MauticJS.notification.postUserIdToMautic(currentToken);          
                 } else {
                     if (fcmTrackingPageAutoprompt){
                         MauticJS.notificationRequestPermission(this, welcomenotificationEnabled)
@@ -241,14 +241,14 @@ MauticJS.conditionalAsyncQueue(function(){
             window.onbeforeunload = function() {
                 this.messaging.getToken().then(function(currentToken){
                     if (currentToken) {
-                        MauticJS.postUserIdToMautic(currentToken);          
+                        MauticJS.notification.postUserIdToMautic(currentToken);          
                     } 
                 });        
             };
             
             this.messaging.onTokenRefresh(function() {
                 this.messaging.getToken().then(function(refreshedToken) {
-                    MauticJS.postUserIdToMautic(refreshedToken);         
+                    MauticJS.notification.postUserIdToMautic(refreshedToken);         
                 }).catch(function(err) {
                     console.log('Unable to retrieve refreshed token ', err);            
                 });
