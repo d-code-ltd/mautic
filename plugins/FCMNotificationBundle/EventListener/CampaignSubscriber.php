@@ -95,6 +95,23 @@ class CampaignSubscriber extends CommonSubscriber
         $features = $integration->getSupportedFeatures();
         $settings = $integration->getIntegrationSettings();
 
+        if (in_array('mobile', $features)) {
+            $event->addAction(
+                'notification.send_mobile_notification',
+                [
+                    'label'            => 'mautic.notification.campaign.send_mobile_notification',
+                    'description'      => 'mautic.notification.campaign.send_mobile_notification.tooltip',
+                    'eventName'        => NotificationEvents::ON_CAMPAIGN_TRIGGER_ACTION,
+                    'formType'         => MobileNotificationSendType::class,
+                    'formTypeOptions'  => ['update_select' => 'campaignevent_properties_notification'],
+                    'formTheme'        => 'MauticNotificationBundle:FormTheme\NotificationSendList',
+                    'timelineTemplate' => 'MauticNotificationBundle:SubscribedEvents\Timeline:index.html.php',
+                    'channel'          => 'mobile_notification',
+                    'channelIdField'   => 'mobile_notification',
+                ]
+            );
+        }
+
         $event->addAction(
             'notification.send_notification',
             [
@@ -147,6 +164,11 @@ class CampaignSubscriber extends CommonSubscriber
         $playerID = [];
 
         foreach ($pushIDs as $pushID) {            
+            // Skip non-mobile PushIDs if this is a mobile event
+            if ($event->checkContext('notification.send_mobile_notification') && $pushID->isMobile() == false) {
+                continue;
+            }
+
             // Skip mobile PushIDs if this is a non-mobile event
             if ($event->checkContext('notification.send_notification') && $pushID->isMobile() == true) {
                 continue;

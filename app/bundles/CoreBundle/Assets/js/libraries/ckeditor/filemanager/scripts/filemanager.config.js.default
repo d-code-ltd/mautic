@@ -57,7 +57,8 @@
             "mp3",
             "wav",
             "zip",
-            "rar"
+            "rar",
+            "ico"
         ]
     },
     "upload": {

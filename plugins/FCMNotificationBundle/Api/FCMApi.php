@@ -174,21 +174,30 @@ class FCMApi extends AbstractNotificationApi
             ];
             if (!empty($url)) {
                 $data['click_action'] = $url;
+                $data['url'] = $url;
             }             
 
             if ($notification->isMobile()) {
                 $this->addMobileData($data, $notification->getMobileSettings());
 
-                if ($button) {
-                    $data['button_id'] = $buttonId;
-                    $data['button_text'] = $button;
-                    $data['button_url'] = $url;
+                if (!empty($button)) {
+                    if (!empty($url)){
+                        $data['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    }else{
+                        $data['buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    }
+
+                    //$data['button_id'] = $buttonId;
+                    //$data['button_text'] = $button;
+                    //$data['button_url'] = $url;
                 }
             } else {
-                if ($button && $url) {
-                    $data['web_button_id'] = $buttonId;
-                    $data['web_button_text'] = $button;
-                    $data['web_button_url'] = $url;
+                if (!empty($button)) {
+                    if (!empty($url)){
+                        $data['web_buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    }else{
+                        $data['web_buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    }
                 }
             }
             $result = $this->send($token, $data);
@@ -207,7 +216,7 @@ class FCMApi extends AbstractNotificationApi
         foreach ($mobileConfig as $key => $value) {
             switch ($key) {
                 case 'ios_subtitle':
-                    $data['subtitle'] = ['en' => $value];
+                    $data['subtitle'] = $value;
                     break;
                 case 'ios_sound':
                     $data['ios_sound'] = $value ?: 'default';
