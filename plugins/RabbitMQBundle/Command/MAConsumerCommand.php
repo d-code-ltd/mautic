@@ -115,7 +115,7 @@ class MAConsumerCommand extends ModeratedCommand
                         $this->channel->queue_declare('mautic.contact', false, true, false, false);
 
                         // Declare the route_keys to listen to
-                        $routing_keys = ['mailengine.contact', 'salesforce.contact','kiazaki_ws.*','pimcore.*'];
+                        $routing_keys = ['mailengine.contact', 'salesforce.*','kiazaki_ws.*','pimcore.*'];
 
                         foreach($routing_keys as $routing_key) {
                             $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
@@ -236,7 +236,6 @@ class MAConsumerCommand extends ModeratedCommand
                                 } else {
                                     throw new \Exception("Message is missing the 'data' part!");
                                 }
-
                                 // Check if the data is set.
                                 if(isset($leadFields['operation'])){
                                     $operation = $leadFields['operation'];
@@ -249,7 +248,6 @@ class MAConsumerCommand extends ModeratedCommand
 
                                 // Convert the data from the standardized format.
                                 $data = $integrationObject->formatData($data, false);
-
                                 // Check if the data contains the unique fields.
                                 $checkContactWithData = array();
                                 foreach ($uniqueLeadFields as $field) {
