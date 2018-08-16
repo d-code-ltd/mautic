@@ -59,6 +59,13 @@ class LeadSubscriber extends CommonSubscriber
     {
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
         $lead = $event->getLead()->convertToArray();
+        $settings = $integrationObject->getIntegrationSettings();
+
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+
 
         // The main array contains only the defaults fields, the custom ones will be listed in the 'field' key
         $leadData = array();
@@ -199,9 +206,9 @@ class LeadSubscriber extends CommonSubscriber
         }
 
         $connection = new AMQPSSLConnection(
-            $integrationObject->getLocation(), 
-            5672, 
-            $integrationObject->getUser(), 
+            $integrationObject->getLocation(),
+            5672,
+            $integrationObject->getUser(),
             $integrationObject->getPassword(),
             '/',
             [
@@ -216,6 +223,7 @@ class LeadSubscriber extends CommonSubscriber
         $channel->exchange_declare('kiazaki', 'topic', false, true, false);
 
         $msg = new AMQPMessage($data);
+
         switch ($dataType) {
             case 'list':
                 $channel->basic_publish($msg, 'kiazaki', 'mautic.segment');
