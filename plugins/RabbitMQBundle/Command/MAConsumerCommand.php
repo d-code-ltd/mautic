@@ -296,7 +296,7 @@ class MAConsumerCommand extends ModeratedCommand
                                         $leadSegments = $leadModel->getLists($lead);
                                         //Removing only geofence segments from lead
                                         foreach ($leadSegments as $key => $value) {
-                                            if(substr($value->getAlias(), 0, 9)!=="geofence-"){
+                                            if(substr($value->getAlias(), 0, 9)=="geofence-"){
                                                 $fenceIds[] = $value->getId();   
                                             }
                                         }
