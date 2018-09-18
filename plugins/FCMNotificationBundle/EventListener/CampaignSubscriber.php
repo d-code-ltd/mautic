@@ -234,7 +234,8 @@ class CampaignSubscriber extends CommonSubscriber
         if ($response) {
             var_dump($response);
             var_dump($playerID,$notificationId);
-            return $event->setResult(false);
+            //return $event->setResult(false); => this causes mautic to try again
+            return $event->setFailed($response);
         }
 
         $this->notificationModel->createStatEntry($notification, $lead);

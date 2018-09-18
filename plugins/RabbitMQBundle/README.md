@@ -51,7 +51,7 @@ The value of the "data" field in the common message format for contact entities 
 "linkedin_id" - string, optional
 "points" - integer, optional (lead points or score)
 "stage" - string, optional (lead stage)
-"in_fence" - list of strings, optional (marks that in which geofence's the contact currently resides in)
+"in_fence" - list of strings, optional (marks that in which geofences the contact currently resides in)
 ```
 
 ### GeoFence:
