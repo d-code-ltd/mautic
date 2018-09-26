@@ -207,10 +207,10 @@ class LeadSubscriber extends CommonSubscriber
 
         $connection = new AMQPSSLConnection(
             $integrationObject->getLocation(),
-            5672,
+            $integrationObject->getPort(),
             $integrationObject->getUser(),
             $integrationObject->getPassword(),
-            '/',
+            $integrationObject->getVirtualHost(),
             [
                 'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
                 'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),
