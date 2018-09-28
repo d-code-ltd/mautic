@@ -92,10 +92,10 @@ class MAConsumerCommand extends ModeratedCommand
 
                         $this->connection = new AMQPSSLConnection(
                             $integrationObject->getLocation(), 
-                            5672, 
+                            $integrationObject->getPort(), 
                             $integrationObject->getUser(), 
                             $integrationObject->getPassword(),
-                            '/',
+                            $integrationObject->getVirtualHost(),
                             [
                                 'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
                                 'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),
@@ -380,10 +380,10 @@ class MAConsumerCommand extends ModeratedCommand
                                             $this->baseConnectionTry++;
                                             $this->connection = new AMQPSSLConnection(
                                                 $integrationObject->getLocation(), 
-                                                5672, 
+                                                $integrationObject->getPort(), 
                                                 $integrationObject->getUser(), 
                                                 $integrationObject->getPassword(),
-                                                '/',
+                                                $integrationObject->getVirtualHost(),
                                                 [
                                                     'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
                                                     'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),

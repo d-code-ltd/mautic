@@ -33,30 +33,49 @@ class RabbitMQIntegration extends AbstractIntegration
         $keys = $this->getKeys();
 
         return [
-            'location' => $keys['rabbitmq_location'],
-            'username' => $keys['rabbitmq_user'],
-            'password' => $keys['rabbitmq_password']
+            // 'location' => $keys['rabbitmq_location'],
+            // 'username' => $keys['rabbitmq_user'],
+            // 'password' => $keys['rabbitmq_password']
         ];
     }
 
     public function getLocation() {
-        $keys = $this->getKeys();
+        // $keys = $this->getKeys();
 
-        return $keys['rabbitmq_location'];
+        // return $keys['rabbitmq_location'];
+        return getenv("MQ_HOST");
     }
 
     public function getUser() 
     {
-        $keys = $this->getKeys();
+        // $keys = $this->getKeys();
 
-        return $keys['rabbitmq_user'];
+        // return $keys['rabbitmq_user'];
+        return getenv("MQ_USERNAME");
     }
 
     public function getPassword() 
     {
-        $keys = $this->getKeys();
+        // $keys = $this->getKeys();
 
-        return $keys['rabbitmq_password'];
+        // return $keys['rabbitmq_password'];
+        return getenv("MQ_PASSWORD");
+    }
+
+    public function getPort()
+    {
+        $port = getenv("MQ_PORT");
+        if($port === false || empty($port))
+            return 5672;
+        return $port;
+    }
+
+    public function getVirtualHost()
+    {
+        $virtualHost = getenv("MQ_VIRTUAL_HOST");
+        if($virtualHost === false || empty($virtualHost))
+            return "/";
+        return $virtualHost;
     }
 
     public function getAuthenticationType()
@@ -71,9 +90,9 @@ class RabbitMQIntegration extends AbstractIntegration
     public function getRequiredKeyFields()
     {
         return [
-            'rabbitmq_location' => 'mautic.rabbitmq.config.location',
-            'rabbitmq_user' => 'mautic.rabbitmq.config.user',
-            'rabbitmq_password'  => 'mautic.rabbitmq.config.password'
+            // 'rabbitmq_location' => 'mautic.rabbitmq.config.location',
+            // 'rabbitmq_user' => 'mautic.rabbitmq.config.user',
+            // 'rabbitmq_password'  => 'mautic.rabbitmq.config.password'
         ];
     }
 
@@ -84,7 +103,7 @@ class RabbitMQIntegration extends AbstractIntegration
     public function getSecretKeys()
     {
         return [
-            'rabbitmq_password'
+            // 'rabbitmq_password'
         ];
     }
 
