@@ -27,7 +27,6 @@ use Mautic\CoreBundle\Helper\InputHelper;
 use Mautic\CoreBundle\Helper\IpLookupHelper;
 use Mautic\CoreBundle\Helper\PathsHelper;
 use Mautic\CoreBundle\Model\FormModel;
-use Mautic\EmailBundle\Entity\Stat;
 use Mautic\EmailBundle\Entity\StatRepository;
 use Mautic\EmailBundle\Helper\EmailValidator;
 use Mautic\LeadBundle\DataObject\LeadManipulator;
@@ -41,7 +40,6 @@ use Mautic\LeadBundle\Entity\LeadCategory;
 use Mautic\LeadBundle\Entity\LeadEventLog;
 use Mautic\LeadBundle\Entity\LeadField;
 use Mautic\LeadBundle\Entity\LeadList;
-use Mautic\LeadBundle\Entity\MergeRecord;
 use Mautic\LeadBundle\Entity\OperatorListTrait;
 use Mautic\LeadBundle\Entity\PointsChangeLog;
 use Mautic\LeadBundle\Entity\StagesChangeLog;
@@ -49,7 +47,6 @@ use Mautic\LeadBundle\Entity\Tag;
 use Mautic\LeadBundle\Entity\UtmTag;
 use Mautic\LeadBundle\Event\CategoryChangeEvent;
 use Mautic\LeadBundle\Event\LeadEvent;
-use Mautic\LeadBundle\Event\LeadMergeEvent;
 use Mautic\LeadBundle\Event\LeadTimelineEvent;
 use Mautic\LeadBundle\Helper\ContactRequestHelper;
 use Mautic\LeadBundle\Helper\IdentifyCompanyHelper;
@@ -177,6 +174,11 @@ class LeadModel extends FormModel
     private $deviceTracker;
 
     /**
+     * @var LegacyLeadModel
+     */
+    private $legacyLeadModel;
+
+    /**
      * @var bool
      */
     private $repoSetup = false;
@@ -210,6 +212,7 @@ class LeadModel extends FormModel
      * @param UserProvider         $userProvider
      * @param ContactTracker       $contactTracker
      * @param DeviceTracker        $deviceTracker
+     * @param LegacyLeadModel      $legacyLeadModel
      */
     public function __construct(
         RequestStack $requestStack,
@@ -227,24 +230,26 @@ class LeadModel extends FormModel
         EmailValidator $emailValidator,
         UserProvider $userProvider,
         ContactTracker $contactTracker,
-        DeviceTracker $deviceTracker
+        DeviceTracker $deviceTracker,
+        LegacyLeadModel $legacyLeadModel
     ) {
-        $this->request                = $requestStack->getCurrentRequest();
-        $this->cookieHelper           = $cookieHelper;
-        $this->ipLookupHelper         = $ipLookupHelper;
-        $this->pathsHelper            = $pathsHelper;
-        $this->integrationHelper      = $integrationHelper;
-        $this->leadFieldModel         = $leadFieldModel;
-        $this->leadListModel          = $leadListModel;
-        $this->companyModel           = $companyModel;
-        $this->formFactory            = $formFactory;
-        $this->categoryModel          = $categoryModel;
-        $this->channelListHelper      = $channelListHelper;
-        $this->coreParametersHelper   = $coreParametersHelper;
-        $this->emailValidator         = $emailValidator;
-        $this->userProvider           = $userProvider;
-        $this->contactTracker         = $contactTracker;
-        $this->deviceTracker          = $deviceTracker;
+        $this->request              = $requestStack->getCurrentRequest();
+        $this->cookieHelper         = $cookieHelper;
+        $this->ipLookupHelper       = $ipLookupHelper;
+        $this->pathsHelper          = $pathsHelper;
+        $this->integrationHelper    = $integrationHelper;
+        $this->leadFieldModel       = $leadFieldModel;
+        $this->leadListModel        = $leadListModel;
+        $this->companyModel         = $companyModel;
+        $this->formFactory          = $formFactory;
+        $this->categoryModel        = $categoryModel;
+        $this->channelListHelper    = $channelListHelper;
+        $this->coreParametersHelper = $coreParametersHelper;
+        $this->emailValidator       = $emailValidator;
+        $this->userProvider         = $userProvider;
+        $this->contactTracker       = $contactTracker;
+        $this->deviceTracker        = $deviceTracker;
+        $this->legacyLeadModel      = $legacyLeadModel;
     }
 
     /**
@@ -937,8 +942,8 @@ class LeadModel extends FormModel
     public function checkForDuplicateContact(array $queryFields, Lead $lead = null, $returnWithQueryFields = false, $onlyPubliclyUpdateable = false)
     {
         // Search for lead by request and/or update lead fields if some data were sent in the URL query
-        if (null == $this->availableLeadFields) {
-            $filter = ['isPublished' => true];
+        if (empty($this->availableLeadFields)) {
+            $filter = ['isPublished' => true, 'object' => 'lead'];
 
             if ($onlyPubliclyUpdateable) {
                 $filter['isPubliclyUpdatable'] = true;
@@ -955,13 +960,14 @@ class LeadModel extends FormModel
             $lead = new Lead();
         }
 
-        // Run values through setFieldValues to clean them first
-        $this->setFieldValues($lead, $queryFields, false, false);
-        $cleanFields = $lead->getFields();
-
         $uniqueFields    = $this->leadFieldModel->getUniqueIdentifierFields();
         $uniqueFieldData = [];
         $inQuery         = array_intersect_key($queryFields, $this->availableLeadFields);
+        $values          = $onlyPubliclyUpdateable ? $inQuery : $queryFields;
+
+        // Run values through setFieldValues to clean them first
+        $this->setFieldValues($lead, $values, false, false);
+        $cleanFields = $lead->getFields();
 
         foreach ($inQuery as $k => $v) {
             if (empty($queryFields[$k])) {
@@ -1780,8 +1786,8 @@ class LeadModel extends FormModel
     public function addUTMTags(Lead $lead, $params)
     {
         // known "synonym" fields expected
-        $synonyms = ['useragent' => 'user_agent',
-                    'remotehost' => 'remote_host', ];
+        $synonyms = ['useragent'  => 'user_agent',
+                     'remotehost' => 'remote_host', ];
 
         // convert 'query' option to an array if necessary
         if (isset($params['query']) && !is_array($params['query'])) {
@@ -1887,13 +1893,16 @@ class LeadModel extends FormModel
             $tags = explode(',', $tags);
         }
 
-        if (empty($tags)) {
+        if (empty($tags) && empty($removeTags)) {
             return false;
         }
 
         $this->logger->debug('CONTACT: Adding '.implode(', ', $tags).' to contact ID# '.$lead->getId());
 
-        array_walk($tags, create_function('&$val', '$val = trim($val); \Mautic\CoreBundle\Helper\InputHelper::clean($val);'));
+        array_walk($tags, function (&$val) {
+            $val = trim($val);
+            InputHelper::clean($val);
+        });
 
         // See which tags already exist
         $foundTags = $this->getTagRepository()->getTagsByName($tags);
@@ -1928,7 +1937,10 @@ class LeadModel extends FormModel
         if (!empty($removeTags)) {
             $this->logger->debug('CONTACT: Removing '.implode(', ', $removeTags).' for contact ID# '.$lead->getId());
 
-            array_walk($removeTags, create_function('&$val', '$val = trim($val); \Mautic\CoreBundle\Helper\InputHelper::clean($val);'));
+            array_walk($removeTags, function (&$val) {
+                $val = trim($val);
+                InputHelper::clean($val);
+            });
 
             // See which tags really exist
             $foundRemoveTags = $this->getTagRepository()->getTagsByName($removeTags);
@@ -2552,16 +2564,6 @@ class LeadModel extends FormModel
     }
 
     /**
-     * @param Lead  $trackedLead
-     * @param array $queryFields
-     *
-     * @return Lead
-     */
-    private function getContactFromClickthrough(Lead $trackedLead, array &$queryFields)
-    {
-    }
-
-    /**
      * @param IpAddress $ip
      * @param bool      $persist
      *
@@ -2807,5 +2809,21 @@ class LeadModel extends FormModel
         @trigger_error('setSystemCurrentLead is deprecated and will be removed in 3.0; Use the ContactTracker::setSystemContac instead', E_USER_DEPRECATED);
 
         $this->contactTracker->setSystemContact($lead);
+    }
+
+    /**
+     * Merge two leads; if a conflict of data occurs, the newest lead will get precedence.
+     *
+     * @deprecated 2.13.0; to be removed in 3.0. Use \Mautic\LeadBundle\Deduplicate\ContactMerger instead
+     *
+     * @param Lead $lead
+     * @param Lead $lead2
+     * @param bool $autoMode If true, the newest lead will be merged into the oldes then deleted; otherwise, $lead will be merged into $lead2 then deleted
+     *
+     * @return Lead
+     */
+    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true)
+    {
+        return $this->legacyLeadModel->mergeLeads($lead, $lead2, $autoMode);
     }
 }
