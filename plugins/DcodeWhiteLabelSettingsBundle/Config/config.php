@@ -13,7 +13,7 @@ return [
             ],
         ],
         'integrations' => [
-            'mautic.integration.rabbitmq' => [
+            'mautic.integration.dcodewhitelabelsettings' => [
                 'class'     => \MauticPlugin\RabbitMQBundle\Integration\WhiteLabelIntegration::class,
                 'arguments' => [
                 ],
