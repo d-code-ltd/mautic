@@ -14,7 +14,7 @@ return [
         ],
         'integrations' => [
             'mautic.integration.dcodewhitelabelsettings' => [
-                'class'     => \MauticPlugin\RabbitMQBundle\Integration\WhiteLabelIntegration::class,
+                'class'     => \MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration::class,
                 'arguments' => [
                 ],
         	]
