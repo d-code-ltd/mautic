@@ -8,7 +8,7 @@ return [
 
     'services' => [
         'events' => [
-            'mautic.asset.configbundle.subscriber' => [
+            'mautic.dcodewhitelabelsettings.configbundle.subscriber' => [
                 'class' => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\EventListener\ConfigSubscriber',
             ],
         ],
