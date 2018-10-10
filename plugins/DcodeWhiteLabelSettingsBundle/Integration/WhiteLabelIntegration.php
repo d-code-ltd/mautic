@@ -20,9 +20,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
- * Class FCMIntegration.
+ * Class WhiteLabelIntegration.
  */
-class FCMIntegration extends AbstractIntegration
+class WhiteLabelIntegration extends AbstractIntegration
 { 
     /**
      * @var bool
