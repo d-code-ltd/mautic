@@ -15,6 +15,7 @@ use Mautic\LeadBundle\Deduplicate\ContactMerger;
 use Mautic\LeadBundle\Deduplicate\Exception\SameContactException;
 use Mautic\LeadBundle\Entity\Lead;
 use Symfony\Component\DependencyInjection\Container;
+use Mautic\LeadBundle\LeadEvents;
 
 /**
  * Class LegacyLeadModel.
