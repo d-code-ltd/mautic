@@ -15,7 +15,6 @@ use Mautic\LeadBundle\Deduplicate\ContactMerger;
 use Mautic\LeadBundle\Deduplicate\Exception\SameContactException;
 use Mautic\LeadBundle\Entity\Lead;
 use Symfony\Component\DependencyInjection\Container;
-use Mautic\LeadBundle\LeadEvents;
 
 /**
  * Class LegacyLeadModel.
@@ -39,35 +38,36 @@ class LegacyLeadModel
         $this->container = $container;
     }
 
-#    /**
-#     * @param Lead $lead
-#     * @param Lead $lead2
-#     * @param bool $autoMode
-#     *
-#     * @return Lead
-#     */
-#    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
-#    {
-#        $leadId = $lead->getId();
-#
-#        if ($autoMode) {
-#            //which lead is the oldest?
-#            $winner = ($lead->getDateAdded() < $lead2->getDateAdded()) ? $lead : $lead2;
-#            $loser  = ($winner->getId() === $leadId) ? $lead2 : $lead;
-#        } else {
-#            $winner = $lead2;
-#            $loser  = $lead;
-#        }
-#
-#        try {
-#            /** @var ContactMerger $contactMerger */
-#            $contactMerger = $this->container->get('mautic.lead.merger');
-#
-#            return $contactMerger->merge($winner, $loser);
-#        } catch (SameContactException $exception) {
-#            return $lead;
-#        }
-#    }
+    /**
+     * @param Lead $lead
+     * @param Lead $lead2
+     * @param bool $autoMode
+     *
+     * @return Lead
+     */
+    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
+    {
+        $leadId = $lead->getId();
+
+        if ($autoMode) {
+            //which lead is the oldest?
+            $winner = ($lead->getDateAdded() < $lead2->getDateAdded()) ? $lead : $lead2;
+            $loser  = ($winner->getId() === $leadId) ? $lead2 : $lead;
+        } else {
+            $winner = $lead2;
+            $loser  = $lead;
+        }
+
+        try {
+            /** @var ContactMerger $contactMerger */
+            $contactMerger = $this->container->get('mautic.lead.merger');
+
+            return $contactMerger->merge($winner, $loser);
+        } catch (SameContactException $exception) {
+            return $lead;
+        }
+    }
+
 
     /**
      * Merge two leads; if a conflict of data occurs, the newest lead will get precedence.
@@ -78,11 +78,14 @@ class LegacyLeadModel
      *
      * @return Lead
      */
-    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
+/*
+    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true, $dispatcher = null)
     {
         //commenting logger rows, since LegacyLeadModel doesn't have a logger object.
         //
         //$this->logger->debug('LEAD: Merging leads');
+
+        $this->dispatcher = $dispatcher;
 
         $leadId  = $lead->getId();
         $lead2Id = $lead2->getId();
@@ -106,7 +109,7 @@ class LegacyLeadModel
 
         //dispatch pre merge event
         $event = new LeadMergeEvent($mergeWith, $mergeFrom);
-        if ($this->dispatcher->hasListeners(LeadEvents::LEAD_PRE_MERGE)) {
+        if ($this->dispatcher && $this->dispatcher->hasListeners(LeadEvents::LEAD_PRE_MERGE)) {
             $this->dispatcher->dispatch(LeadEvents::LEAD_PRE_MERGE, $event);
         }
 
@@ -172,7 +175,7 @@ class LegacyLeadModel
         $this->getMergeRecordRepository()->saveEntity($mergeRecord);
 
         //post merge events
-        if ($this->dispatcher->hasListeners(LeadEvents::LEAD_POST_MERGE)) {
+        if ($this->dispatcher && $this->dispatcher->hasListeners(LeadEvents::LEAD_POST_MERGE)) {
             $this->dispatcher->dispatch(LeadEvents::LEAD_POST_MERGE, $event);
         }
 
@@ -182,5 +185,5 @@ class LegacyLeadModel
         //return the merged lead
         return $mergeWith;
     }
-
+*/
 }
