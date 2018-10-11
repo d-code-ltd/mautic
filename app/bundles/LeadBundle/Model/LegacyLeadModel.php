@@ -79,14 +79,16 @@ class LegacyLeadModel
      */
     public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
     {
-        $this->logger->debug('LEAD: Merging leads');
+        //commenting logger rows, since LegacyLeadModel doesn't have a logger object.
+        //
+        //$this->logger->debug('LEAD: Merging leads');
 
         $leadId  = $lead->getId();
         $lead2Id = $lead2->getId();
 
         //if they are the same lead, then just return one
         if ($leadId === $lead2Id) {
-            $this->logger->debug('LEAD: Leads are the same');
+            //$this->logger->debug('LEAD: Leads are the same');
 
             return $lead;
         }
@@ -99,7 +101,7 @@ class LegacyLeadModel
             $mergeWith = $lead2;
             $mergeFrom = $lead;
         }
-        $this->logger->debug('LEAD: Lead ID# '.$mergeFrom->getId().' will be merged into ID# '.$mergeWith->getId());
+        //$this->logger->debug('LEAD: Lead ID# '.$mergeFrom->getId().' will be merged into ID# '.$mergeWith->getId());
 
         //dispatch pre merge event
         $event = new LeadMergeEvent($mergeWith, $mergeFrom);
@@ -112,7 +114,7 @@ class LegacyLeadModel
         foreach ($ipAddresses as $ip) {
             $mergeWith->addIpAddress($ip);
 
-            $this->logger->debug('LEAD: Associating with IP '.$ip->getIpAddress());
+            //$this->logger->debug('LEAD: Associating with IP '.$ip->getIpAddress());
         }
 
         //merge fields
@@ -128,7 +130,7 @@ class LegacyLeadModel
                 if (!empty($details['value'])) {
                     $mergeWith->addUpdatedField($alias, $details['value']);
 
-                    $this->logger->debug('LEAD: Updated '.$alias.' = '.$details['value']);
+                    //$this->logger->debug('LEAD: Updated '.$alias.' = '.$details['value']);
                 }
             }
         }
@@ -140,14 +142,14 @@ class LegacyLeadModel
         if ($oldOwner === null && $newOwner !== null) {
             $mergeWith->setOwner($newOwner);
 
-            $this->logger->debug('LEAD: New owner is '.$newOwner->getId());
+            //$this->logger->debug('LEAD: New owner is '.$newOwner->getId());
         }
 
         // Sum points
         $mergeFromPoints = $mergeFrom->getPoints();
         $mergeWithPoints = $mergeWith->getPoints();
         $mergeWith->adjustPoints($mergeFromPoints);
-        $this->logger->debug('LEAD: Adding '.$mergeFromPoints.' points from lead ID #'.$mergeFrom->getId().' to lead ID #'.$mergeWith->getId().' with '.$mergeWithPoints.' points');
+        //$this->logger->debug('LEAD: Adding '.$mergeFromPoints.' points from lead ID #'.$mergeFrom->getId().' to lead ID #'.$mergeWith->getId().' with '.$mergeWithPoints.' points');
 
         //merge tags
         $mergeFromTags = $mergeFrom->getTags();
