@@ -38,35 +38,36 @@ class LegacyLeadModel
         $this->container = $container;
     }
 
-#    /**
-#     * @param Lead $lead
-#     * @param Lead $lead2
-#     * @param bool $autoMode
-#     *
-#     * @return Lead
-#     */
-#    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
-#    {
-#        $leadId = $lead->getId();
-#
-#        if ($autoMode) {
-#            //which lead is the oldest?
-#            $winner = ($lead->getDateAdded() < $lead2->getDateAdded()) ? $lead : $lead2;
-#            $loser  = ($winner->getId() === $leadId) ? $lead2 : $lead;
-#        } else {
-#            $winner = $lead2;
-#            $loser  = $lead;
-#        }
-#
-#        try {
-#            /** @var ContactMerger $contactMerger */
-#            $contactMerger = $this->container->get('mautic.lead.merger');
-#
-#            return $contactMerger->merge($winner, $loser);
-#        } catch (SameContactException $exception) {
-#            return $lead;
-#        }
-#    }
+    /**
+     * @param Lead $lead
+     * @param Lead $lead2
+     * @param bool $autoMode
+     *
+     * @return Lead
+     */
+    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
+    {
+        $leadId = $lead->getId();
+
+        if ($autoMode) {
+            //which lead is the oldest?
+            $winner = ($lead->getDateAdded() < $lead2->getDateAdded()) ? $lead : $lead2;
+            $loser  = ($winner->getId() === $leadId) ? $lead2 : $lead;
+        } else {
+            $winner = $lead2;
+            $loser  = $lead;
+        }
+
+        try {
+            /** @var ContactMerger $contactMerger */
+            $contactMerger = $this->container->get('mautic.lead.merger');
+
+            return $contactMerger->merge($winner, $loser);
+        } catch (SameContactException $exception) {
+            return $lead;
+        }
+    }
+
 
     /**
      * Merge two leads; if a conflict of data occurs, the newest lead will get precedence.
@@ -77,16 +78,21 @@ class LegacyLeadModel
      *
      * @return Lead
      */
-    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true)
+/*
+    public function mergeLeads(Lead $lead, Lead $lead2, $autoMode = true, $dispatch = true, $dispatcher = null)
     {
-        $this->logger->debug('LEAD: Merging leads');
+        //commenting logger rows, since LegacyLeadModel doesn't have a logger object.
+        //
+        //$this->logger->debug('LEAD: Merging leads');
+
+        $this->dispatcher = $dispatcher;
 
         $leadId  = $lead->getId();
         $lead2Id = $lead2->getId();
 
         //if they are the same lead, then just return one
         if ($leadId === $lead2Id) {
-            $this->logger->debug('LEAD: Leads are the same');
+            //$this->logger->debug('LEAD: Leads are the same');
 
             return $lead;
         }
@@ -99,11 +105,11 @@ class LegacyLeadModel
             $mergeWith = $lead2;
             $mergeFrom = $lead;
         }
-        $this->logger->debug('LEAD: Lead ID# '.$mergeFrom->getId().' will be merged into ID# '.$mergeWith->getId());
+        //$this->logger->debug('LEAD: Lead ID# '.$mergeFrom->getId().' will be merged into ID# '.$mergeWith->getId());
 
         //dispatch pre merge event
         $event = new LeadMergeEvent($mergeWith, $mergeFrom);
-        if ($this->dispatcher->hasListeners(LeadEvents::LEAD_PRE_MERGE)) {
+        if ($this->dispatcher && $this->dispatcher->hasListeners(LeadEvents::LEAD_PRE_MERGE)) {
             $this->dispatcher->dispatch(LeadEvents::LEAD_PRE_MERGE, $event);
         }
 
@@ -112,7 +118,7 @@ class LegacyLeadModel
         foreach ($ipAddresses as $ip) {
             $mergeWith->addIpAddress($ip);
 
-            $this->logger->debug('LEAD: Associating with IP '.$ip->getIpAddress());
+            //$this->logger->debug('LEAD: Associating with IP '.$ip->getIpAddress());
         }
 
         //merge fields
@@ -128,7 +134,7 @@ class LegacyLeadModel
                 if (!empty($details['value'])) {
                     $mergeWith->addUpdatedField($alias, $details['value']);
 
-                    $this->logger->debug('LEAD: Updated '.$alias.' = '.$details['value']);
+                    //$this->logger->debug('LEAD: Updated '.$alias.' = '.$details['value']);
                 }
             }
         }
@@ -140,14 +146,14 @@ class LegacyLeadModel
         if ($oldOwner === null && $newOwner !== null) {
             $mergeWith->setOwner($newOwner);
 
-            $this->logger->debug('LEAD: New owner is '.$newOwner->getId());
+            //$this->logger->debug('LEAD: New owner is '.$newOwner->getId());
         }
 
         // Sum points
         $mergeFromPoints = $mergeFrom->getPoints();
         $mergeWithPoints = $mergeWith->getPoints();
         $mergeWith->adjustPoints($mergeFromPoints);
-        $this->logger->debug('LEAD: Adding '.$mergeFromPoints.' points from lead ID #'.$mergeFrom->getId().' to lead ID #'.$mergeWith->getId().' with '.$mergeWithPoints.' points');
+        //$this->logger->debug('LEAD: Adding '.$mergeFromPoints.' points from lead ID #'.$mergeFrom->getId().' to lead ID #'.$mergeWith->getId().' with '.$mergeWithPoints.' points');
 
         //merge tags
         $mergeFromTags = $mergeFrom->getTags();
@@ -169,7 +175,7 @@ class LegacyLeadModel
         $this->getMergeRecordRepository()->saveEntity($mergeRecord);
 
         //post merge events
-        if ($this->dispatcher->hasListeners(LeadEvents::LEAD_POST_MERGE)) {
+        if ($this->dispatcher && $this->dispatcher->hasListeners(LeadEvents::LEAD_POST_MERGE)) {
             $this->dispatcher->dispatch(LeadEvents::LEAD_POST_MERGE, $event);
         }
 
@@ -179,5 +185,5 @@ class LegacyLeadModel
         //return the merged lead
         return $mergeWith;
     }
-
+*/
 }
