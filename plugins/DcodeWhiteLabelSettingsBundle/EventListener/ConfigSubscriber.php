@@ -33,8 +33,8 @@ class ConfigSubscriber extends CommonSubscriber
     public function onConfigGenerate(ConfigBuilderEvent $event)
     {
         $event->addForm([
-            'bundle'     => 'DcodeWhiteLabelSettingsBundle',
-            //'formAlias'  => 'whitelabelconfig',
+            //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
+            'formAlias'  => 'whitelabelconfig',
             'formTheme'  => 'DcodeWhiteLabelSettingsBundle:FormTheme\Config',
             'parameters' => $event->getParametersFromConfig('DcodeWhiteLabelSettingsBundle'),
         ]);
