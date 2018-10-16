@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace PluginMautic\DcodeWhiteLabelSettingsBundle\Form\Type;
+namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type;
 
 use Mautic\CoreBundle\Form\DataTransformer\ArrayStringTransformer;
 use Symfony\Component\Form\AbstractType;
