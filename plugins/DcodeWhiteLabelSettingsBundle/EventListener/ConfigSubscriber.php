@@ -31,7 +31,7 @@ class ConfigSubscriber extends CommonSubscriber
     }
 
     public function onConfigGenerate(ConfigBuilderEvent $event)
-    {
+    {        
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
             'formAlias'  => 'whitelabelconfig',
