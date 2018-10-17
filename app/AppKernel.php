@@ -202,11 +202,9 @@ class AppKernel extends Kernel
             $dirname  = basename($file->getRelativePath());
             $filename = substr($file->getFilename(), 0, -4);
 
-            $class = '\\MauticPlugin'.'\\'.$dirname.'\\'.$filename;
-            var_dump($class);
+            $class = '\\MauticPlugin'.'\\'.$dirname.'\\'.$filename;            
             if (class_exists($class)) {            
-                $plugin = new $class();
-                var_dump('OK');
+                $plugin = new $class();                
 
                 if ($plugin instanceof \Symfony\Component\HttpKernel\Bundle\Bundle) {
                     if (defined($class.'::MINIMUM_MAUTIC_VERSION')) {
