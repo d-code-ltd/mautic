@@ -34,7 +34,7 @@ class ConfigSubscriber extends CommonSubscriber
     {     
         $myVar = $this->factory->getPluginBundles();             
         var_dump($myVar);
-        $myVar = $this->factory->getBundleConfig('DcodeWhiteLabelSettings');             
+        $myVar = $this->factory->getBundleConfig('MauticSocialBundle');             
         var_dump($myVar);        
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
