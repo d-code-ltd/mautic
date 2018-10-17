@@ -34,7 +34,7 @@ class ConfigSubscriber extends CommonSubscriber
     {     
         $myVar = $this->factory->getPluginBundles();             
         var_dump($myVar);
-        $myVar = $this->factory->getBundleConfig('Whitelabel');             
+        $myVar = $this->factory->getBundleConfig('DcodeWhiteLabelSettingsBundle');             
         var_dump($myVar);        
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
