@@ -18,20 +18,15 @@ return [
                 'arguments' => [
                 ],
         	]
-    	]
+    	],
+        'forms' => [       
+            'mauticplugin.dcodewhitelabelsettings.whitelabelconfig.config' => [
+                'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
+                'arguments' => 'mautic.factory',            
+                'alias'     => 'whitelabelconfig',
+            ],
+        ], 
     ],
-    'forms' => [       
-        'mauticplugin.dcodewhitelabelsettings.whitelabelconfig.config' => [
-            'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
-            'arguments' => 'mautic.factory',            
-            'alias'     => 'whitelabelconfig',
-        ],
-        'mauticplugin.form.type.whitelabelconfig' => [
-            'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
-            'arguments' => 'mautic.factory',            
-            'alias'     => 'whitelabelconfig2',
-        ],         
-    ], 
     'parameters' => [
         'whitelabel_branding_name' => '',
         'whitelabel_branding_version' => '',
