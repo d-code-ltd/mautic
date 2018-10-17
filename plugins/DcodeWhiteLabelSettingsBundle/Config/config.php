@@ -8,12 +8,12 @@ return [
 
     'services' => [
         'events' => [
-            'mautic.dcodewhitelabelsettings.configbundle.subscriber' => [
+            'mauticplugin.dcodewhitelabelsettings.configbundle.subscriber' => [
                 'class' => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\EventListener\ConfigSubscriber',
             ],
         ],
         'integrations' => [
-            'mautic.integration.dcodewhitelabelsettings' => [
+            'mauticplugin.dcodewhitelabelsettings.integration.dcodewhitelabelsettings' => [
                 'class'     => \MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration::class,
                 'arguments' => [
                 ],
@@ -21,7 +21,7 @@ return [
     	]
     ],
     'forms' => [       
-        'mautic.form.type.whitelabelconfig' => [
+        'mauticplugin.dcodewhitelabelsettings.whitelabelconfig.config' => [
             'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
             'arguments' => 'mautic.factory',            
             'alias'     => 'whitelabelconfig',

@@ -31,11 +31,7 @@ class ConfigSubscriber extends CommonSubscriber
     }
 
     public function onConfigGenerate(ConfigBuilderEvent $event)
-    {     
-        $myVar = $this->factory->getPluginBundles();             
-        var_dump($myVar);
-        $myVar = $this->factory->getBundleConfig('MauticSocialBundle');             
-        var_dump($myVar);        
+    {             
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
             'formAlias'  => 'whitelabelconfig',
