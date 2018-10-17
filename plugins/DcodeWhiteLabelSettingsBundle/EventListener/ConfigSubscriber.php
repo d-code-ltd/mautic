@@ -31,7 +31,13 @@ class ConfigSubscriber extends CommonSubscriber
     }
 
     public function onConfigGenerate(ConfigBuilderEvent $event)
-    {             
+    {   
+        $integration = $this->integrationHelper->getIntegrationObject('FCM');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
+                  
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
             'formAlias'  => 'whitelabelconfig',
