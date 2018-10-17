@@ -14,6 +14,7 @@ namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\EventListener;
 use Mautic\ConfigBundle\ConfigEvents;
 use Mautic\ConfigBundle\Event\ConfigBuilderEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class ConfigSubscriber.
