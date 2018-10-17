@@ -21,6 +21,22 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 class ConfigSubscriber extends CommonSubscriber
 {
     /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
+     * CampaignSubscriber constructor.
+     *
+     * @param IntegrationHelper       $integrationHelper    
+     */
+    public function __construct(
+        IntegrationHelper $integrationHelper        
+    ) {
+        $this->integrationHelper = $integrationHelper;        
+    }
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -32,12 +48,12 @@ class ConfigSubscriber extends CommonSubscriber
 
     public function onConfigGenerate(ConfigBuilderEvent $event)
     {   
-        $integration = $this->integrationHelper->getIntegrationObject('FCM');
+        $integration = $this->integrationHelper->getIntegrationObject('WhiteLabel');
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
 
-                  
+
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
             'formAlias'  => 'whitelabelconfig',

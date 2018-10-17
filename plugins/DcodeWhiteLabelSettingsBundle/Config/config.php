@@ -10,6 +10,9 @@ return [
         'events' => [
             'mauticplugin.dcodewhitelabelsettings.configbundle.subscriber' => [
                 'class' => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\EventListener\ConfigSubscriber',
+                'arguments' => [
+                    'mautic.helper.integration'
+                ],
             ],
         ],
         'integrations' => [
