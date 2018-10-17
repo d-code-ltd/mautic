@@ -31,7 +31,9 @@ class ConfigSubscriber extends CommonSubscriber
     }
 
     public function onConfigGenerate(ConfigBuilderEvent $event)
-    {        
+    {     
+        $myVar = $this->get('mautic.form.type.whitelabelconfig');         
+        var_dump($myVar);
         $event->addForm([
             //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
             'formAlias'  => 'whitelabelconfig',

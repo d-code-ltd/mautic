@@ -26,7 +26,13 @@ return [
             //'arguments' => 'mautic.factory',
             'arguments' => 'mautic.lead.model.field',
             'alias'     => 'whitelabelconfig',
-        ],        
+        ],
+        'mauticplugin.form.type.whitelabelconfig' => [
+            'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
+            //'arguments' => 'mautic.factory',
+            'arguments' => 'mautic.lead.model.field',
+            'alias'     => 'whitelabelconfig2',
+        ],         
     ], 
     'parameters' => [
         'whitelabel_branding_name' => '',
