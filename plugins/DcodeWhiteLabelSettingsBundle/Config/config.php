@@ -23,14 +23,12 @@ return [
     'forms' => [       
         'mautic.form.type.whitelabelconfig' => [
             'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
-            //'arguments' => 'mautic.factory',
-            'arguments' => 'mautic.lead.model.field',
+            'arguments' => 'mautic.factory',            
             'alias'     => 'whitelabelconfig',
         ],
         'mauticplugin.form.type.whitelabelconfig' => [
             'class'     => 'MauticPlugin\DcodeWhiteLabelSettingsBundle\Form\Type\ConfigType',
-            //'arguments' => 'mautic.factory',
-            'arguments' => 'mautic.lead.model.field',
+            'arguments' => 'mautic.factory',            
             'alias'     => 'whitelabelconfig2',
         ],         
     ], 
