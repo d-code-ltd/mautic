@@ -21,6 +21,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class ConfigType extends AbstractType
 {
+    protected $fieldModel;
+
+    /**
+     * ConfigType constructor.
+     *
+     * @param FieldModel $fieldModel
+     */
+    public function __construct(FieldModel $fieldModel)
+    {
+        $this->fieldModel = $fieldModel;
+    }
+    
     /**
      * @param FormBuilderInterface $builder
      * @param array                $options
