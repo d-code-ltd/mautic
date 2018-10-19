@@ -73,6 +73,7 @@
 !/plugins/MauticZapierBundle
 !/plugins/FCMNotificationBundle
 !/plugins/DcodeWhiteLabelSettingsBundle
+!/plugins/DcodeSenderEngineBundle
 !/plugins/index.html
 
 /themes/*
