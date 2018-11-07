@@ -219,6 +219,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
+                    'empty_data' => '100'
                 ]
             );
             
