@@ -9,7 +9,7 @@ return [
     'services' => [
         'events' => [
             /*
-            'mauticplugin.dcodessenderenginesettings.configbundle.subscriber' => [
+            'mauticplugin.dcodesenderengine.configbundle.subscriber' => [
                 'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ConfigSubscriber',
                 'arguments' => [
                     'mautic.helper.integration'
@@ -20,7 +20,7 @@ return [
             
         ],
         'integrations' => [
-            'mauticplugin.dcodewhitelabelsettings.integration.dcodessenderenginesettings' => [
+            'mauticplugin.dcodesenderengine.integration.dcodesenderengine' => [
                 'class'     => \MauticPlugin\DcodeSenderEngineBundle\Integration\SenderEngineIntegration::class,
                 'arguments' => [
                 ],
