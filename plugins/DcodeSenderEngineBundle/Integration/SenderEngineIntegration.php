@@ -15,6 +15,7 @@ namespace MauticPlugin\DcodeSenderEngineBundle\Integration;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilder;
@@ -146,77 +147,89 @@ class SenderEngineIntegration extends AbstractIntegration
 */
 
             $builder->add(
-                'tracking_page_autoprompt',
-                CheckboxType::class,
+                'return_path_format',
+                TextType::class,
                 [
-                    'label' => 'mautic.plugin.integration.form.features.tracking_page_autoprompt',
+                    'label' => 'mautic.plugin.integration.form.features.return_path_format',
                     'attr'  => [
                         'class'        => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.tracking_page_autoprompt.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'required' => false,
-                ]
-            );
-
-            $builder->add(
-                'sample_notification_title',
-                TextType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.sample_notification_title',                    
-                    'required' => false,
-                    'attr'     => [
-                        'class' => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.sample_notification_title.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
-                    ],
-                ]
-            );
-
-            $builder->add(
-                'sample_notification_text',
-                TextType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.sample_notification_text',                    
-                    'required' => false,
-                    'attr'     => [
-                        'class' => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.sample_notification_text.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_3":"checked"}',
-                    ],
-                ]
-            );
-
-            $builder->add(
-                'welcome_notification_title',
-                TextType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.welcome_notification_title',                    
-                    'required' => false,
-                    'attr'     => [
-                        'class' => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.welcome_notification_title.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
-                    ],
-                ]
-            );
-
-            $builder->add(
-                'welcome_notification_text',
-                TextType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.welcome_notification_text',                    
-                    'required' => false,
-                    'attr'     => [
-                        'class' => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.welcome_notification_text.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
-                    ],
                 ]
             );
 
             
+            $builder->add(
+                'bounce3_value',
+                TextType::class,
+                [
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value',                    
+                    'required' => true,
+                    'attr'     => [
+                        'class' => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.toolip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                    ],
+                ]
+            );
 
+            $builder->add(
+                'bounce4_value',
+                TextType::class,
+                [
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value',                    
+                    'required' => true,
+                    'attr'     => [
+                        'class' => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.toolip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'bounce5_value',
+                TextType::class,
+                [
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value',                    
+                    'required' => true,
+                    'attr'     => [
+                        'class' => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.toolip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                    ],
+                ]
+            );
+            
+            $builder->add(
+                'bounce_threshold',
+                NumberType::class,
+                [
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold',                    
+                    'required' => true,
+                    'attr'     => [
+                        'class' => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.toolip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                    ],
+                ]
+            );
+            
+            $builder->add(
+                'bounce_unsubscribe',
+                CheckboxType::class,
+                [
+                    'label' => 'mautic.plugin.integration.form.features.bounce_report.bounce_unsubscribe',
+                    'attr'  => [
+                        'class'        => '',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_unsubscribe',
+                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                    ],
+                    'required' => false,
+                ]
+            );
             
 /*            
             $builder->add(
