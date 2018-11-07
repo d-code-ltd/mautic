@@ -157,7 +157,9 @@ class SenderEngineIntegration extends AbstractIntegration
                         'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
                     ],
                     'required' => false,
+                    'empty_data' => 'postmaster-{idHash}@example.com'
                 ]
+
             );
 
             
@@ -169,9 +171,10 @@ class SenderEngineIntegration extends AbstractIntegration
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.toolip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
+                    'empty_data' => '3'
                 ]
             );
 
@@ -183,9 +186,10 @@ class SenderEngineIntegration extends AbstractIntegration
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.toolip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
+                    'empty_data' => '10'
                 ]
             );
 
@@ -197,7 +201,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.toolip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'empty_data' => '20'
@@ -212,7 +216,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.toolip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                 ]
