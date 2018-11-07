@@ -38,12 +38,6 @@ return [
         ],
     ],    
     'parameters' => [
-        'whitelabel_branding_name' => '',
-        'whitelabel_branding_version' => '',
-        'whitelabel_branding_copyright' => '',
-        'whitelabel_branding_favicon' => '',
-        'whitelabel_branding_apple_favicon' => '',
-        'whitelabel_branding_logo' => '',
-        'whitelabel_branding_left_logo' => '',
+       
     ],
 ];

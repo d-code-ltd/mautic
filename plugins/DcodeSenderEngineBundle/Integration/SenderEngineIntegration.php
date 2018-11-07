@@ -127,10 +127,10 @@ class SenderEngineIntegration extends AbstractIntegration
             );            
         }
 */        
-/* 
+ 
         if ($formArea == 'features') {
             
-            
+/*            
             $builder->add(
                 'notification_icon',
                 TextType::class,
@@ -143,7 +143,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     ],
                 ]
             );
-
+*/
 
             $builder->add(
                 'tracking_page_autoprompt',
@@ -218,7 +218,7 @@ class SenderEngineIntegration extends AbstractIntegration
             
 
             
-            
+/*            
             $builder->add(
                 'platforms',
                 ChoiceType::class,
@@ -238,8 +238,8 @@ class SenderEngineIntegration extends AbstractIntegration
                     'required'    => false,
                 ]
             );
-            
+*/            
         }
-*/
+
     }
 }

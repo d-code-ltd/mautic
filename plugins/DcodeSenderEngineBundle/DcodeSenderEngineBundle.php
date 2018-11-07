@@ -9,10 +9,10 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\DcodeWhiteLabelSettingsBundle;
+namespace MauticPlugin\DcodeSenderEngineBundle;
 
 use Mautic\PluginBundle\Bundle\PluginBundleBase;
 
-class DcodeWhiteLabelSettingsBundle extends PluginBundleBase
+class DcodeSenderEngineBundle extends PluginBundleBase
 {
 }
