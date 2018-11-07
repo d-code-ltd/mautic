@@ -200,7 +200,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.toolip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
-                    'empty_data' => ''
+                    'empty_data' => '20'
                 ]
             );
             
