@@ -10,7 +10,7 @@ return [
         'events' => [
             /*
             'mauticplugin.dcodessenderenginesettings.configbundle.subscriber' => [
-                'class' => 'MauticPlugin\DcodeSenderEngineSettingsBundle\EventListener\ConfigSubscriber',
+                'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ConfigSubscriber',
                 'arguments' => [
                     'mautic.helper.integration'
                 ],
