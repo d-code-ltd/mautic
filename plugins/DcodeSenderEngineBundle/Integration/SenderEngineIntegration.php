@@ -152,7 +152,7 @@ class SenderEngineIntegration extends AbstractIntegration
                 [
                     'label' => 'mautic.plugin.integration.form.features.return_path_format',
                     'attr'  => [
-                        'class'        => '',
+                        'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
                     ],
@@ -163,12 +163,12 @@ class SenderEngineIntegration extends AbstractIntegration
             
             $builder->add(
                 'bounce3_value',
-                TextType::class,
+                NumberType::class,
                 [
                     'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value',                    
                     'required' => true,
                     'attr'     => [
-                        'class' => 'form-control',
+                        'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.toolip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
@@ -177,12 +177,12 @@ class SenderEngineIntegration extends AbstractIntegration
 
             $builder->add(
                 'bounce4_value',
-                TextType::class,
+                NumberType::class,
                 [
                     'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value',                    
                     'required' => true,
                     'attr'     => [
-                        'class' => 'form-control',
+                        'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.toolip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
@@ -191,15 +191,16 @@ class SenderEngineIntegration extends AbstractIntegration
 
             $builder->add(
                 'bounce5_value',
-                TextType::class,
+                NumberType::class,
                 [
                     'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value',                    
                     'required' => true,
                     'attr'     => [
-                        'class' => 'form-control',
+                        'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.toolip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
+                    'empty_data' => ''
                 ]
             );
             
@@ -210,7 +211,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold',                    
                     'required' => true,
                     'attr'     => [
-                        'class' => 'form-control',
+                        'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.toolip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
