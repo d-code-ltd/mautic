@@ -154,7 +154,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'  => [
                         'class'        => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
                     ],
                     'required' => false,
                 ]
@@ -170,7 +170,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                 ]
             );
@@ -184,7 +184,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                 ]
             );
@@ -198,7 +198,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                 ]
             );
@@ -212,7 +212,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'     => [
                         'class' => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.toolip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                 ]
             );
@@ -225,7 +225,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'  => [
                         'class'        => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_unsubscribe',
-                        'data-show-on' => '{"integration_details_supportedFeatures_2":"checked"}',
+                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'required' => false,
                 ]
