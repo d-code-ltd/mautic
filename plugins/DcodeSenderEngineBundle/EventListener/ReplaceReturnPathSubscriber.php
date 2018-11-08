@@ -15,6 +15,7 @@ use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Event\EmailSendEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
+use Psr\Log\LoggerInterface;
 
 class ReplaceReturnPathSubscriber implements EventSubscriberInterface
 {    
@@ -32,12 +33,14 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
      * CampaignSubscriber constructor.
      *
      * @param IntegrationHelper       $integrationHelper
+     * @param LoggerInterface          $logger
      */
     public function __construct(
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        LoggerInterface $logger
     ) {
         $this->integrationHelper = $integrationHelper;
-        $this->logger = $this->getContainer()->get('logger')->withName('DcodeSenderEngine');
+        $this->logger = $logger;
     }
 
     /**
@@ -89,7 +92,7 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
             ),$featureSettings['return_path_format']);
 
             var_dump($returnPath);
-            
+
             $event->addTextHeader('Return-path', $returnPath);            
 
             $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin changed return-path to {$returnPath}");

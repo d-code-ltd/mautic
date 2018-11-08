@@ -8,10 +8,11 @@ return [
 
     'services' => [
         'events' => [            
-            'mauticplugin.dcodesenderengine.emailbundle.subscriber' => [
+            'mauticplugin.dcodesenderengine.email.subscriber' => [
                 'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ReplaceReturnPathSubscriber',
                 'arguments' => [
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
                 ],
             ],            
             
