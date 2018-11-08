@@ -7,16 +7,13 @@ return [
     'version'     => '1.0.0',
 
     'services' => [
-        'events' => [
-            /*
-            'mauticplugin.dcodesenderengine.configbundle.subscriber' => [
-                'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ConfigSubscriber',
+        'events' => [            
+            'mauticplugin.dcodesenderengine.emailbundle.subscriber' => [
+                'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ReplaceReturnPathSubscriber',
                 'arguments' => [
                     'mautic.helper.integration'
                 ],
-            ],
-            */
-            //sendEmail event -> return path cseréje
+            ],            
             
         ],
         'integrations' => [

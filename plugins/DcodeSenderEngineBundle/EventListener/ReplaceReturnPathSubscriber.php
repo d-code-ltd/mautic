@@ -57,11 +57,13 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
      */
     public function onEmailSend(EmailSendEvent $event)
     {
+        var_dump('1');
         $integration = $this->integrationHelper->getIntegrationObject('SenderEngine');
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
 
+        var_dump('2');
         $supportedFeatures = $integration->getSupportedFeatures();
         if (!in_array('replace_return_path', $supportedFeatures)) {
             return;
@@ -71,7 +73,7 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
         $features            = $integration->getSupportedFeatures();
         $featureSettings     = $integrationSettings->getFeatureSettings();  
 
-
+        var_dump('3');
 
         $helper = $event->getHelper();
         if ($helper && !empty($featureSettings['return_path_format'])) {
@@ -86,9 +88,11 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
                 $event->getEmail()->getId()
             ),$featureSettings['return_path_format']);
 
+            var_dump($returnPath);
+            
             $event->addTextHeader('Return-path', $returnPath);            
 
-            $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin changed eturn-path to {$returnPath}");
+            $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin changed return-path to {$returnPath}");
         }
     }
 }
