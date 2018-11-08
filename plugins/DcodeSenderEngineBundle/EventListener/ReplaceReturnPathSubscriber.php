@@ -24,6 +24,11 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
     protected $integrationHelper;
 
     /**
+     * @var IntegrationHelper
+     */
+    protected $logger;
+
+    /**
      * CampaignSubscriber constructor.
      *
      * @param IntegrationHelper       $integrationHelper
@@ -32,6 +37,7 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
         IntegrationHelper $integrationHelper
     ) {
         $this->integrationHelper = $integrationHelper;
+        $this->logger = $this->getContainer()->get('logger')->withName('DcodeSenderEngine');
     }
 
     /**
@@ -80,15 +86,9 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
                 $event->getEmail()->getId()
             ),$featureSettings['return_path_format']);
 
+            $event->addTextHeader('Return-path', $returnPath);            
 
-            /*
-            $headers          = $event->getTextHeaders();
-            $existing         = (isset($headers['List-Unsubscribe'])) ? $headers['List-Unsubscribe'] : '';
-            $unsubscribeEmail = "<mailto:$unsubscribeEmail>";
-            $updatedHeader    = ($existing) ? $unsubscribeEmail.', '.$existing : $unsubscribeEmail;
-
-            $event->addTextHeader('List-Unsubscribe', $updatedHeader);
-            */
+            $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin changed eturn-path to {$returnPath}");
         }
     }
 }
