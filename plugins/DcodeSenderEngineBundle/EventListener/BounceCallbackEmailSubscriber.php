@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Psr\Log\LoggerInterface;
 
-class ReplaceReturnPathSubscriber implements EventSubscriberInterface
+class BounceCallbackEmailSubscriber implements EventSubscriberInterface
 {    
     /**
      * @var IntegrationHelper
@@ -66,29 +66,27 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
         }
         
         $supportedFeatures = $integration->getSupportedFeatures();
-        if (!in_array('replace_return_path', $supportedFeatures)) {
+        if (!in_array('bounce_callback', $supportedFeatures)) {
             return;
         }
 
-        $integrationSettings = $integration->getIntegrationSettings();        
-        $featureSettings     = $integrationSettings->getFeatureSettings();  
+        //$integrationSettings = $integration->getIntegrationSettings();        
+        //$featureSettings     = $integrationSettings->getFeatureSettings();  
+
 
         $helper = $event->getHelper();
-        if (!empty($featureSettings['return_path_format'])) {
-            $lead = $event->getLead();
-            $returnPath = str_ireplace(array(
-                '{idHash}',
-                '{leadId}',
-                '{emailId}'
-            ),array(
-                $event->getIdHash(),
-                $lead['id'],
-                $event->getEmail()->getId()
-            ),$featureSettings['return_path_format']);
+        $lead = $event->getLead();
 
-            $event->addTextHeader('Return-path', $returnPath);            
+        $event->addTextHeader('X-M-Lead', $lead['id']);            
+        $event->addTextHeader('X-M-email', $event->getEmail()->getId());
+        $event->addTextHeader('X-M-idHash', $event->getIdHash());
+        
+        $callbackUrl   = $this->router->generate('mautic_notification_popup', ['idHash' => $event->getIdHash()], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin changed return-path to {$returnPath}");
-        }
+
+        $event->addTextHeader('X-mailengine-bounce-callback', $callbackUrl);
+
+        $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin added X-mailengine-bounce-callback to {$returnPath}");
+        
     }
 }

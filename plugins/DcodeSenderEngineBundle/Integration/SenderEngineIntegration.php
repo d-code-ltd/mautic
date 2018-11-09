@@ -57,7 +57,7 @@ class SenderEngineIntegration extends AbstractIntegration
     {
         return [
             'replace_return_path',
-            'bounce_report',            
+            'bounce_callback',            
         ];
     }
 
@@ -65,7 +65,7 @@ class SenderEngineIntegration extends AbstractIntegration
     {
         return [
             'replace_return_path'  => 'mautic.plugin.integration.form.features.replace_return_path.tooltip',
-            'bounce_report' => 'mautic.plugin.integration.form.features.bounce_report.tooltip',
+            'bounce_callback' => 'mautic.plugin.integration.form.features.bounce_callback.tooltip',
         ];
     }
 
@@ -167,11 +167,11 @@ class SenderEngineIntegration extends AbstractIntegration
                 'bounce3_value',
                 NumberType::class,
                 [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value',                    
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value',                    
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce3_value.tooltip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'empty_data' => '3'
@@ -182,11 +182,11 @@ class SenderEngineIntegration extends AbstractIntegration
                 'bounce4_value',
                 NumberType::class,
                 [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value',                    
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value',                    
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce4_value.tooltip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'empty_data' => '10'
@@ -197,11 +197,11 @@ class SenderEngineIntegration extends AbstractIntegration
                 'bounce5_value',
                 NumberType::class,
                 [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value',                    
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value',                    
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce5_value.tooltip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'empty_data' => '20'
@@ -212,11 +212,11 @@ class SenderEngineIntegration extends AbstractIntegration
                 'bounce_threshold',
                 NumberType::class,
                 [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold',                    
+                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold',                    
                     'required' => true,
                     'attr'     => [
                         'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_threshold.tooltip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'empty_data' => '100'
@@ -227,10 +227,10 @@ class SenderEngineIntegration extends AbstractIntegration
                 'bounce_unsubscribe',
                 CheckboxType::class,
                 [
-                    'label' => 'mautic.plugin.integration.form.features.bounce_report.bounce_unsubscribe',
+                    'label' => 'mautic.plugin.integration.form.features.bounce_callback.bounce_unsubscribe',
                     'attr'  => [
                         'class'        => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_report.bounce_unsubscribe',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_unsubscribe',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
                     ],
                     'required' => false,

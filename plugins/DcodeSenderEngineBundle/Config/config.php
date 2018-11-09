@@ -8,14 +8,20 @@ return [
 
     'services' => [
         'events' => [            
-            'mauticplugin.dcodesenderengine.email.subscriber' => [
+            'mauticplugin.dcodesenderengine.returnpathemail.subscriber' => [
                 'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ReplaceReturnPathSubscriber',
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
             ],            
-            
+            'mauticplugin.dcodesenderengine.bouncecallbackemail.subscriber' => [
+                'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackEmailSubscriber',
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
+                ],
+            ], 
         ],
         'integrations' => [
             'mauticplugin.dcodesenderengine.integration.dcodesenderengine' => [
@@ -26,12 +32,10 @@ return [
     	],        
     ],    
     'routes' => [        
-        'api' => [
-            'mautic_api_senderenginereport' => [
-                'standard_entity' => true,
-                'name'            => 'senderengine',
-                'path'            => '/senderengine/bounce-report',
-                'controller'      => 'DcodeSenderEngineBundle:Api\BounceReportApi',
+        'public' => [
+            'mauticplugin.dcodesenderengin.route.bouncecallback' => [                
+                'path'       => '/senderengine/bouncecallback/{idHash}',
+                'controller' => 'DcodeSenderEngineBundle:BounceCallback:callback',
             ],
         ],
     ],    
