@@ -8,20 +8,27 @@ return [
 
     'services' => [
         'events' => [            
-            'mauticplugin.dcodesenderengine.returnpathemail.subscriber' => [
+            'mauticplugin.dcodesenderengine.returnpath.onsendemail.subscriber' => [
                 'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\ReplaceReturnPathSubscriber',
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
             ],            
-            'mauticplugin.dcodesenderengine.bouncecallbackemail.subscriber' => [
+            'mauticplugin.dcodesenderengine.bouncecallback.onsendemail.subscriber' => [
                 'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackEmailSubscriber',
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
-            ], 
+            ],
+            'mauticplugin.dcodesenderengine.bouncecallback.pluginsave.subscriber' => [
+                'class' => 'MauticPlugin\DcodeSenderEngineBundle\EventListener\PluginSubscriber',
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
+                ],
+            ],  
         ],
         'integrations' => [
             'mauticplugin.dcodesenderengine.integration.dcodesenderengine' => [

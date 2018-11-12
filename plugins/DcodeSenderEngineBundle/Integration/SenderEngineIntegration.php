@@ -103,6 +103,65 @@ class SenderEngineIntegration extends AbstractIntegration
     {
         return 'none';
     }
+    
+    protected function getEnhancerFieldArray()
+    {
+        return [
+            'bounce_points' => [
+                'label' => 'Bounce points',
+                'type'  => 'number',
+            ],
+        ];
+    }
+
+
+    public function buildSenderEngineFields(){
+        $new_field   = null;
+        $integration = $this->getIntegrationSettings();
+ 
+        $existing = $this->fieldModel->getFieldList(false);
+        $existing = array_keys($existing);
+    
+        if ($integration->getIsPublished()) {
+            foreach ($this->getEnhancerFieldArray() as $alias => $properties) {
+                if (in_array($alias, $existing)) {
+                    // The field already exists
+                    continue;
+                }
+                
+                $new_field = new LeadField();
+                $new_field->setAlias($alias);
+                //setting extendedField/lead in one place,
+                $new_field->setObject($this->getLeadFieldObject());
+
+                // Add default required properties to prevent warnings and notices.
+                if (isset($properties['type'])) {
+                    if ('boolean' === $properties['type']) {
+                        $new_field->setProperties('a:2:{s:2:"no";s:2:"No";s:3:"yes";s:3:"Yes";}');
+                    } elseif ('number' === $properties['type']) {
+                        $new_field->setProperties('a:2:{s:9:"roundmode";s:1:"3";s:9:"precision";s:0:"";}');
+                    }
+                }
+                foreach ($properties as $property => $value) {
+                    //convert snake case to cammel case
+                    $method = 'set'.implode('', array_map('ucfirst', explode('_', $property)));
+
+                    try {
+                        $new_field->$method($value);
+                    } catch (\Exception $e) {
+                        error_log('Failed with "'.$e->getMessage().'"');
+                    }
+                }
+                try {
+                    $this->em->persist($new_field);
+                    $this->em->flush($new_field);
+                } catch (OptimisticLockException $e) {
+                    $this->logger->warning($e->getMessage());
+                }
+            }
+        }
+
+    }
 
     /**
      * @param \Mautic\PluginBundle\Integration\Form|FormBuilder $builder
