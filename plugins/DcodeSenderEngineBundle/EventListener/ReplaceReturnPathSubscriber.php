@@ -82,8 +82,8 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
                 '{emailId}'
             ),array(
                 $event->getIdHash(),
-                $lead['id'],
-                $event->getEmail()->getId()
+                !empty($lead['id'])?$lead['id']:'',
+                $event->getEmail()?$event->getEmail()->getId():''
             ),$featureSettings['return_path_format']);
 
             $event->addTextHeader('Return-path', $returnPath);            
