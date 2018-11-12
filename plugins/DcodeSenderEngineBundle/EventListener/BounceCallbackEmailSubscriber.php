@@ -77,8 +77,12 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
         $helper = $event->getHelper();
         $lead = $event->getLead();
 
-        $event->addTextHeader('X-M-Lead', $lead['id']);            
-        $event->addTextHeader('X-M-email', $event->getEmail()->getId());
+        if (!empty($lead['id'])){
+            $event->addTextHeader('X-M-Lead', $lead['id']);            
+        }
+        if (!empty($event->getEmail())){
+            $event->addTextHeader('X-M-email', $event->getEmail()->getId());
+        }
         $event->addTextHeader('X-M-idHash', $event->getIdHash());
         
         $callbackUrl   = $this->router->generate('mautic_notification_popup', ['idHash' => $event->getIdHash()], UrlGeneratorInterface::ABSOLUTE_URL);
