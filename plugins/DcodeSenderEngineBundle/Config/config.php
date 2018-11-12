@@ -20,6 +20,7 @@ return [
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
+                    'router'
                 ],
             ],
             'mauticplugin.dcodesenderengine.bouncecallback.pluginsave.subscriber' => [

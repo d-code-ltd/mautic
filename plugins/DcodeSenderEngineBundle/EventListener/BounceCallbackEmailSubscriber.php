@@ -16,6 +16,7 @@ use Mautic\EmailBundle\Event\EmailSendEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 class BounceCallbackEmailSubscriber implements EventSubscriberInterface
 {    
@@ -37,12 +38,12 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         IntegrationHelper $integrationHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Router $router
     ) {
         $this->integrationHelper = $integrationHelper;
         $this->logger = $logger;
-
-        $this->router   = $this->get('router');
+        $this->router = $router;        
     }
 
     /**
