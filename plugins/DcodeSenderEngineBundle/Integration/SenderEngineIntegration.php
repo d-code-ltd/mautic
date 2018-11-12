@@ -107,6 +107,18 @@ class SenderEngineIntegration extends AbstractIntegration
         return 'none';
     }
     
+    /**
+     * @return string
+     */
+    private function getLeadFieldObject()
+    {   
+        if (class_exists('MauticPlugin\MauticExtendedFieldBundle\MauticExtendedFieldBundle')) {
+            return 'extendedField';
+        }
+            
+        return 'lead';
+    }
+
     protected function getEnhancerFieldArray()
     {
         return [
