@@ -14,6 +14,9 @@ namespace MauticPlugin\DcodeSenderEngineBundle\EventListener;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\PluginBundle\Event\PluginIntegrationEvent;
 use Mautic\PluginBundle\PluginEvents;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
+use Psr\Log\LoggerInterface;
+
 
 /**
  * Class PluginSubscriber.
@@ -38,8 +41,7 @@ class PluginSubscriber extends CommonSubscriber
      */
     public function __construct(
         IntegrationHelper $integrationHelper,
-        LoggerInterface $logger,
-        Router $router
+        LoggerInterface $logger        
     ) {
         $this->integrationHelper = $integrationHelper;
         $this->logger = $logger;        
