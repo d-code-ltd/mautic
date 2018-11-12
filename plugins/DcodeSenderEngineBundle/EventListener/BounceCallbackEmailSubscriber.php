@@ -41,6 +41,8 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
     ) {
         $this->integrationHelper = $integrationHelper;
         $this->logger = $logger;
+
+        $this->router   = $this->get('router');
     }
 
     /**
