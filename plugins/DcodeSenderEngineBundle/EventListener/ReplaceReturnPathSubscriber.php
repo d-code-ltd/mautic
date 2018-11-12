@@ -74,7 +74,7 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
         $featureSettings     = $integrationSettings->getFeatureSettings();  
 
         $helper = $event->getHelper();
-        if (!empty($featureSettings['return_path_format'])) {
+        if (!empty($featureSettings['return_path_format']) && !empty($featureSettings['return_path_domain'])) {
             $lead = $event->getLead();
             $returnPath = str_ireplace(array(
                 '{idHash}',
@@ -84,7 +84,7 @@ class ReplaceReturnPathSubscriber implements EventSubscriberInterface
                 $event->getIdHash(),
                 !empty($lead['id'])?$lead['id']:'',
                 $event->getEmail()?$event->getEmail()->getId():''
-            ),$featureSettings['return_path_format']);
+            ),$featureSettings['return_path_format'].'@'.$featureSettings['return_path_domain']);
 
             $event->addTextHeader('Return-path', $returnPath);            
 

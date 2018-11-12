@@ -21,6 +21,31 @@ use Mautic\PluginBundle\PluginEvents;
 class PluginSubscriber extends CommonSubscriber
 {
     /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
+     * @var IntegrationHelper
+     */
+    protected $logger;
+  
+    /**
+     * CampaignSubscriber constructor.
+     *
+     * @param IntegrationHelper       $integrationHelper
+     * @param LoggerInterface          $logger
+     */
+    public function __construct(
+        IntegrationHelper $integrationHelper,
+        LoggerInterface $logger,
+        Router $router
+    ) {
+        $this->integrationHelper = $integrationHelper;
+        $this->logger = $logger;        
+    }
+
+    /**
      * @return array
      */
     public static function getSubscribedEvents()
@@ -41,6 +66,8 @@ class PluginSubscriber extends CommonSubscriber
         $integration = $event->getIntegration();
         if ($integration->getName() == 'SenderEngine') {
             $integration->buildSenderEngineFields();
+
+            $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin fields added");
         }
     }
 }

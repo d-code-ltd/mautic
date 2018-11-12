@@ -32,6 +32,11 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
     protected $logger;
 
     /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
      * CampaignSubscriber constructor.
      *
      * @param IntegrationHelper       $integrationHelper
@@ -82,19 +87,18 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
         $lead = $event->getLead();
 
         if (!empty($lead['id'])){
-            $event->addTextHeader('X-M-Lead', $lead['id']);            
+            $event->addTextHeader('X-SenderEngine-Lead', $lead['id']);            
         }
         if (!empty($event->getEmail())){
-            $event->addTextHeader('X-M-email', $event->getEmail()->getId());
+            $event->addTextHeader('X-SenderEngine-email', $event->getEmail()->getId());
         }
-        $event->addTextHeader('X-M-idHash', $event->getIdHash());
+        $event->addTextHeader('X-SenderEngine-idHash', $event->getIdHash());
         
         $callbackUrl   = $this->router->generate('mautic_notification_popup', ['idHash' => $event->getIdHash()], UrlGeneratorInterface::ABSOLUTE_URL);
 
 
-        $event->addTextHeader('X-mailengine-bounce-callback', $callbackUrl);
+        $event->addTextHeader('X-SenderEngine-bounce-callback', $callbackUrl);
 
-        $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin added X-mailengine-bounce-callback to {$returnPath}");
-        
+        $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin added X-mailengine-bounce-callback to {$returnPath}");        
     }
 }
