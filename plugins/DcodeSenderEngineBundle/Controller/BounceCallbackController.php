@@ -60,25 +60,30 @@ class BounceCallbackController extends CommonController
                         var_dump($prevBouncePoints, $status, $featureSettings["bounce{$status}_value"]);
                         if (intval($featureSettings["bounce{$status}_value"]) > 0){
                             $lead->addUpdatedField($integration::$bouncePointsFieldName, $prevBouncePoints+intval($featureSettings["bounce{$status}_value"]), $prevBouncePoints);
+                       
+  
+                            
+                            
                             $manipulator = $lead->getManipulator();
-                            $leadModel->saveEntity($lead);
-                            var_dump($manipulator);
-/*
+
                             $manipulationLog = new LeadEventLog();
-                            $manipulationLog->setLead($lead)
-                                ->setBundle($manipulator->getBundleName())
+                            $manipulationLog->setLead($lead);
+                            
+                            if (!empty($manipulator)){
+                                $manipulationLog->setBundle($manipulator->getBundleName())
                                 ->setObject($manipulator->getObjectName())
                                 ->setObjectId($manipulator->getObjectId());
-                            if ($lead->isAnonymous()) {
-                                $manipulationLog->setAction('created_contact');
-                            } else {
-                                $manipulationLog->setAction('identified_contact');
+                            }else{
+                                //Test whether bundle, object and objectId has any affect
                             }
-                            $description = $manipulator->getObjectDescription();
-                            $manipulationLog->setProperties(['object_description' => $description]);
+                            
+                            $manipulationLog->setAction('email_bounced');
+                            
+                            //$description = $manipulator->getObjectDescription();
+                            //$manipulationLog->setProperties(['object_description' => $description]);
 
                             $lead->addEventLog($manipulationLog);
-*/
+                            $leadModel->saveEntity($lead);
                         }
 
 
