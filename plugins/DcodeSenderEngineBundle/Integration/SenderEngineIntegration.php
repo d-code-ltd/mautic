@@ -119,10 +119,12 @@ class SenderEngineIntegration extends AbstractIntegration
         return 'lead';
     }
 
+    public static $bouncePointsFieldName = 'bounce_points';
+
     protected function getEnhancerFieldArray()
     {
         return [
-            'bounce_points' => [
+            self::$bouncePointsFieldName => [
                 'label' => 'Bounce points',
                 'type'  => 'number',
             ],

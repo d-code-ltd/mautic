@@ -17,6 +17,8 @@ use Mautic\NotificationBundle\Entity\Notification;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Mautic\LeadBundle\Entity\LeadEventLog;
+
 class BounceCallbackController extends CommonController
 {
     public function callbackAction(Request $request)
@@ -31,35 +33,63 @@ class BounceCallbackController extends CommonController
         if (!in_array('bounce_callback', $supportedFeatures)) {
             return;
         }
+        $featureSettings   = $settings->getFeatureSettings();
+
 
         $translator = $this->get('translator');
 
         $idHash = $this->request->get('idHash', '');
-        $status = $this->request->get('status', 0);
-        $error_message = $this->request->get('error_message', '');
+        $status = intval($this->request->get('status', 0));
+        $errorMessage = $this->request->get('error_message', '');
         
         if (!empty($status)){
             $emailModel = $this->getModel('email');
             $leadModel = $this->getModel('lead');
-            $stat  = $emailModel->getEmailStatus($idHash);
-
-            var_dump($stat);
+            $stat  = $emailModel->getEmailStatus($idHash);            
 
             if (!empty($stat)) {
                 if (!$stat->isFailed()){
-                    $email = $stat->getEmail();
-                    $lead = $stat->getLead();
-                    $leadModel->setCurrentLead($lead);
+                    if (isset($featureSettings["bounce{$status}_value"])){
+                        $email = $stat->getEmail();
+                        $lead = $stat->getLead();
+                        $leadModel->setCurrentLead($lead);
 
-                    var_dump($email, $lead);
+                        var_dump($integration::$bouncePointsFieldName);
 
-                    /* TODO: 
-                            $emailModel::processMailerCallback 
-                    */
+                        $prevBouncePoints = intval($lead->getFieldValue($integration::$bouncePointsFieldName));
+                        if (intval($featureSettings["bounce{$status}_value"]) > 0){
+                            $lead->addUpdatedField($integration::$bouncePointsFieldName, $prevBouncePoints+intval($featureSettings["bounce{$status}_value"]), $prevBouncePoints);
+                            $manipulator = $lead->getManipulator();
+                            var_dump($manipulator);
+/*
+                            $manipulationLog = new LeadEventLog();
+                            $manipulationLog->setLead($lead)
+                                ->setBundle($manipulator->getBundleName())
+                                ->setObject($manipulator->getObjectName())
+                                ->setObjectId($manipulator->getObjectId());
+                            if ($lead->isAnonymous()) {
+                                $manipulationLog->setAction('created_contact');
+                            } else {
+                                $manipulationLog->setAction('identified_contact');
+                            }
+                            $description = $manipulator->getObjectDescription();
+                            $manipulationLog->setProperties(['object_description' => $description]);
 
-                    //TODO if user reached threashold => DoNotContact / Unsubscribe
+                            $lead->addEventLog($manipulationLog);
+*/
+                        }
 
-                    //TODO Log bounce event
+                        
+                        /* TODO: 
+                                $emailModel::processMailerCallback 
+                        */
+
+                        //TODO if user reached threashold => DoNotContact / Unsubscribe
+
+                        //TODO Log bounce event
+                    }else{
+                        $message = $translator->trans('mautic.plugin.bounce_callback.status.unhandled');    
+                    }
                 }else{
                     $message = $translator->trans('mautic.plugin.bounce_callback.status.already_reported');    
                 }
