@@ -94,7 +94,7 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
         }
         $event->addTextHeader('X-SenderEngine-idHash', $event->getIdHash());
         
-        $callbackUrl   = $this->router->generate('mautic_notification_popup', ['idHash' => $event->getIdHash()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $callbackUrl   = $this->router->generate('mauticplugin.dcodesenderengin.route.bouncecallback', ['idHash' => $event->getIdHash()], UrlGeneratorInterface::ABSOLUTE_URL);
 
 
         $event->addTextHeader('X-SenderEngine-bounce-callback', $callbackUrl);
