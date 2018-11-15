@@ -34,6 +34,7 @@ class BounceCallbackController extends CommonController
 
         $translator = $this->get('translator');
 
+        $idHash = $this->request->get('idHash', '');
         $status = $this->request->get('status', 0);
         $error_message = $this->request->get('error_message', '');
         
@@ -194,7 +195,7 @@ class BounceCallbackController extends CommonController
 
         if (!empty($message)){
             return new JsonResponse([
-                'success' => true,
+                'success' => false,
                 'message'  => $message,                
             ]);
         }else{
