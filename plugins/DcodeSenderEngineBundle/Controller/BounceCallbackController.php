@@ -232,9 +232,7 @@ class BounceCallbackController extends CommonController
         }else{
             return new JsonResponse([
                 'success' => true,
-                'status'  => $status,
-                'leadId'  => $leadId,
-                'emailId' => $emailId
+                'status'  => $status,                
             ]);
         }
     }
