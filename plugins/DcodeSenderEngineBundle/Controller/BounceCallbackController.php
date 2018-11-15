@@ -61,6 +61,7 @@ class BounceCallbackController extends CommonController
                         if (intval($featureSettings["bounce{$status}_value"]) > 0){
                             $lead->addUpdatedField($integration::$bouncePointsFieldName, $prevBouncePoints+intval($featureSettings["bounce{$status}_value"]), $prevBouncePoints);
                             $manipulator = $lead->getManipulator();
+                            $leadModel->saveEntity($lead);
                             var_dump($manipulator);
 /*
                             $manipulationLog = new LeadEventLog();
