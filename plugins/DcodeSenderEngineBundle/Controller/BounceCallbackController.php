@@ -36,10 +36,8 @@ class BounceCallbackController extends CommonController
 
         $status = $this->request->get('status', 0);
         $error_message = $this->request->get('error_message', '');
-
-        var_dump($status);
-
-        if (empty($status)){
+        
+        if (!empty($status)){
             $emailModel = $this->getModel('email');
             $leadModel = $this->getModel('lead');
             $stat  = $emailModel->getEmailStatus($idHash);
