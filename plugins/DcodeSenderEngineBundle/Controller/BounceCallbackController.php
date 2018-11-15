@@ -25,7 +25,8 @@ class BounceCallbackController extends CommonController
     {
         $this->integrationHelper = $this->get('mautic.helper.integration');         
         $integration = $this->integrationHelper->getIntegrationObject('SenderEngine');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        $integrationSettings = $integration->getIntegrationSettings();
+        if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
         }
         
@@ -33,7 +34,7 @@ class BounceCallbackController extends CommonController
         if (!in_array('bounce_callback', $supportedFeatures)) {
             return;
         }
-        $featureSettings   = $settings->getFeatureSettings();
+        $featureSettings   = $integrationSettings->getFeatureSettings();
 
 
         $translator = $this->get('translator');
@@ -79,7 +80,7 @@ class BounceCallbackController extends CommonController
 */
                         }
 
-                        
+
                         /* TODO: 
                                 $emailModel::processMailerCallback 
                         */
