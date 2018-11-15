@@ -54,10 +54,10 @@ class BounceCallbackController extends CommonController
                         $email = $stat->getEmail();
                         $lead = $stat->getLead();
                         $leadModel->setCurrentLead($lead);
-
-                        var_dump($integration::$bouncePointsFieldName);
-
+                    
                         $prevBouncePoints = intval($lead->getFieldValue($integration::$bouncePointsFieldName));
+
+                        var_dump($prevBouncePoints, $status, $featureSettings["bounce{$status}_value"]);
                         if (intval($featureSettings["bounce{$status}_value"]) > 0){
                             $lead->addUpdatedField($integration::$bouncePointsFieldName, $prevBouncePoints+intval($featureSettings["bounce{$status}_value"]), $prevBouncePoints);
                             $manipulator = $lead->getManipulator();
