@@ -269,22 +269,24 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
     {
         $properties = json_decode($log['properties'], true);
 
-        switch ($properties['status']){
-            case 3:
-            case "3":
-                return 'fa-info-circle';
-            break;
+        if (!empty($properties['status'])){
+            switch ($properties['status']){
+                case 3:
+                case "3":
+                    return 'fa-info-circle';
+                break;
 
-            case 4:
-            case "4":
-                return 'fa-exclamation-triangle';
-            break;
+                case 4:
+                case "4":
+                    return 'fa-exclamation-triangle';
+                break;
 
-            case 5:
-            case "5":
-                return 'fa-exclamation-triangle';
-            break;        
-        }        
+                case 5:
+                case "5":
+                    return 'fa-exclamation-triangle';
+                break;        
+            }        
+        }
 
         if (!empty($properties['bounce_points']) && !empty($properties['threshold']) && $properties['bounce_points']>$properties['threshold']) {
             return "fa-times-circle";
