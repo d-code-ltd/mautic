@@ -82,8 +82,8 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
         }
 
         $this->addEvents($event, 'dcodesenderengine.bouncecallback.email_bounced', 'mautic.plugin.bounce_callback.timeline.bounce');        
-//        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_dnc', 'mautic.plugin.bounce_callback.timeline.lead.dnc');
-//        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_unsubscribed', 'mautic.plugin.bounce_callback.timeline.lead.unsubscribed');        
+        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_dnc', 'mautic.plugin.bounce_callback.timeline.lead.dnc');
+        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_unsubscribed', 'mautic.plugin.bounce_callback.timeline.lead.unsubscribed');        
     }
 
     /**
@@ -96,6 +96,14 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
         $eventTypeName = $this->translator->trans($eventTypeName);
         $event->addEventType($eventType, $eventTypeName);
      
+        /*
+        $citrixEvents = $this->model->getRepository()->getEventsForTimeline(
+                    [$product, $type],
+                    $event->getLeadId(),
+                    $event->getQueryOptions()
+                );
+         */
+
         if (!$event->isApplicable($eventType)) {
             return;
         }
@@ -135,6 +143,10 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
             'timestamp'       => $log['date_added'],
             'icon'            => $this->getIcon($log, $eventType),
             'contactId'       => $log['lead_id'],
+            'contentTemplate' => 'DcodeSenderEngineBundle:SubscribedEvents\Timeline:index.html.php',
+            'extra'      => [
+                'details' => $this->getDetails($log, $eventType)                
+            ],
         ];
     }
 
@@ -145,6 +157,48 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
      * @return string
      */
     private function getLabel(array $log, $eventType)
+    {
+        switch ($eventType){
+            case "dcodesenderengine.bouncecallback.email_bounced":
+                $properties = json_decode($log['properties'], true);
+                
+                switch ($properties['status']){
+                    case 3:
+                    case "3":
+                        return $this->translator->trans('mautic.plugin.bounce_callback.timeline.bounce.soft');
+                    break;
+
+                    case 4:
+                    case "4":
+                        return $this->translator->trans('mautic.plugin.bounce_callback.timeline.bounce.hard');
+                    break;
+
+                    case 5:
+                    case "5":
+                        return $this->translator->trans('mautic.plugin.bounce_callback.timeline.bounce.hard');
+                    break;
+                    default:
+                        return $this->translator->trans('mautic.plugin.bounce_callback.timeline.bounce');        
+                    break;        
+                }                                        
+            break;
+
+            case "dcodesenderengine.bouncecallback.lead_dnc":
+                return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.dnc');   
+            break;
+            case "dcodesenderengine.bouncecallback.lead_unsubscribed":
+                return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.unsubscribed');   
+            break;
+        }        
+    }
+
+    /**
+     * @param array $log
+     * @param       $eventType
+     *
+     * @return string
+     */
+    private function getDetails(array $log, $eventType)
     {
         switch ($eventType){
             case "dcodesenderengine.bouncecallback.email_bounced":
@@ -202,9 +256,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
                     return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.unsubscribed');   
                 }
             break;
-        }
-
-        
+        }        
     }
 
     /**

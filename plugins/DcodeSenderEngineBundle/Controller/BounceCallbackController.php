@@ -186,6 +186,97 @@ class BounceCallbackController extends CommonController
 
 
 
+/*
+/**
+     * @param Message $message
+     *
+     * @return bool
+     */
+    public function process(Message $message)
+    {
+        $this->message = $message;
+        $bounce        = false;
+
+        $this->logger->debug('MONITORED EMAIL: Processing message ID '.$this->message->id.' for a bounce');
+
+        // Does the transport have special handling such as Amazon SNS?
+        if ($this->transport instanceof BounceProcessorInterface) {
+            try {
+                $bounce = $this->transport->processBounce($this->message);
+            } catch (BounceNotFound $exception) {
+                // Attempt to parse a bounce the standard way
+            }
+        }
+
+        if (!$bounce) {
+            try {
+                $bounce = (new Parser($this->message))->parse();
+            } catch (BounceNotFound $exception) {
+                return false;
+            }
+        }
+
+        $searchResult = $this->contactFinder->find($bounce->getContactEmail(), $bounce->getBounceAddress());
+        if (!$contacts = $searchResult->getContacts()) {
+            // No contacts found so bail
+            return false;
+        }
+
+        $stat    = $searchResult->getStat();
+        $channel = 'email';
+        if ($stat) {
+            // Update stat entry
+            $this->updateStat($stat, $bounce);
+
+            if ($stat->getEmail() instanceof Email) {
+                // We know the email ID so set it to append to the the DNC record
+                $channel = ['email' => $stat->getEmail()->getId()];
+            }
+        }
+
+        $comments = $this->translator->trans('mautic.email.bounce.reason.'.$bounce->getRuleCategory());
+        foreach ($contacts as $contact) {
+            $this->leadModel->addDncForLead($contact, $channel, $comments);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param Stat         $stat
+     * @param BouncedEmail $bouncedEmail
+     */
+    protected function updateStat(Stat $stat, BouncedEmail $bouncedEmail)
+    {
+        $dtHelper    = new DateTimeHelper();
+        $openDetails = $stat->getOpenDetails();
+
+        if (!isset($openDetails['bounces'])) {
+            $openDetails['bounces'] = [];
+        }
+
+        $openDetails['bounces'][] = [
+            'datetime' => $dtHelper->toUtcString(),
+            'reason'   => $bouncedEmail->getRuleCategory(),
+            'code'     => $bouncedEmail->getRuleNumber(),
+            'type'     => $bouncedEmail->getType(),
+        ];
+
+        $stat->setOpenDetails($openDetails);
+
+        $retryCount = $stat->getRetryCount();
+        ++$retryCount;
+        $stat->setRetryCount($retryCount);
+
+        if ($fail = $bouncedEmail->isFinal() || $retryCount >= 5) {
+            $stat->setIsFailed(true);
+        }
+
+        $this->statRepository->saveEntity($stat);
+    }
+ */
+
+
 
 
 
