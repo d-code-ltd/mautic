@@ -56,7 +56,7 @@ return [
                 ],
             ],        
         ],
-        'others' => [
+        'other' => [
             'mauticplugin.dcodesenderengine.bounceprocessor' => [
                 'class'     => \MauticPlugin\DcodeSenderEngineBundle\BounceCallback\Processor\Bounce::class,
                 'arguments' => [                    
