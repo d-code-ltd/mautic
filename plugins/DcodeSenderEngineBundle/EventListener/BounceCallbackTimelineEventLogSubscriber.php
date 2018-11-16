@@ -51,7 +51,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
         IntegrationHelper $integrationHelper
     ) {
         $this->translator             = $translator;
-        $this->leadEventLogRepository = $leadEventLogRepository;
+        $this->leadEventLogRepository = $LeadEventLogRepository;
         $this->integrationHelper      = $integrationHelper;      
     } 
 

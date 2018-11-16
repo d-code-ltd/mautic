@@ -34,7 +34,7 @@ return [
                 'class'     => \MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackTimelineEventLogSubscriber::class,
                 'arguments' => [
                     'translator',
-                    'mautic.lead.repository.lead_event_log',
+                    'mmauticplugin.dcodesenderengine.repository.lead_event_log',
                     'mautic.helper.integration',                    
                 ],
             ],
@@ -46,7 +46,16 @@ return [
                 'arguments' => [
                 ],
         	]
-    	],        
+    	],
+        'repositories' => [
+            'mauticplugin.dcodesenderengine.repository.lead_event_log' => [
+                'class'     => Doctrine\ORM\EntityRepository::class,
+                'factory'   => ['@doctrine.orm.entity_manager', 'getRepository'],
+                'arguments' => [
+                    \Mautic\LeadBundle\Entity\LeadEventLog::class,
+                ],
+            ],        
+        ],
     ],    
     'routes' => [        
         'public' => [
