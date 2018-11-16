@@ -34,7 +34,7 @@ return [
                 'class'     => \MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackTimelineEventLogSubscriber::class,
                 'arguments' => [
                     'translator',
-                    'mmauticplugin.dcodesenderengine.repository.lead_event_log',
+                    'mauticplugin.dcodesenderengine.repository.lead_event_log',
                     'mautic.helper.integration',                    
                 ],
             ],
