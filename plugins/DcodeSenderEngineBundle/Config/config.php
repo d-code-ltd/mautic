@@ -56,6 +56,17 @@ return [
                 ],
             ],        
         ],
+        'others' => [
+            'mauticplugin.dcodesenderengine.bounceprocessor' => [
+                'class'     => \MauticPlugin\DcodeSenderEngineBundle\BounceCallback\Processor\Bounce::class,
+                'arguments' => [                    
+                    'mautic.email.repository.stat',
+                    'mautic.lead.model.lead',
+                    'translator',
+                    'monolog.logger.mautic',
+                ],
+            ],
+        ]
     ],    
     'routes' => [        
         'public' => [
