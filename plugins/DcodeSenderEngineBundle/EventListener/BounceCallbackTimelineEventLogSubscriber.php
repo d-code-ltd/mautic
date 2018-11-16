@@ -33,6 +33,11 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
      */
     private $leadEventLogRepository;
 
+     /**
+     * @var integrationHelper
+     */
+    private $integrationHelper;
+
     /**
      * TimelineEventLogSubscriber constructor.
      *
@@ -90,9 +95,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
     {
         $eventTypeName = $this->translator->trans($eventTypeName);
         $event->addEventType($eventType, $eventTypeName);
-
-        var_dump($event->getEventFilters(), $eventTypeName);
-
+     
         if (!$event->isApplicable($eventType)) {
             return;
         }
