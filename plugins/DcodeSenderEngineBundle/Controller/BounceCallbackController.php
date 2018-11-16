@@ -186,12 +186,13 @@ class BounceCallbackController extends CommonController
 
 
 
+
+
+
+
+
 /*
-/**
-     * @param Message $message
-     *
-     * @return bool
-     */
+
     public function process(Message $message)
     {
         $this->message = $message;
@@ -242,10 +243,7 @@ class BounceCallbackController extends CommonController
         return true;
     }
 
-    /**
-     * @param Stat         $stat
-     * @param BouncedEmail $bouncedEmail
-     */
+    
     protected function updateStat(Stat $stat, BouncedEmail $bouncedEmail)
     {
         $dtHelper    = new DateTimeHelper();
@@ -275,6 +273,10 @@ class BounceCallbackController extends CommonController
         $this->statRepository->saveEntity($stat);
     }
  */
+
+
+
+
 
 
 
