@@ -47,13 +47,12 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
      */
     public function __construct(
         TranslatorInterface $translator,
-        LeadEventLogRepository $LeadEventLogRepository//,
-//        IntegrationHelper $integrationHelper
+        LeadEventLogRepository $LeadEventLogRepository,
+        IntegrationHelper $integrationHelper
     ) {
         $this->translator             = $translator;
         $this->leadEventLogRepository = $leadEventLogRepository;
-        //$this->integrationHelper      = $integrationHelper;
-      
+        $this->integrationHelper      = $integrationHelper;      
     } 
 
     /**
@@ -71,7 +70,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
      */
     public function onTimelineGenerate(LeadTimelineEvent $event)
     {        
- /*       $integration = $this->integrationHelper->getIntegrationObject('SenderEngine');
+        $integration = $this->integrationHelper->getIntegrationObject('SenderEngine');
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
@@ -81,10 +80,10 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
         if (!in_array('bounce_callback', $supportedFeatures)) {
             return;
         }
-*/
+
         $this->addEvents($event, 'dcodesenderengine.bouncecallback.email_bounced', 'mautic.plugin.bounce_callback.timeline.bounce');        
-        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_dnc', 'mautic.plugin.bounce_callback.timeline.lead.dnc');
-        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_unsubscribed', 'mautic.plugin.bounce_callback.timeline.lead.unsubscribed');        
+//        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_dnc', 'mautic.plugin.bounce_callback.timeline.lead.dnc');
+//        $this->addEvents($event, 'dcodesenderengine.bouncecallback.lead_unsubscribed', 'mautic.plugin.bounce_callback.timeline.lead.unsubscribed');        
     }
 
     /**
