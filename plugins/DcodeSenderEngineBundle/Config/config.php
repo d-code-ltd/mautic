@@ -31,13 +31,14 @@ return [
                 ],
             ],
             'mauticplugin.dcodesenderengine.bouncecallback.timeline_events.subscriber' => [
-                'class'     => '\MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackTimelineEventLogSubscriber',
+                'class'     => \MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackTimelineEventLogSubscriber::class,
                 'arguments' => [
                     'translator',
                     'mautic.lead.repository.lead_event_log',
-                    'mautic.helper.integration',                    
+                    //'mautic.helper.integration',                    
                 ],
-            ],  
+            ],
+            
         ],
         'integrations' => [
             'mauticplugin.dcodesenderengine.integration.dcodesenderengine' => [

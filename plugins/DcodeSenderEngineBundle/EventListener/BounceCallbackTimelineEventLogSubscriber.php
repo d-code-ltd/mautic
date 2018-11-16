@@ -47,12 +47,13 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
      */
     public function __construct(
         TranslatorInterface $translator,
-        LeadEventLogRepository $LeadEventLogRepository,
-        IntegrationHelper $integrationHelper
+        LeadEventLogRepository $LeadEventLogRepository//,
+//        IntegrationHelper $integrationHelper
     ) {
         $this->translator             = $translator;
         $this->leadEventLogRepository = $leadEventLogRepository;
-        $this->integrationHelper      = $integrationHelper;
+        //$this->integrationHelper      = $integrationHelper;
+        $this->integrationHelper = $this->get('mautic.helper.integration');   
     } 
 
     /**
