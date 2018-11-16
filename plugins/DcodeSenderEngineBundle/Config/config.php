@@ -29,6 +29,14 @@ return [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
+            ],
+            'mauticplugin.dcodesenderengine.bouncecallback.timeline_events.subscriber' => [
+                'class'     => \MauticPlugin\DcodeSenderEngineBundle\EventListener\BounceCallbackTimelineEventLogSubscriber::class,
+                'arguments' => [
+                    'translator',
+                    'mautic.lead.repository.lead_event_log',
+                    'mautic.helper.integration',                    
+                ],
             ],  
         ],
         'integrations' => [
