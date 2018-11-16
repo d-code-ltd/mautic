@@ -35,7 +35,7 @@ return [
                 'arguments' => [
                     'translator',
                     'mautic.lead.repository.lead_event_log',
-                    //'mautic.helper.integration',                    
+                    'mautic.helper.integration',                    
                 ],
             ],
             
