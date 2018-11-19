@@ -128,7 +128,7 @@ class Bounce
         $leadModel->saveEntity($lead);
         
         
-        $bounceProcessor->updateStat($stat, $status, $errorMessage);
+        $this->updateStat($stat, $status, $errorMessage);
 
         if ($bouncePointThreshold > 0 && $newBouncePoints >= $bouncePointThreshold) {                            
             $emailModel->setDoNotContact($stat, $translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
@@ -159,8 +159,7 @@ class Bounce
      * @param Stat         $stat
      * @param int $status
      */
-    //protected
-    public function updateStat(Stat $stat, $status, $errorMessage)
+    protected function updateStat(Stat $stat, $status, $errorMessage)
     {
         $dtHelper    = new DateTimeHelper();
         $openDetails = $stat->getOpenDetails();
