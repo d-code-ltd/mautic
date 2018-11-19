@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace \MauticPlugin\DcodeSenderEngineBundle\BounceCallback\Processor;
+namespace MauticPlugin\DcodeSenderEngineBundle\BounceCallback\Processor;
 
 use Mautic\CoreBundle\Helper\DateTimeHelper;
 use Mautic\EmailBundle\Entity\Email;
