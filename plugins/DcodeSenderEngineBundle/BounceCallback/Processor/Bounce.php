@@ -24,6 +24,7 @@ use Mautic\EmailBundle\Swiftmailer\Transport\BounceProcessorInterface;
 use Mautic\LeadBundle\Model\LeadModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Mautic\EmailBundle\MonitoredEmail\Processor\ProcessorInterface;
 
 class Bounce implements ProcessorInterface
 {  
