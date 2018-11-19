@@ -131,7 +131,7 @@ class Bounce
         $this->updateStat($stat, $status, $errorMessage);
 
         if ($bouncePointThreshold > 0 && $newBouncePoints >= $bouncePointThreshold) {                            
-            $emailModel->setDoNotContact($stat, $translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
+            $emailModel->setDoNotContact($stat, $this->translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
                 '%threshold%' => $bouncePointThreshold,                                
                 '%error_message%' => $errorMessage,                                
             ]), DoNotContact::BOUNCED);
