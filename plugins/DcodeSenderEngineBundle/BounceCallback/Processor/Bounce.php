@@ -139,10 +139,10 @@ class Bounce
             $manipulationLog = new LeadEventLog();
             $manipulationLog->setLead($lead);
 
-            $manipulationLog->setAction('lead_unsubscribed');
+            $manipulationLog->setAction('lead_dnc');
             $manipulationLog->setProperties([
-                'threashold' => $status,                                    
-                'bounce_points' => $addBouncePoints
+                'threshold' => $status,                                    
+                'bounce_points' => $newBouncePoints
             ]);
 
             $lead->addEventLog($manipulationLog);

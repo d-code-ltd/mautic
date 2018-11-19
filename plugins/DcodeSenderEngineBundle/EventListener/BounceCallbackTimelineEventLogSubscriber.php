@@ -186,9 +186,11 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
             case "dcodesenderengine.bouncecallback.lead_dnc":
                 return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.dnc');   
             break;
+            /*
             case "dcodesenderengine.bouncecallback.lead_unsubscribed":
                 return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.unsubscribed');   
             break;
+            */
         }        
     }
 
@@ -242,6 +244,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
                     return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.dnc');   
                 }
             break;
+            /*
             case "dcodesenderengine.bouncecallback.lead_unsubscribed":
                 $properties = json_decode($log['properties'], true);
                 if (!empty($properties['bounce_points']) && !empty($properties['threshold'])) {
@@ -256,6 +259,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
                     return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.unsubscribed');   
                 }
             break;
+            */
         }        
     }
 

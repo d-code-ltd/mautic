@@ -56,15 +56,8 @@ class BounceCallbackController extends CommonController
                         $lead = $stat->getLead();
                         $leadModel->setCurrentLead($lead);
                     
-
                         $bounceProcessor = $this->get('mauticplugin.dcodesenderengine.bounceprocessor');
                         $bounceProcessor->process($idHash, $stat, $status, $errorMessage, $lead, $leadModel, $email, $emailModel, $integration);
-
-                        
-                        
-                        
-                        
-                                 
                     }else{
                         $message = $translator->trans('mautic.plugin.bounce_callback.status.unhandled');    
                     }
