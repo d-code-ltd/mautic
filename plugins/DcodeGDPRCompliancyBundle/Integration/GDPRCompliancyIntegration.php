@@ -26,7 +26,7 @@ use Mautic\LeadBundle\Entity\LeadField;
 /**
  * Class WhiteLabelIntegration.
  */
-class SenderEngineIntegration extends AbstractIntegration
+class GDPRCompliancyIntegration extends AbstractIntegration
 { 
     /**
      * @var bool
