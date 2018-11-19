@@ -26,6 +26,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\EmailBundle\MonitoredEmail\Processor\ProcessorInterface;
 
+use Mautic\LeadBundle\Entity\LeadEventLog;
+use Mautic\LeadBundle\Entity\DoNotContact;
+
 class Bounce implements ProcessorInterface
 {  
     /**
@@ -83,52 +86,71 @@ class Bounce implements ProcessorInterface
      *
      * @return bool
      */
-    public function process(Message $message)
+    public function process($idHash, $stat, $status, $errorMessage, $lead, $leadModel, $email, $emailModel, $integration)
     {
-        $this->message = $message;
-        $bounce        = false;
+        $integrationSettings = $integration->getIntegrationSettings();
+        $featureSettings   = $integrationSettings->getFeatureSettings();        
 
-        $this->logger->debug('MONITORED EMAIL: Processing message ID '.$this->message->id.' for a bounce');
+        $this->logger->debug('SenderEngine BounceCallback: Processing idHash '.idHash.' for bounce. Status: '.$status);
 
-        // Does the transport have special handling such as Amazon SNS?
-        if ($this->transport instanceof BounceProcessorInterface) {
-            try {
-                $bounce = $this->transport->processBounce($this->message);
-            } catch (BounceNotFound $exception) {
-                // Attempt to parse a bounce the standard way
-            }
+        $prevBouncePoints = intval($lead->getFieldValue($integration::$bouncePointsFieldName));
+        $addBouncePoints = intval($featureSettings["bounce{$status}_value"]);
+        $newBouncePoints = $prevBouncePoints+$addBouncePoints;
+        $bouncePointThreshold = intval($featureSettings["bounce_threshold"]);
+
+        if ($addBouncePoints > 0){
+            $lead->addUpdatedField($integration::$bouncePointsFieldName, $newBouncePoints, $prevBouncePoints);
+            $this->logger->debug('SenderEngine BounceCallback: added '.$addBouncePoints.' bounce poiints to contact');
         }
 
-        if (!$bounce) {
-            try {
-                $bounce = (new Parser($this->message))->parse();
-            } catch (BounceNotFound $exception) {
-                return false;
-            }
-        }
 
-        $searchResult = $this->contactFinder->find($bounce->getContactEmail(), $bounce->getBounceAddress());
-        if (!$contacts = $searchResult->getContacts()) {
-            // No contacts found so bail
-            return false;
-        }
+        $manipulator = $lead->getManipulator();
 
-        $stat    = $searchResult->getStat();
-        $channel = 'email';
-        if ($stat) {
-            // Update stat entry
-            $this->updateStat($stat, $bounce);
-
-            if ($stat->getEmail() instanceof Email) {
-                // We know the email ID so set it to append to the the DNC record
-                $channel = ['email' => $stat->getEmail()->getId()];
-            }
+        $manipulationLog = new LeadEventLog();
+        $manipulationLog->setLead($lead);
+        
+        if (!empty($manipulator)){
+            $manipulationLog->setBundle($manipulator->getBundleName())
+            ->setObject($manipulator->getObjectName())
+            ->setObjectId($manipulator->getObjectId());
+        }else{
+            //Test whether bundle, object and objectId has any affect
         }
+        
+        $manipulationLog->setAction('email_bounced');
+        $manipulationLog->setProperties([
+            'status' => $status,
+            'error_message' => $errorMessage,
+            'bounce_points' => intval($featureSettings["bounce{$status}_value"])
+        ]);
 
-        $comments = $this->translator->trans('mautic.email.bounce.reason.'.$bounce->getRuleCategory());
-        foreach ($contacts as $contact) {
-            $this->leadModel->addDncForLead($contact, $channel, $comments);
-        }
+        $lead->addEventLog($manipulationLog);
+        $leadModel->saveEntity($lead);
+        
+        
+        $bounceProcessor->updateStat($stat, $status, $errorMessage);
+
+        if ($bouncePointThreshold > 0 && $newBouncePoints >= $bouncePointThreshold) {                            
+            $emailModel->setDoNotContact($stat, $translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
+                '%threshold%' => $bouncePointThreshold,                                
+                '%error_message%' => $errorMessage,                                
+            ]), DoNotContact::BOUNCED);
+
+            $manipulationLog = new LeadEventLog();
+            $manipulationLog->setLead($lead);
+
+            $manipulationLog->setAction('lead_unsubscribed');
+            $manipulationLog->setProperties([
+                'threashold' => $status,                                    
+                'bounce_points' => $addBouncePoints
+            ]);
+
+            $lead->addEventLog($manipulationLog);
+            $leadModel->saveEntity($lead);
+
+
+            $this->logger->debug('SenderEngine BounceCallback: put lead on DNC');
+        }       
 
         return true;
     }

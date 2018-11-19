@@ -56,79 +56,15 @@ class BounceCallbackController extends CommonController
                         $lead = $stat->getLead();
                         $leadModel->setCurrentLead($lead);
                     
-                        $prevBouncePoints = intval($lead->getFieldValue($integration::$bouncePointsFieldName));
-                        $addBouncePoints = intval($featureSettings["bounce{$status}_value"]);
-                        $newBouncePoints = $prevBouncePoints+$addBouncePoints;
-                        $bouncePointThreshold = intval($featureSettings["bounce_threshold"]);
-                        
-                        if ($addBouncePoints > 0){
-                            $lead->addUpdatedField($integration::$bouncePointsFieldName, $newBouncePoints, $prevBouncePoints);
-                        }
 
-                        $manipulator = $lead->getManipulator();
-
-                        $manipulationLog = new LeadEventLog();
-                        $manipulationLog->setLead($lead);
-                        
-                        if (!empty($manipulator)){
-                            $manipulationLog->setBundle($manipulator->getBundleName())
-                            ->setObject($manipulator->getObjectName())
-                            ->setObjectId($manipulator->getObjectId());
-                        }else{
-                            //Test whether bundle, object and objectId has any affect
-                        }
-                        
-                        $manipulationLog->setAction('email_bounced');
-                        $manipulationLog->setProperties([
-                            'status' => $status,
-                            'error_message' => $errorMessage,
-                            'bounce_points' => intval($featureSettings["bounce{$status}_value"])
-                        ]);
-
-                        $lead->addEventLog($manipulationLog);
-                        $leadModel->saveEntity($lead);
-                        
                         $bounceProcessor = $this->get('mauticplugin.dcodesenderengine.bounceprocessor');
-                        $bounceProcessor->updateStat($stat, $status, $errorMessage);
+                        $bounceProcessor->process($idHash, $stat, $status, $errorMessage, $lead, $leadModel, $email, $emailModel, $integration);
 
-                        if ($bouncePointThreshold > 0 && $newBouncePoints >= $bouncePointThreshold) {
-                            if ($featureSettings["bounce_unsubscribe"]){
-                                $emailModel->setDoNotContact($stat, $translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
-                                    '%threshold%' => $bouncePointThreshold,                                
-                                    '%error_message%' => $errorMessage,                                
-                                ]), DoNotContact::BOUNCED);
-
-                                $manipulationLog = new LeadEventLog();
-                                $manipulationLog->setLead($lead);
-
-                                $manipulationLog->setAction('lead_unsubscribed');
-                                $manipulationLog->setProperties([
-                                    'threashold' => $status,                                    
-                                    'bounce_points' => $addBouncePoints
-                                ]);
-
-                                $lead->addEventLog($manipulationLog);
-                                $leadModel->saveEntity($lead);
-
-                            }else{
-                                $emailModel->setDoNotContact($stat, $translator->trans('mautic.plugin.bounce_callback.status.bounce_threshold_reached', [
-                                    '%threshold%' => $bouncePointThreshold,                                
-                                    '%error_message%' => $errorMessage,                                
-                                ]), DoNotContact::BOUNCED);
-
-                                $manipulationLog = new LeadEventLog();
-                                $manipulationLog->setLead($lead);
-
-                                $manipulationLog->setAction('lead_dnc');
-                                $manipulationLog->setProperties([
-                                    '%threshold%' => $bouncePointThreshold,                                
-                                    '%error_message%' => $errorMessage,   
-                                ]);
-
-                                $lead->addEventLog($manipulationLog);
-                                $leadModel->saveEntity($lead);
-                            }  
-                        }                
+                        
+                        
+                        
+                        
+                                 
                     }else{
                         $message = $translator->trans('mautic.plugin.bounce_callback.status.unhandled');    
                     }

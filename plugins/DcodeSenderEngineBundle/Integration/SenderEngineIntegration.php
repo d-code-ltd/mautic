@@ -313,20 +313,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'empty_data' => '100'
                 ]
             );
-            
-            $builder->add(
-                'bounce_unsubscribe',
-                CheckboxType::class,
-                [
-                    'label' => 'mautic.plugin.integration.form.features.bounce_callback.bounce_unsubscribe',
-                    'attr'  => [
-                        'class'        => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_unsubscribe',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                    ],
-                    'required' => false,
-                ]
-            );
+                
             
 /*            
             $builder->add(
