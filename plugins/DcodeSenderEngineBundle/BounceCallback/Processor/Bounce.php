@@ -137,7 +137,8 @@ class Bounce implements ProcessorInterface
      * @param Stat         $stat
      * @param int $status
      */
-    protected function updateStat(Stat $stat, $status, $errorMessage)
+    //protected
+    public function updateStat(Stat $stat, $status, $errorMessage)
     {
         $dtHelper    = new DateTimeHelper();
         $openDetails = $stat->getOpenDetails();
