@@ -51,7 +51,7 @@ return [
         ],
         'integrations' => [
             'mauticplugin.dcodegdprcompliancy.integration.dcodesenderengine' => [
-                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\DPRCompliancyIntegration::class,
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\GDPRCompliancyIntegration::class,
                 'arguments' => [
                 ],
         	]
