@@ -99,6 +99,6 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
 
         $event->addTextHeader('X-SenderEngine-bounce-callback', $callbackUrl);
 
-        $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin added X-mailengine-bounce-callback to {$returnPath}");        
+        $this->logger->addDebug("EMAIL: DcodeSenderEngine plugin added X-mailengine-bounce-callback to {$callbackUrl}");        
     }
 }
