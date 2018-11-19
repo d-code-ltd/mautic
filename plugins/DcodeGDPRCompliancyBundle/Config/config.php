@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'        => 'GDPR-compliancy',
+    'name'        => 'GDPR compliancy',
     'description' => 'Enables Mautic to operate with GDPR compliancy',
     'author'      => 'peter.osvath@d-code.hu',
     'version'     => '1.0.0',

@@ -40,7 +40,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'SenderEngine';
+        return 'GDPRCompliancy';
     }
 
      /**
@@ -48,7 +48,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
      */
     public function getDisplayName()
     {
-        return 'SenderEngine';
+        return 'GDPR Compliancy';
     }
 
     public function getIcon()
