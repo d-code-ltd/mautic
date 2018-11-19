@@ -29,7 +29,7 @@ use Mautic\EmailBundle\MonitoredEmail\Processor\ProcessorInterface;
 use Mautic\LeadBundle\Entity\LeadEventLog;
 use Mautic\LeadBundle\Entity\DoNotContact;
 
-class Bounce implements ProcessorInterface
+class Bounce
 {  
     /**
      * @var StatRepository
