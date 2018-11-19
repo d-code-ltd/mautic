@@ -91,7 +91,7 @@ class Bounce
         $integrationSettings = $integration->getIntegrationSettings();
         $featureSettings   = $integrationSettings->getFeatureSettings();        
 
-        $this->logger->debug('SenderEngine BounceCallback: Processing idHash '.idHash.' for bounce. Status: '.$status);
+        $this->logger->debug('SenderEngine BounceCallback: Processing idHash '.$idHash.' for bounce. Status: '.$status);
 
         $prevBouncePoints = intval($lead->getFieldValue($integration::$bouncePointsFieldName));
         $addBouncePoints = intval($featureSettings["bounce{$status}_value"]);
