@@ -46,7 +46,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
         $newStatus = $event->getNewStatus();
 
         if ($newStatus == DoNotContact::BOUNCED){
-            var_dump($newStatus);
+            var_dump($lead->fields);
         }    
     }
 }
