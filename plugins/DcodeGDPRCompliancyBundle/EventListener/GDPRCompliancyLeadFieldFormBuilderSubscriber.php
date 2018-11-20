@@ -16,7 +16,8 @@ use Mautic\LeadBundle\Event\ChannelSubscriptionChange;
 use Mautic\LeadBundle\Event\LeadEvent;
 use Mautic\CoreBundle\Event\CustomFormEvent;
 use Mautic\LeadBundle\LeadEvents;
-use Mautic\LeadBundle\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Mautic\CoreBundle\CoreEvents;
 
 
