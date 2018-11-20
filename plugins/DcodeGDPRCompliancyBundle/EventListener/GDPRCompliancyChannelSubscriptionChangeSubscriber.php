@@ -27,17 +27,17 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
     /**
      * @var TranslatorInterface|Translator
      */
-    private $translator;
+    public $translator;
 
     /**
      * @var LeadEventLogRepository
      */
-    private $leadEventLogRepository;
+    protected $leadEventLogRepository;
 
      /**
      * @var integrationHelper
      */
-    private $integrationHelper;
+    protected $integrationHelper;
 
     /**
      * TimelineEventLogSubscriber constructor.
