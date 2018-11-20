@@ -117,6 +117,7 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
                     'empty_value' => false,
                     'required'    => false,
                     'disabled'    => false,
+                    "mapped"      => false,
                     'data'        => 'core' 
                 ]
             );
