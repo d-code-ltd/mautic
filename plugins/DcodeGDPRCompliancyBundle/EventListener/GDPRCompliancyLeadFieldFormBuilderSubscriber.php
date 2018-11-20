@@ -85,7 +85,7 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
             return;
         }
 
-        $formModifier = function (FormEvent $event) use ($listChoices, $type) {
+        $formModifier = function (FormEvent $event) {
             $cleaningRules = [];
             $form          = $event->getForm();
             $data          = $event->getData();
