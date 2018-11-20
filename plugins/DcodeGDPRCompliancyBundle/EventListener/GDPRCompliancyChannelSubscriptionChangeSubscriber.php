@@ -17,7 +17,12 @@ use Mautic\LeadBundle\Event\LeadEvent;
 use Mautic\LeadBundle\Event\PointsChangeEvent;
 use Mautic\LeadBundle\LeadEvents;
 
+
 use Mautic\LeadBundle\Entity\DoNotContact;
+use Mautic\CoreBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
+use Mautic\LeadBundle\Entity\LeadEventLogRepository;
 
 /**
  * Class WebhookSubscriber.
