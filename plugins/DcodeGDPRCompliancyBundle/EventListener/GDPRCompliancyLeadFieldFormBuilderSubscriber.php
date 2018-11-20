@@ -86,7 +86,7 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
             return;
         }
 
-        $formModifier = function (FormEvent $event) {
+        $formPrepare = function (FormEvent $event) {
             $cleaningRules = [];
             $form          = $event->getForm();
             $data          = $event->getData();
@@ -98,38 +98,51 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
             }
 
             $form->add(
-                'mygroup',
+                'field_gdpr_behaviour',
                 'choice',
                 [
                     'choices' => [
-                        'core'         => 'mautic.lead.field.group.core',
-                        'social'       => 'mautic.lead.field.group.social',
-                        'personal'     => 'mautic.lead.field.group.personal',
-                        'professional' => 'mautic.lead.field.group.professional',
+                        'keep'         => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.keep',
+                        'remove'       => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.remove',
+                        'hash'     => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.hash',                        
                     ],
                     'attr' => [
                         'class'   => 'form-control',
-                        'tooltip' => 'mautic.lead.field.form.group.help',
+                        'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.toolip',
                     ],
                     'expanded'    => false,
                     'multiple'    => false,
-                    'label'       => 'mautic.lead.field.group',
+                    'label'       => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle',
                     'empty_value' => false,
                     'required'    => false,
                     'disabled'    => false,
                     "mapped"      => false,
-                    'data'        => 'core' 
+                    'data'        => !empty($properties['field_gdpr_behaviour'])?$properties['field_gdpr_behaviour']:'keep'
                 ]
             );
         };    
 
+
+
+
         if ($event->getFormName() == 'leadfield'){
             $event->getFormBuilder()->addEventListener(
                 FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) use ($formModifier) {
-                    $formModifier($event);
+                function (FormEvent $event) use ($formPrepare) {
+                    $formPrepare($event);
                 }
             );
-        }        
+        }
+
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event){
+                $data          = $event->getData();
+                
+                $data['properties']['field_gdpr_behaviour'] = $data['field_gdpr_behaviour'];
+
+                $event->setData($data);
+            }
+        );        
     }
 }
