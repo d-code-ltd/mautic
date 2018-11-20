@@ -16,6 +16,7 @@ use Mautic\LeadBundle\Event\ChannelSubscriptionChange;
 use Mautic\LeadBundle\Event\LeadEvent;
 use Mautic\CoreBundle\Event\CustomFormEvent;
 use Mautic\LeadBundle\LeadEvents;
+use Mautic\LeadBundle\FormEvents;
 use Mautic\CoreBundle\CoreEvents;
 
 
@@ -84,8 +85,18 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
             return;
         }
 
-        if ($event->getFormName() == 'leadfield'){
-            $event->getFormBuilder()->add(
+        $formModifier = function (FormEvent $event) use ($listChoices, $type) {
+            $cleaningRules = [];
+            $form          = $event->getForm();
+            $data          = $event->getData();
+
+            if (is_array($data)) {
+                $properties = isset($data['properties']) ? $data['properties'] : [];
+            } else {
+                $properties = $data->getProperties();
+            }
+
+            $form->add(
                 'mygroup',
                 'choice',
                 [
@@ -105,7 +116,17 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
                     'empty_value' => false,
                     'required'    => false,
                     'disabled'    => false,
+                    'data'        => 'core' 
                 ]
+            );
+        };    
+
+        if ($event->getFormName() == 'leadfield'){
+            $event->getFormBuilder()->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) use ($formModifier) {
+                    $formModifier($event);
+                }
             );
         }        
     }
