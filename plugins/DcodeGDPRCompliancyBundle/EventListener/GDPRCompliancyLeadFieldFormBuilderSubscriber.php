@@ -132,17 +132,19 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
                     $formPrepare($event);
                 }
             );
+
+            $event->getFormBuilder()->addEventListener(
+                FormEvents::PRE_SUBMIT,
+                function (FormEvent $event){
+                    $data          = $event->getData();
+                    
+                    $data['properties']['field_gdpr_behaviour'] = $data['field_gdpr_behaviour'];
+
+                    $event->setData($data);
+                }
+            ); 
         }
 
-        $builder->addEventListener(
-            FormEvents::PRE_SUBMIT,
-            function (FormEvent $event){
-                $data          = $event->getData();
-                
-                $data['properties']['field_gdpr_behaviour'] = $data['field_gdpr_behaviour'];
 
-                $event->setData($data);
-            }
-        );        
     }
 }
