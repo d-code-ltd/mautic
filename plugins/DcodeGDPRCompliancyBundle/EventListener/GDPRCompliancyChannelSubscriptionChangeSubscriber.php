@@ -24,7 +24,38 @@ use Mautic\LeadBundle\Entity\DoNotContact;
  */
 class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
 {
-    use WebhookModelTrait;
+    /**
+     * @var TranslatorInterface|Translator
+     */
+    private $translator;
+
+    /**
+     * @var LeadEventLogRepository
+     */
+    private $leadEventLogRepository;
+
+     /**
+     * @var integrationHelper
+     */
+    private $integrationHelper;
+
+    /**
+     * TimelineEventLogSubscriber constructor.
+     *
+     * @param TranslatorInterface    $translator
+     * @param ModelFactory           $modelFactory
+     * @param LeadEventLogRepository $leadEventLogRepository
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        LeadEventLogRepository $LeadEventLogRepository,
+        IntegrationHelper $integrationHelper
+    ) {
+        $this->translator             = $translator;
+        $this->leadEventLogRepository = $LeadEventLogRepository;
+        $this->integrationHelper      = $integrationHelper;      
+    }     
+
 
     /**
      * @return array
@@ -46,7 +77,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
         $newStatus = $event->getNewStatus();
 
         var_dump($lead->fields);
-        
+
         if ($newStatus == DoNotContact::BOUNCED){
             var_dump($lead->fields);
         }    

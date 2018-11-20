@@ -26,20 +26,23 @@ return [
             ],
             */
            /*
-            'mauticplugin.dcodegdprcompliancy.bouncecallback.pluginsave.subscriber' => [
+            'mauticplugin.dcodegdprcompliancy.pluginsave.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\PluginSubscriber',
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
-            ],
+            ],  
             */
-           
-
-           //+ onUserDNCsubscriber
-
-           
-            'mauticplugin.dcodegdprcompliancy.bouncecallback.timeline_events.subscriber' => [
+            'mauticplugin.dcodegdprcompliancy.ondonotcontact.channelsubscriptionchange.subscriber' => [
+                'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyChannelSubscriptionChangeSubscriber',
+                'arguments' => [
+                    'translator',
+                    'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
+                    'mautic.helper.integration',
+                ],
+            ],  
+            'mauticplugin.dcodegdprcompliancy.timeline_events.subscriber' => [
                 'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyTimelineEventLogSubscriber::class,
                 'arguments' => [
                     'translator',
