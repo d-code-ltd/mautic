@@ -104,7 +104,7 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
                     'label'       => 'mautic.lead.field.group',
                     'empty_value' => false,
                     'required'    => false,
-                    'disabled'    => $disabled,
+                    'disabled'    => false,
                 ]
             );
         }        
