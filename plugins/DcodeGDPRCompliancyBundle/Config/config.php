@@ -38,16 +38,16 @@ return [
 
            //+ onUserDNCsubscriber
 
-/*           
+           
             'mauticplugin.dcodegdprcompliancy.bouncecallback.timeline_events.subscriber' => [
-                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\BounceCallbackTimelineEventLogSubscriber::class,
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyTimelineEventLogSubscriber::class,
                 'arguments' => [
                     'translator',
                     'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
                     'mautic.helper.integration',                    
                 ],
             ],
-*/            
+            
         ],
         'integrations' => [
             'mauticplugin.dcodegdprcompliancy.integration.dcodegdprcompliancy' => [
@@ -56,7 +56,7 @@ return [
                 ],
         	]
     	],
-/*
+
         'repositories' => [
             'mauticplugin.dcodegdprcompliancy.repository.lead_event_log' => [
                 'class'     => Doctrine\ORM\EntityRepository::class,
@@ -66,7 +66,7 @@ return [
                 ],
             ],        
         ]
-*/
+
     ],        
     'parameters' => [
        
