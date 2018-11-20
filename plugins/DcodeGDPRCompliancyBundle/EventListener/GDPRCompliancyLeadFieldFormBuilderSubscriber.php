@@ -16,6 +16,7 @@ use Mautic\LeadBundle\Event\ChannelSubscriptionChange;
 use Mautic\LeadBundle\Event\LeadEvent;
 use Mautic\CoreBundle\Event\CustomFormEvent;
 use Mautic\LeadBundle\LeadEvents;
+use Mautic\CoreBundle\CoreEvents;
 
 
 use Mautic\LeadBundle\Entity\DoNotContact;
