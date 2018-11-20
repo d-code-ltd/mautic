@@ -81,10 +81,76 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
         $channel = $event->getChannel();
         $newStatus = $event->getNewStatus();
 
-        var_dump($lead->getFields());
+        $fields = $lead->getFields();
+
+
+/*
+    public function checkForDuplicateContact(array $queryFields, Lead $lead = null, $returnWithQueryFields = false, $onlyPubliclyUpdateable = false)
+    {
+        // Search for lead by request and/or update lead fields if some data were sent in the URL query
+        if (empty($this->availableLeadFields)) {
+            $filter = ['isPublished' => true, 'object' => 'lead'];
+
+            if ($onlyPubliclyUpdateable) {
+                $filter['isPubliclyUpdatable'] = true;
+            }
+
+            $this->availableLeadFields = $this->leadFieldModel->getFieldList(
+                false,
+                false,
+                $filter
+            );
+        }
+
+        if (is_null($lead)) {
+            $lead = new Lead();
+        }
+
+        $uniqueFields    = $this->leadFieldModel->getUniqueIdentifierFields();
+        $uniqueFieldData = [];
+        $inQuery         = array_intersect_key($queryFields, $this->availableLeadFields);
+        $values          = $onlyPubliclyUpdateable ? $inQuery : $queryFields;
+
+        // Run values through setFieldValues to clean them first
+        $this->setFieldValues($lead, $values, false, false);
+        $cleanFields = $lead->getFields();
+
+        foreach ($inQuery as $k => $v) {
+            if (empty($queryFields[$k])) {
+                unset($inQuery[$k]);
+            }
+        }
+
+        foreach ($cleanFields as $group) {
+            foreach ($group as $key => $field) {
+                if (array_key_exists($key, $uniqueFields) && !empty($field['value'])) {
+                    $uniqueFieldData[$key] = $field['value'];
+                }
+            }
+        }
+
+        // Check for leads using unique identifier
+        if (count($uniqueFieldData)) {
+            $existingLeads = $this->getRepository()->getLeadsByUniqueFields($uniqueFieldData, ($lead) ? $lead->getId() : null);
+
+            if (!empty($existingLeads)) {
+                $this->logger->addDebug("LEAD: Existing contact ID# {$existingLeads[0]->getId()} found through query identifiers.");
+                // Merge with existing lead or use the one found
+                $lead = ($lead->getId()) ? $this->mergeLeads($lead, $existingLeads[0]) : $existingLeads[0];
+            }
+        }
+
+        return $returnWithQueryFields ? [$lead, $inQuery] : $lead;
+    }
+ */
+
+
+
+
 
         if ($newStatus == DoNotContact::BOUNCED){
-            var_dump($lead->fields);
+            //ide jön majd minden
+            var_dump();
         }    
     }
 }
