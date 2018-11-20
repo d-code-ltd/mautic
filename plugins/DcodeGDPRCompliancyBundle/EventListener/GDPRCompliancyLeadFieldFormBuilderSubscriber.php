@@ -78,6 +78,35 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
      */
     public function onLeadFieldFormBuild(CustomFormEvent $event)
     {
-        var_dump($event->getFormName());   
+        $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        $integrationSettings = $integration->getIntegrationSettings();
+        if (!$integration || $integrationSettings->getIsPublished() === false) {
+            return;
+        }
+
+        if ($event->getFormName() == 'leadfield'){
+            $event->getFormBuilder()->add(
+                'mygroup',
+                'choice',
+                [
+                    'choices' => [
+                        'core'         => 'mautic.lead.field.group.core',
+                        'social'       => 'mautic.lead.field.group.social',
+                        'personal'     => 'mautic.lead.field.group.personal',
+                        'professional' => 'mautic.lead.field.group.professional',
+                    ],
+                    'attr' => [
+                        'class'   => 'form-control',
+                        'tooltip' => 'mautic.lead.field.form.group.help',
+                    ],
+                    'expanded'    => false,
+                    'multiple'    => false,
+                    'label'       => 'mautic.lead.field.group',
+                    'empty_value' => false,
+                    'required'    => false,
+                    'disabled'    => $disabled,
+                ]
+            );
+        }        
     }
 }
