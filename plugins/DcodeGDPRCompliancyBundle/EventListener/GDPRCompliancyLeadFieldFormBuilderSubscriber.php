@@ -134,12 +134,14 @@ class GDPRCompliancyLeadFieldFormBuilderSubscriber extends CommonSubscriber
             );
 
             $event->getFormBuilder()->addEventListener(
-                FormEvents::PRE_SUBMIT,
+                FormEvents::SUBMIT,
                 function (FormEvent $event){
                     $data          = $event->getData();
-                    
-                    $data['properties']['field_gdpr_behaviour'] = $data['field_gdpr_behaviour'];
+                    $form   = $event->getForm();
+                    $properties = $data->getProperties();
 
+                    $properties['field_gdpr_behaviour'] = $form['field_gdpr_behaviour']->getData();
+                    $data->setProperties($properties);
                     $event->setData($data);
                 }
             ); 

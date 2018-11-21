@@ -34,14 +34,6 @@ return [
                 ],
             ],  
             */
-            'mauticplugin.dcodegdprcompliancy.ondonotcontact.leadfieldformbuilder.subscriber' => [
-                'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyLeadFieldFormBuilderSubscriber',
-                'arguments' => [
-                    'translator',
-                    'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
-                    'mautic.helper.integration',
-                ],
-            ],  
             'mauticplugin.dcodegdprcompliancy.ondonotcontact.channelsubscriptionchange.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyChannelSubscriptionChangeSubscriber',
                 'arguments' => [
