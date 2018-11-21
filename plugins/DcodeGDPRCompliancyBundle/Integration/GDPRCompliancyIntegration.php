@@ -206,8 +206,9 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 */        
  
         if ($formArea == 'features') {
-            $available = $this->getAvailableLeadFields();
-            var_dump($available);
+            $lead = new Lead();
+            $availableFields = $lead->getFields();
+            var_dump($availableFields);
             
             $builder->add(
                 'notification_icon',
