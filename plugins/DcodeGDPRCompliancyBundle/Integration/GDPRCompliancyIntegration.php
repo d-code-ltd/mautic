@@ -206,23 +206,26 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 */
 
             $availableFields = $this->fieldModel->getLeadFields();
+            foreach ($availableFields as $leadFieldEntity){
 
-            var_dump($availableFields);
+                $builder->add(
+                    $leadFieldEntity->getAlias().'-gdpr_behaviour',
+                    TextType::class,
+                    [
+                        'label'    => $leadFieldEntity->getLabel(),                    
+                        'required' => false,
+                        'attr'     => [
+                            'class' => 'form-control',
+                            'tooltip'      => 'dfgdfgdgf',                        
+                        ],
+                    ]
+                );                
+            }
             
             
+            
 
-            $builder->add(
-                'notification_icon',
-                TextType::class,
-                [
-                    'label'    => 'gdfgdfg',                    
-                    'required' => false,
-                    'attr'     => [
-                        'class' => 'form-control',
-                        'tooltip'      => 'dfgdfgdgf',                        
-                    ],
-                ]
-            );
+            
 
 /*
 
