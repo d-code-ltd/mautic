@@ -187,29 +187,30 @@ class GDPRCompliancyIntegration extends AbstractIntegration
      */
     public function appendToForm(&$builder, $data, $formArea)
     {
-/*        
-        if ($formArea == 'keys') {
-            $builder->add(
-                'service_account_json',
-                TextAreaType::class,
-                [
-                    'label' => 'mautic.plugin.fcmnotification.config.form.notification.service_account',
-                    'attr'  => [
-                        'tooltip' => 'mautic.plugin.fcmnotification.config.form.notification.service_account.tooltip',
-                        'class' => 'form-control',
-                        'rows'    => 15,
-                    ],
-                    'required' => true                    
-                ]
-            );            
-        }
-*/        
- 
         if ($formArea == 'features') {
-            $lead = new Lead();
-            $availableFields = $lead->getFields();
+            /*
+
+            $this->em                     = $factory->getEntityManager();
+            $this->session                = (!defined('IN_MAUTIC_CONSOLE')) ? $factory->getSession() : null;
+            $this->request                = $factory->getRequest();
+            $this->router                 = $factory->getRouter();
+            $this->translator             = $factory->getTranslator();
+            $this->logger                 = $factory->getLogger();
+            $this->encryptionHelper       = $factory->getHelper('encryption');
+            $this->leadModel              = $factory->getModel('lead');
+            $this->companyModel           = $factory->getModel('lead.company');
+            $this->pathsHelper            = $factory->getHelper('paths');
+            $this->notificationModel      = $factory->getModel('core.notification');
+            
+            $this->integrationEntityModel = $factory->getModel('plugin.integration_entity');
+*/
+
+            $availableFields = $this->fieldModel->getLeadFields();
+
             var_dump($availableFields);
             
+            
+
             $builder->add(
                 'notification_icon',
                 TextType::class,
