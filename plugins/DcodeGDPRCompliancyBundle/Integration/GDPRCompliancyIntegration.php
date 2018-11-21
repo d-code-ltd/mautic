@@ -204,20 +204,20 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         if ($formArea == 'features') {
             $available = $this->getAvailableLeadFields();
             var_dump($available);
-/*            
+            
             $builder->add(
                 'notification_icon',
                 TextType::class,
                 [
-                    'label'    => 'mautic.plugin.integration.form.features.icon',                    
+                    'label'    => 'gdfgdfg',                    
                     'required' => false,
                     'attr'     => [
                         'class' => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.icon.toolip',                        
+                        'tooltip'      => 'dfgdfgdgf',                        
                     ],
                 ]
             );
-*/
+
 /*
 
             $builder->add(
