@@ -108,6 +108,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     }
 
     
+    
 /*
     private function getLeadFieldObject()
     {   
@@ -179,6 +180,21 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     }
 */
 
+    public static $defaultGDPRFieldBehaviour = 'remove';
+
+    public static $fixedHashFields = [
+        'firstname', 'lastname', 'company', 'email', 'mobile', 'phone', 'fax', 'address1', 'address2', 
+    ];
+    
+    public static $nonHashableFieldTypes = [
+        'number', 'datetime', 'date', 'time', 'timezone',
+    ];
+    
+    public static $GDPRFieldBehaviours = [
+        'keep'         => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.keep',
+        'remove'       => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.remove',
+        'hash'     => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.hash',                        
+    ];
 
     /**
      * @param \Mautic\PluginBundle\Integration\Form|FormBuilder $builder
@@ -207,21 +223,53 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 
             $availableFields = $this->fieldModel->getLeadFields();
             foreach ($availableFields as $leadFieldEntity){
+            
+                $disabled = false;
+                $defaultValue = self::$defaultGDPRFieldBehaviour;
+
+                $allowedBehaviours = self::$GDPRFieldBehaviours;
+                if (in_array($leadFieldEntity->getAlias(),self::$fixedHashFields)){
+                    if (!in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
+                        $disabled = true;
+                        $defaultValue = "hash";
+                        unset($allowedBehaviours['keep']);
+                        unset($allowedBehaviours['remove']);
+                    }else{
+                        $defaultValue = "remove";
+                        unset($allowedBehaviours['keep']);
+                        unset($allowedBehaviours['hash']);
+                    }
+                }else{
+                    if (!in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
+                        unset($allowedBehaviours['hash']);
+                    }    
+                }
+
+                
+
+
 
                 $builder->add(
                     $leadFieldEntity->getAlias().'-gdpr_behaviour',
-                    TextType::class,
+                    'choice',
                     [
-                        'label'    => $leadFieldEntity->getLabel(),                    
+                        'label'    => $leadFieldEntity->getLabel(),
+                        'choices'  => $allowedBehaviours,
                         'required' => false,
                         'attr'     => [
-                            'class' => 'form-control',
-                            'tooltip'      => 'dfgdfgdgf',                        
+                            'class' => '',
+                            'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.toolip',                     
                         ],
+                        'expanded'    => false,
+                        'multiple'    => false,
+                        'empty_value' => $defaultValue, //default behaviour
+                        'required'    => true,
+                        'disabled'    => $disabled,
                     ]
                 );                
             }
             
+
             
             
 
