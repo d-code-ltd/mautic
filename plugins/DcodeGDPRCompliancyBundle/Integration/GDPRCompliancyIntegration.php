@@ -257,7 +257,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         'choices'  => $allowedBehaviours,
                         'required' => false,
                         'attr'     => [
-                            'class' => '',
+                            'class' => 'form-control',
                             'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.tooltip',                     
                         ],
                         'expanded'    => false,
