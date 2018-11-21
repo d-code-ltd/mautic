@@ -240,7 +240,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         unset($allowedBehaviours['hash']);
                     }
                 }else{
-                    if (!in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
+                    if (in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
                         unset($allowedBehaviours['hash']);
                     }    
                 }
@@ -258,7 +258,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         'required' => false,
                         'attr'     => [
                             'class' => '',
-                            'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.toolip',                     
+                            'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.tooltip',                     
                         ],
                         'expanded'    => false,
                         'multiple'    => false,
