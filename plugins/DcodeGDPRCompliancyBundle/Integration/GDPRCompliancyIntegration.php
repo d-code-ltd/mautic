@@ -107,9 +107,6 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         return 'none';
     }
 
-    
-    
-/*
     private function getLeadFieldObject()
     {   
         if (class_exists('MauticPlugin\MauticExtendedFieldBundle\MauticExtendedFieldBundle')) {
@@ -119,10 +116,13 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         return 'lead';
     }
 
-    public static $bouncePointsFieldName = 'bounce_points';
-
     protected function getEnhancerFieldArray()
     {
+        foreach (self::$separateHashFields as $fieldName){
+
+        }
+
+// TODOOOOO
         return [
             self::$bouncePointsFieldName => [
                 'label' => 'Bounce points',
@@ -145,7 +145,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                     // The field already exists
                     continue;
                 }
-                
+
                 $new_field = new LeadField();
                 $new_field->setAlias($alias);
                 //setting extendedField/lead in one place,
@@ -178,7 +178,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             }
         }
     }
-*/
+
 
     public static $defaultGDPRFieldBehaviour = 'remove';
 
@@ -195,6 +195,8 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         'remove'       => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.remove',
         'hash'     => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.hash',                        
     ];
+
+    public static $separateHashFields = ['email'];
 
     /**
      * @param \Mautic\PluginBundle\Integration\Form|FormBuilder $builder
@@ -243,12 +245,12 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                     if (in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
                         unset($allowedBehaviours['hash']);
                     }    
+
+                    if ($leadFieldEntity->isUnique()){
+                        unset($allowedBehaviours['hash']);
+                    }
                 }
-
-                
-
-
-
+            
                 $builder->add(
                     $leadFieldEntity->getAlias().'-gdpr_behaviour',
                     'choice',
