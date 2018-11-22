@@ -136,7 +136,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     }
 
 
-    public function buildSenderEngineFields(){
+    public function buildHashFields(){
         $new_field   = null;
         $integration = $this->getIntegrationSettings();
  

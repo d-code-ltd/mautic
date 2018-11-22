@@ -25,15 +25,14 @@ return [
                 ],
             ],
             */
-           /*
+           
             'mauticplugin.dcodegdprcompliancy.pluginsave.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\PluginSubscriber',
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                 ],
-            ],  
-            */
+            ],             
             'mauticplugin.dcodegdprcompliancy.ondonotcontact.channelsubscriptionchange.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyChannelSubscriptionChangeSubscriber',
                 'arguments' => [
