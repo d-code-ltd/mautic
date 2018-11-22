@@ -83,13 +83,55 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
             return;
         }
 
-        
+        $newStatus = $event->getNewStatus();
+
+        $supportedFeatures = $integration->getSupportedFeatures();        
+        $featureSettings     = $integrationSettings->getFeatureSettings();  
+
+        var_dump($featureSettings);
+
+        $leadFields = $this->fieldModel->getLeadFields();
+        var_dump($leadFields);
+
 
         $lead = $event->getLead();
         $channel = $event->getChannel();
-        $newStatus = $event->getNewStatus();
+        
+        foreach ($availableFields as $leadFieldEntity){
+            $fieldAlias = $leadFieldEntity->getAlias();
+            $settingKey = $integration->getFieldSettingKey($fieldAlias);
+            if (!empty($featureSettings[$settingKey])){
+                $action = $featureSettings[$settingKey];
+            }else{
+                $action = $integration::$defaultGDPRFieldBehaviour;
+            }
 
-        $fields = $lead->getFields();
+            switch ($action){
+                case "hash":
+                    $method = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
+                    
+                break;                
+                case "remove":
+                    $method = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
+                    $lead->$method(null);
+                break;                
+            }    
+            
+        }
+
+
+
+        
+
+
+        
+
+        
+
+        if ($newStatus == DoNotContact::BOUNCED){
+            //ide jön majd minden
+            var_dump();
+        }   
 
 
 /*
@@ -156,9 +198,6 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
 
 
 
-        if ($newStatus == DoNotContact::BOUNCED){
-            //ide jön majd minden
-            var_dump();
-        }    
+         
     }
 }

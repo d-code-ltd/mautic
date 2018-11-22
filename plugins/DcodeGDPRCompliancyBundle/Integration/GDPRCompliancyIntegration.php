@@ -120,15 +120,14 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     {
         $fieldArray = [];
         foreach (self::$separateHashFields as $fieldAlias){
-            $fieldArray[] = [
-                $fieldAlias."_hash" => [
-                    'label' => $fieldAlias."_hash",
-                    'type'  => 'text',
-                    'is_visible' => false,
-                    'is_short_visible' => false,
-                    'is_listable' => false,
-                    'is_publicly_available' => false,
-                ],
+            $fieldArray[$fieldAlias."_hash"] = [
+                'label' => $fieldAlias."_hash",
+                'type'  => 'text',
+                'is_visible' => false,
+                'is_fixed' => true,
+                'is_short_visible' => false,
+                'is_listable' => false,
+                'is_publicly_updatable' => false,
             ];
         }
 
@@ -145,7 +144,6 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     
         if ($integration->getIsPublished()) {
             foreach ($this->getEnhancerFieldArray() as $alias => $properties) {
-                var_dump($alias, $properties, $existing);
                 if (in_array($alias, $existing)) {
                     // The field already exists
                     continue;
@@ -206,6 +204,14 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 
     public static $separateHashFields = ['email'];
 
+    public function getFieldSettingKey($alias){
+        if (!empty($alias)){
+            return $alias.'-gdpr_behaviour';
+        }else{
+            return false;
+        }
+    }
+
     /**
      * @param \Mautic\PluginBundle\Integration\Form|FormBuilder $builder
      * @param array                                             $data
@@ -260,7 +266,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                 }
             
                 $builder->add(
-                    $leadFieldEntity->getAlias().'-gdpr_behaviour',
+                    $this->getFieldSettingKey($leadFieldEntity->getAlias()),
                     'choice',
                     [
                         'label'    => $leadFieldEntity->getLabel(),

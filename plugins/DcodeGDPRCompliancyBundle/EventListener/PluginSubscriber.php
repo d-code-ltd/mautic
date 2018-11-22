@@ -69,7 +69,7 @@ class PluginSubscriber extends CommonSubscriber
         if ($integration->getName() == 'GDPRCompliancy') {
             $integration->buildHashFields();
 
-            $this->logger->addDebug("GDPR: DcodeSenderEngine plugin fields added");
+            $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
         }
     }
 }
