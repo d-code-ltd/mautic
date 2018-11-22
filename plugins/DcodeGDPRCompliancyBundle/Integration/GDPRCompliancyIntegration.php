@@ -123,7 +123,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             $fieldArray[] = [
                 $fieldAlias."_hash" => [
                     'label' => $fieldAlias."_hash",
-                    'type'  => 'number',
+                    'type'  => 'text',
                     'is_visible' => false,
                     'is_short_visible' => false,
                     'is_listable' => false,
@@ -145,6 +145,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     
         if ($integration->getIsPublished()) {
             foreach ($this->getEnhancerFieldArray() as $alias => $properties) {
+                var_dump($alias, $properties);
                 if (in_array($alias, $existing)) {
                     // The field already exists
                     continue;
@@ -271,7 +272,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         ],
                         'expanded'    => false,
                         'multiple'    => false,
-                        'empty_value' => $defaultValue, //default behaviour
+                        'preferred_choices' => [$defaultValue], //default behaviour
                         'required'    => true,
                         'disabled'    => $disabled,
                     ]
