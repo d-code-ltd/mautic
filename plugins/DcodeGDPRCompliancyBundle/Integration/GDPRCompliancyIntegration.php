@@ -145,7 +145,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     
         if ($integration->getIsPublished()) {
             foreach ($this->getEnhancerFieldArray() as $alias => $properties) {
-                var_dump($alias, $properties);
+                var_dump($alias, $properties, $existing);
                 if (in_array($alias, $existing)) {
                     // The field already exists
                     continue;
