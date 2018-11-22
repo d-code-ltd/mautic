@@ -253,7 +253,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         unset($allowedBehaviours['hash']);
                     }    
 
-                    if ($leadFieldEntity->isUnique()){
+                    if ($leadFieldEntity->getIsUniqueIdentifer()){
                         unset($allowedBehaviours['hash']);
                     }
                 }
