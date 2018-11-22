@@ -118,17 +118,21 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 
     protected function getEnhancerFieldArray()
     {
-        foreach (self::$separateHashFields as $fieldName){
-
+        $fieldArray = [];
+        foreach (self::$separateHashFields as $fieldAlias){
+            $fieldArray[] = [
+                $fieldAlias."_hash" => [
+                    'label' => $fieldAlias."_hash",
+                    'type'  => 'number',
+                    'is_visible' => false,
+                    'is_short_visible' => false,
+                    'is_listable' => false,
+                    'is_publicly_available' => false,
+                ],
+            ];
         }
 
-// TODOOOOO
-        return [
-            self::$bouncePointsFieldName => [
-                'label' => 'Bounce points',
-                'type'  => 'number',
-            ],
-        ];
+        return $fieldArray;
     }
 
 
@@ -185,6 +189,9 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public static $fixedHashFields = [
         'firstname', 'lastname', 'company', 'email', 'mobile', 'phone', 'fax', 'address1', 'address2', 
     ];
+    public static $fixedHashGroups = [
+        'social', 
+    ];
     
     public static $nonHashableFieldTypes = [
         'number', 'datetime', 'date', 'time', 'timezone',
@@ -230,7 +237,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                 $defaultValue = self::$defaultGDPRFieldBehaviour;
 
                 $allowedBehaviours = self::$GDPRFieldBehaviours;
-                if (in_array($leadFieldEntity->getAlias(),self::$fixedHashFields)){
+                if (in_array($leadFieldEntity->getAlias(),self::$fixedHashFields) || in_array($leadFieldEntity->getGroup(),self::$fixedHashGroups)){
                     if (!in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
                         $disabled = true;
                         $defaultValue = "hash";
@@ -269,131 +276,9 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         'disabled'    => $disabled,
                     ]
                 );                
-            }
-            
-
-            
-            
-
-            
-
-/*
-
-            $builder->add(
-                'return_path_format',
-                TextType::class,
-                [
-                    'label' => 'mautic.plugin.integration.form.features.return_path_format',
-                    'attr'  => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
-                        'readonly'     => true
-                    ],
-                    'required' => true,
-                    'empty_data' => 'postmaster-{idHash}',
-                    'data' => 'postmaster-{idHash}'
-                ]
-            );
-
-            $builder->add(
-                'return_path_domain',
-                TextType::class,
-                [
-                    'label' => 'mautic.plugin.integration.form.features.return_path_domain',
-                    'attr'  => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',                        
-                    ],
-                    'required' => true,
-                    'empty_data' => 'example.com',                    
-                ]
-            );
-            
-            $builder->add(
-                'bounce3_value',
-                NumberType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value',                    
-                    'required' => true,
-                    'attr'     => [
-                        'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                    ],
-                    'empty_data' => '3'
-                ]
-            );
-
-            $builder->add(
-                'bounce4_value',
-                NumberType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value',                    
-                    'required' => true,
-                    'attr'     => [
-                        'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                    ],
-                    'empty_data' => '10'
-                ]
-            );
-
-            $builder->add(
-                'bounce5_value',
-                NumberType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value',                    
-                    'required' => true,
-                    'attr'     => [
-                        'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                    ],
-                    'empty_data' => '20'
-                ]
-            );
-            
-            $builder->add(
-                'bounce_threshold',
-                NumberType::class,
-                [
-                    'label'    => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold',                    
-                    'required' => true,
-                    'attr'     => [
-                        'class' => '',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                    ],
-                    'empty_data' => '100'
-                ]
-            );
-      */          
-            
-/*            
-            $builder->add(
-                'platforms',
-                ChoiceType::class,
-                [
-                    'choices' => [
-                        'ios'     => 'mautic.integration.form.platforms.ios',
-                        'android' => 'mautic.integration.form.platforms.android',
-                    ],
-                    'attr' => [
-                        'tooltip'      => 'mautic.integration.form.platforms.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
-                    ],
-                    'expanded'    => true,
-                    'multiple'    => true,
-                    'label'       => 'mautic.integration.form.platforms',
-                    'empty_value' => false,
-                    'required'    => false,
-                ]
-            );
-*/            
+            }           
         }
 
     }
 }
+
