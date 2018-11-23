@@ -25,6 +25,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\LeadBundle\Entity\LeadEventLogRepository;
 use Mautic\LeadBundle\Model\FieldModel;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class WebhookSubscriber.
@@ -57,11 +58,13 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
      */
     public function __construct(
         TranslatorInterface $translator,
+        LoggerInterface $logger,
         LeadEventLogRepository $LeadEventLogRepository,
         IntegrationHelper $integrationHelper,
         FieldModel $fieldModel
     ) {
         $this->translator             = $translator;
+        $this->logger             = $logger;
         $this->leadEventLogRepository = $LeadEventLogRepository;
         $this->integrationHelper      = $integrationHelper;
         $this->fieldModel             = $fieldModel;
@@ -89,11 +92,16 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
             return;
         }
 
+        if (empty($featureSettings['hash_salt'])){
+            $this->logger->addError('GDPR: hash_salt setting is required for proper operation');
+        }
+
         $newStatus = $event->getNewStatus();
+        $oldStatus = $event->getOldStatus();
 
  
 
-        if ($newStatus == DoNotContact::BOUNCED){
+        if ($oldStatus == DoNotContact::IS_CONTACTABLE  && in_array($newStatus,[DoNotContact::BOUNCED, DoNotContact::UNSUBSCRIBED, DoNotContact::MANUAL])){
             $supportedFeatures = $integration->getSupportedFeatures();        
             $featureSettings     = $integrationSettings->getFeatureSettings();  
 
@@ -125,10 +133,10 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
 
                                 //hash the value and store it in special field
                                 $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias.'_hash'))); 
-                                $lead->$setMethod($integration->hashValue(trim($value)));
+                                $lead->$setMethod($integration->hashValue(trim($value),$featureSettings['hash_salt']));
                             }else{
                                 //hash the value in the field
-                                $lead->$setMethod($integration->hashValue(trim($value)));
+                                $lead->$setMethod($integration->hashValue(trim($value),$featureSettings['hash_salt']));
                             }    
                         }
                     break;                

@@ -212,13 +212,11 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         }
     }
 
-    private static $salt = '4szt4l1t3n1sz';
-    public function getSalt(){
-        return self::$salt;
-    }
+    
+    
 
-    public function hashValue($value){
-        return md5($this->getsalt().$value.$this->getsalt());
+    public function hashValue($value, $salt){
+        return md5($salt.$value.$salt);
     }
 
     /**
