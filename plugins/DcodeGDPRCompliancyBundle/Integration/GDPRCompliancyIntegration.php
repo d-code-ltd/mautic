@@ -139,7 +139,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         $new_field   = null;
         $integration = $this->getIntegrationSettings();
  
-        $existing = $this->fieldModel->getFieldList(false);
+        $existing = $this->fieldModel->getLeadFields();
         $existing = array_keys($existing);
     
         if ($integration->getIsPublished()) {
@@ -247,9 +247,29 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             $this->integrationEntityModel = $factory->getModel('plugin.integration_entity');
 */
 
+            $builder->add(
+                'hash_salt',
+                TextType::class,
+                [
+                    'label' => 'mautic.plugin.integration.form.features.hash_salt',
+                    'attr'  => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.hash_salt.tooltip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
+                        'readonly'     => true
+                    ],
+                    'required' => true,                        
+                    'empty_data' => mb_substr(md5(time()),0,16)                        
+                ]
+            );
+
             $availableFields = $this->fieldModel->getLeadFields();
             foreach ($availableFields as $leadFieldEntity){
-            
+                if (in_array(mb_ereg_replace('_hash$','',$leadFieldEntity->getAlias()), self::$separateHashFields)){
+                    continue;
+                }
+
+           
                 $readonly = false;
                 $defaultValue = self::$defaultGDPRFieldBehaviour;
 
@@ -280,22 +300,6 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                     }
                 }
             
-                $builder->add(
-                    'hash_salt',
-                    TextType::class,
-                    [
-                        'label' => 'mautic.plugin.integration.form.features.hash_salt',
-                        'attr'  => [
-                            'class'        => 'form-control',
-                            'tooltip'      => 'mautic.plugin.integration.form.features.hash_salt.tooltip',
-                            'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
-                            'readonly'     => true
-                        ],
-                        'required' => true,                        
-                        'empty_data' => mb_substr(md5(time()),0,16)                        
-                    ]
-                );
-
                 $builder->add(
                     $this->getFieldSettingKey($leadFieldEntity->getAlias()),
                     'choice',
