@@ -126,13 +126,15 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                 switch ($action){
                     case "hash":                        
                         $value = $lead->__get($fieldAlias);
-                        if (trim($value)){
+                        if (trim($value)){                            
                             if (in_array($fieldAlias, $integration::$separateHashFields)){
+                                $this->logger->log("GDPR: {$fieldAlias} member of separateHashFields");
                                 //acquire hashable value and remove it                                
                                 $lead->addUpdatedField($fieldAlias,null,$value);
 
                                 //hash the value and store it in special field                                
                                 $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                $this->logger->log("GDPR: {$value} hashed as ".$integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt'])." into {$fieldAlias}_hash");
                             }else{
                                 //hash the value in the field
                                 $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);

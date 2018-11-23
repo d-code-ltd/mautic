@@ -188,6 +188,9 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public static $fixedHashFields = [
         'firstname', 'lastname', 'company', 'email', 'mobile', 'phone', 'fax', 'address1', 'address2', 
     ];
+    public static $fixedKeepFields = [
+        'bounce_points', 
+    ];
     public static $fixedHashGroups = [
         'social', 
     ];
@@ -247,13 +250,13 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             $availableFields = $this->fieldModel->getLeadFields();
             foreach ($availableFields as $leadFieldEntity){
             
-                $disabled = false;
+                $readonly = false;
                 $defaultValue = self::$defaultGDPRFieldBehaviour;
 
                 $allowedBehaviours = self::$GDPRFieldBehaviours;
                 if (in_array($leadFieldEntity->getAlias(),self::$fixedHashFields) || in_array($leadFieldEntity->getGroup(),self::$fixedHashGroups)){
                     if (!in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
-                        $disabled = true;
+                        $readonly = true;
                         $defaultValue = "hash";
                         unset($allowedBehaviours['keep']);
                         unset($allowedBehaviours['remove']);
@@ -262,6 +265,11 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         unset($allowedBehaviours['keep']);
                         unset($allowedBehaviours['hash']);
                     }
+                }elseif(in_array($leadFieldEntity->getAlias(),self::$fixedKeepFields)){
+                    $readonly = true;
+                    $defaultValue = "keep";
+                    unset($allowedBehaviours['remove']);
+                    unset($allowedBehaviours['hash']);
                 }else{
                     if (in_array($leadFieldEntity->getType(),self::$nonHashableFieldTypes)){
                         unset($allowedBehaviours['hash']);
@@ -298,12 +306,12 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                         'attr'     => [
                             'class' => 'form-control',
                             'tooltip' => 'mautic.plugin.gdprcompliancy.leadfieldform.unsubscribe_handle.tooltip',                     
+                            'readonly' => $readonly
                         ],
                         'expanded'    => false,
                         'multiple'    => false,
                         'preferred_choices' => [$defaultValue], //default behaviour
-                        'required'    => true,
-                        'disabled'    => $disabled,
+                        'required'    => true,                        
                     ]
                 );                
             }           
