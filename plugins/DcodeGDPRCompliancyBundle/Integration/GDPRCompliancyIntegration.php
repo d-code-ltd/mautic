@@ -285,8 +285,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                             'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
                             'readonly'     => true
                         ],
-                        'required' => true,
-                        'disabled' => true,
+                        'required' => true,                        
                         'empty_data' => mb_substr(md5(time()),0,16)                        
                     ]
                 );
