@@ -117,10 +117,19 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
             foreach ($leadFields as $leadFieldEntity){
                 $fieldAlias = $leadFieldEntity->getAlias();
                 $settingKey = $integration->getFieldSettingKey($fieldAlias);
+
+                if (in_array(mb_ereg_replace('_hash$','',$fieldAlias), $integration::$separateHashFields)){
+                    $this->logger->warning("GDPR: {$fieldAlias} is a separateHashFields");
+                }
+
+
+
                 if (!empty($featureSettings[$settingKey])){
                     $action = $featureSettings[$settingKey];
+                    $this->logger->warning("GDPR: $settingKey has setting: {$featureSettings[$settingKey]}");
                 }else{
                     $action = $integration::$defaultGDPRFieldBehaviour;
+                    $this->logger->warning("GDPR: $settingKey defaults to: {$integration::$defaultGDPRFieldBehaviour}");
                 }
 
                 switch ($action){
