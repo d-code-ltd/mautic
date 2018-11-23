@@ -128,13 +128,13 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                         $value = $lead->__get($fieldAlias);
                         if (trim($value)){                            
                             if (in_array($fieldAlias, $integration::$separateHashFields)){
-                                $this->logger->log("GDPR: {$fieldAlias} member of separateHashFields");
+                                $this->logger->warning("GDPR: {$fieldAlias} member of separateHashFields");
                                 //acquire hashable value and remove it                                
                                 $lead->addUpdatedField($fieldAlias,null,$value);
 
                                 //hash the value and store it in special field                                
                                 $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
-                                $this->logger->log("GDPR: {$value} hashed as ".$integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt'])." into {$fieldAlias}_hash");
+                                $this->logger->warning("GDPR: {$value} hashed as ".$integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt'])." into {$fieldAlias}_hash");
                             }else{
                                 //hash the value in the field
                                 $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
@@ -145,7 +145,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                         $lead->addUpdatedField($fieldAlias, null, $value);
                     break;                
                 }
-                $this->logger->log("GDPR: lead{$lead->getId()}->{$fieldAlias} {$action}ed");
+                $this->logger->warning("GDPR: lead{$lead->getId()}->{$fieldAlias} {$action}ed");
             }
             
 
