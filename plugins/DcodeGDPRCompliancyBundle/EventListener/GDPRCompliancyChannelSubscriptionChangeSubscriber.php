@@ -124,7 +124,6 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                 }
 
 
-
                 if (!empty($featureSettings[$settingKey])){
                     $action = $featureSettings[$settingKey];
                     $this->logger->warning("GDPR: $settingKey has setting: {$featureSettings[$settingKey]}");

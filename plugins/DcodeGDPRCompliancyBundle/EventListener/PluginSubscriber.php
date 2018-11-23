@@ -17,6 +17,7 @@ use Mautic\PluginBundle\PluginEvents;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Psr\Log\LoggerInterface;
 
+use Mautic\PluginBundle\Entity\Integration;
 
 /**
  * Class PluginSubscriber.
@@ -71,5 +72,10 @@ class PluginSubscriber extends CommonSubscriber
 
             $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
         }
+
+        $integrationSettingsRepository = $this->em->getRepository('PluginBundle:IntegrationEntity');
+
+        //TODO
+
     }
 }
