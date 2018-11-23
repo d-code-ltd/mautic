@@ -212,6 +212,15 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         }
     }
 
+    private static $salt = '4szt4l1t3n1sz';
+    public function getSalt(){
+        return self::$salt;
+    }
+
+    public function hashValue($value){
+        return md5($this->getsalt().$value.$this->getsalt());
+    }
+
     /**
      * @param \Mautic\PluginBundle\Integration\Form|FormBuilder $builder
      * @param array                                             $data
@@ -265,6 +274,23 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                     }
                 }
             
+                $builder->add(
+                    'hash_salt',
+                    TextType::class,
+                    [
+                        'label' => 'mautic.plugin.integration.form.features.hash_salt',
+                        'attr'  => [
+                            'class'        => 'form-control',
+                            'tooltip'      => 'mautic.plugin.integration.form.features.hash_salt.tooltip',
+                            'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
+                            'readonly'     => true
+                        ],
+                        'required' => true,
+                        'disabled' => true,
+                        'empty_data' => mb_substr(md5(time()),0,16)                        
+                    ]
+                );
+
                 $builder->add(
                     $this->getFieldSettingKey($leadFieldEntity->getAlias()),
                     'choice',

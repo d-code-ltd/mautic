@@ -18,11 +18,13 @@ use Mautic\LeadBundle\Event\PointsChangeEvent;
 use Mautic\LeadBundle\LeadEvents;
 
 
+
 use Mautic\LeadBundle\Entity\DoNotContact;
 use Mautic\CoreBundle\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\LeadBundle\Entity\LeadEventLogRepository;
+use Mautic\LeadBundle\Model\FieldModel;
 
 /**
  * Class WebhookSubscriber.
@@ -44,6 +46,8 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
      */
     protected $integrationHelper;
 
+    protected $fieldModel;
+
     /**
      * TimelineEventLogSubscriber constructor.
      *
@@ -54,11 +58,13 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
     public function __construct(
         TranslatorInterface $translator,
         LeadEventLogRepository $LeadEventLogRepository,
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        FieldModel $fieldModel
     ) {
         $this->translator             = $translator;
         $this->leadEventLogRepository = $LeadEventLogRepository;
-        $this->integrationHelper      = $integrationHelper;      
+        $this->integrationHelper      = $integrationHelper;
+        $this->fieldModel             = $fieldModel;
     }     
 
 
@@ -85,119 +91,54 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
 
         $newStatus = $event->getNewStatus();
 
-        $supportedFeatures = $integration->getSupportedFeatures();        
-        $featureSettings     = $integrationSettings->getFeatureSettings();  
-
-        var_dump($featureSettings);
-
-        $leadFields = $this->fieldModel->getLeadFields();
-        var_dump($leadFields);
-
-
-        $lead = $event->getLead();
-        $channel = $event->getChannel();
-        
-        foreach ($availableFields as $leadFieldEntity){
-            $fieldAlias = $leadFieldEntity->getAlias();
-            $settingKey = $integration->getFieldSettingKey($fieldAlias);
-            if (!empty($featureSettings[$settingKey])){
-                $action = $featureSettings[$settingKey];
-            }else{
-                $action = $integration::$defaultGDPRFieldBehaviour;
-            }
-
-            switch ($action){
-                case "hash":
-                    $method = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
-                    
-                break;                
-                case "remove":
-                    $method = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
-                    $lead->$method(null);
-                break;                
-            }    
-            
-        }
-
-
-
-        
-
-
-        
-
-        
+ 
 
         if ($newStatus == DoNotContact::BOUNCED){
-            //ide jön majd minden
-            var_dump();
-        }   
+            $supportedFeatures = $integration->getSupportedFeatures();        
+            $featureSettings     = $integrationSettings->getFeatureSettings();  
 
+            $leadFields = $this->fieldModel->getLeadFields();
+            
 
-/*
-    public function checkForDuplicateContact(array $queryFields, Lead $lead = null, $returnWithQueryFields = false, $onlyPubliclyUpdateable = false)
-    {
-        // Search for lead by request and/or update lead fields if some data were sent in the URL query
-        if (empty($this->availableLeadFields)) {
-            $filter = ['isPublished' => true, 'object' => 'lead'];
-
-            if ($onlyPubliclyUpdateable) {
-                $filter['isPubliclyUpdatable'] = true;
-            }
-
-            $this->availableLeadFields = $this->leadFieldModel->getFieldList(
-                false,
-                false,
-                $filter
-            );
-        }
-
-        if (is_null($lead)) {
-            $lead = new Lead();
-        }
-
-        $uniqueFields    = $this->leadFieldModel->getUniqueIdentifierFields();
-        $uniqueFieldData = [];
-        $inQuery         = array_intersect_key($queryFields, $this->availableLeadFields);
-        $values          = $onlyPubliclyUpdateable ? $inQuery : $queryFields;
-
-        // Run values through setFieldValues to clean them first
-        $this->setFieldValues($lead, $values, false, false);
-        $cleanFields = $lead->getFields();
-
-        foreach ($inQuery as $k => $v) {
-            if (empty($queryFields[$k])) {
-                unset($inQuery[$k]);
-            }
-        }
-
-        foreach ($cleanFields as $group) {
-            foreach ($group as $key => $field) {
-                if (array_key_exists($key, $uniqueFields) && !empty($field['value'])) {
-                    $uniqueFieldData[$key] = $field['value'];
+            $lead = $event->getLead();
+            $channel = $event->getChannel();
+            
+            foreach ($availableFields as $leadFieldEntity){
+                $fieldAlias = $leadFieldEntity->getAlias();
+                $settingKey = $integration->getFieldSettingKey($fieldAlias);
+                if (!empty($featureSettings[$settingKey])){
+                    $action = $featureSettings[$settingKey];
+                }else{
+                    $action = $integration::$defaultGDPRFieldBehaviour;
                 }
+
+                switch ($action){
+                    case "hash":
+                        $getMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));    
+                        $value = $lead->$getMethod();
+                        if (trim($value)){
+                            $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
+                            if (in_array($fieldAlias, $integration::$separateHashFields)){
+                                //acquire hashable value and remove it
+                                $value = $lead->$getMethod();
+                                $lead->$setMethod(null);
+
+                                //hash the value and store it in special field
+                                $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias.'_hash'))); 
+                                $lead->$setMethod($integration->hashValue(trim($value)));
+                            }else{
+                                //hash the value in the field
+                                $lead->$setMethod($integration->hashValue(trim($value)));
+                            }    
+                        }
+                    break;                
+                    case "remove":
+                        $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
+                        $lead->$method(null);
+                    break;                
+                }                
             }
-        }
-
-        // Check for leads using unique identifier
-        if (count($uniqueFieldData)) {
-            $existingLeads = $this->getRepository()->getLeadsByUniqueFields($uniqueFieldData, ($lead) ? $lead->getId() : null);
-
-            if (!empty($existingLeads)) {
-                $this->logger->addDebug("LEAD: Existing contact ID# {$existingLeads[0]->getId()} found through query identifiers.");
-                // Merge with existing lead or use the one found
-                $lead = ($lead->getId()) ? $this->mergeLeads($lead, $existingLeads[0]) : $existingLeads[0];
-            }
-        }
-
-        return $returnWithQueryFields ? [$lead, $inQuery] : $lead;
-    }
- */
-
-
-
-
-
-         
+            $this->fieldModel->saveEntity($lead);
+        }           
     }
 }

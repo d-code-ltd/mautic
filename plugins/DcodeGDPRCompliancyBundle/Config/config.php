@@ -39,6 +39,7 @@ return [
                     'translator',
                     'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
                     'mautic.helper.integration',
+                    'mautic.lead.model.field'
                 ],
             ],  
             'mauticplugin.dcodegdprcompliancy.timeline_events.subscriber' => [
@@ -67,8 +68,18 @@ return [
                     \Mautic\LeadBundle\Entity\LeadEventLog::class,
                 ],
             ],        
+        ],
+/*
+        'models' => [
+            'mauticplugin.dcodegdprcompliancy.lead.model.field' => [
+                'class'     => 'Mautic\LeadBundle\Model\FieldModel',
+                'arguments' => [
+                    'mautic.schema.helper.index',
+                    'mautic.schema.helper.column',
+                ],
+            ],
         ]
-
+*/
     ],        
     'parameters' => [
        
