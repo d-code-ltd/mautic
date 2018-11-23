@@ -118,7 +118,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                 $fieldAlias = $leadFieldEntity->getAlias();
                 $settingKey = $integration->getFieldSettingKey($fieldAlias);
 
-                if (in_array(mb_ereg_replace('_hash$','',$fieldAlias), $integration::$separateHashFields)){
+                if (mb_ereg('_hash$', $fieldAlias) AND in_array(mb_ereg_replace('_hash$','',$fieldAlias), $integration::$separateHashFields)){
                     $this->logger->warning("GDPR: {$fieldAlias} is a separateHashFields");
                     continue;
                 }

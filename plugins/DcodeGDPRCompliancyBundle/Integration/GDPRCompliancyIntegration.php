@@ -264,8 +264,8 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             );
 
             $availableFields = $this->fieldModel->getLeadFields();
-            foreach ($availableFields as $leadFieldEntity){
-                if (in_array(mb_ereg_replace('_hash$','',$leadFieldEntity->getAlias()), self::$separateHashFields)){
+            foreach ($availableFields as $leadFieldEntity){                
+                if (mb_ereg('_hash$', $leadFieldEntity->getAlias()) AND in_array(mb_ereg_replace('_hash$','',$leadFieldEntity->getAlias()), self::$separateHashFields)){
                     continue;
                 }
 
