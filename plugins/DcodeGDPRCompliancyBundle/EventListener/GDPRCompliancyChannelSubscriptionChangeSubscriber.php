@@ -20,6 +20,7 @@ use Mautic\LeadBundle\LeadEvents;
 
 
 use Mautic\LeadBundle\Entity\DoNotContact;
+use Mautic\LeadBundle\Entity\LeadEventLog;
 use Mautic\CoreBundle\Translation\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
@@ -95,22 +96,21 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
             return;
         }
 
+        $supportedFeatures = $integration->getSupportedFeatures();        
+        $featureSettings     = $integrationSettings->getFeatureSettings();  
+
         if (empty($featureSettings['hash_salt'])){
             $this->logger->addError('GDPR: hash_salt setting is required for proper operation');
+            return;
         }
 
         $newStatus = $event->getNewStatus();
         $oldStatus = $event->getOldStatus();
-
  
 
         if ($oldStatus == DoNotContact::IS_CONTACTABLE  && in_array($newStatus,[DoNotContact::BOUNCED, DoNotContact::UNSUBSCRIBED, DoNotContact::MANUAL])){
-            $supportedFeatures = $integration->getSupportedFeatures();        
-            $featureSettings     = $integrationSettings->getFeatureSettings();  
-
             $leadFields = $this->fieldModel->getLeadFields();
             
-
             $lead = $event->getLead();
             $channel = $event->getChannel();
             
@@ -142,7 +142,8 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                     case "remove":
                         $lead->addUpdatedField($fieldAlias, null, $value);
                     break;                
-                }                
+                }
+                $this->logger->log("GDPR: lead{$lead->getId()}->{$fieldAlias} {$action}ed");
             }
             
 
