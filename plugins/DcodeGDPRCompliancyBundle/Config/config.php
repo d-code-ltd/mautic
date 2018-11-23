@@ -37,6 +37,7 @@ return [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\GDPRCompliancyChannelSubscriptionChangeSubscriber',
                 'arguments' => [
                     'translator',
+                    'monolog.logger.mautic',
                     'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
                     'mautic.helper.integration',
                     'mautic.lead.model.field'
