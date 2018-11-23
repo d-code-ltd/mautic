@@ -76,7 +76,7 @@ class GDPRCompliancyTimelineEventLogSubscriber implements EventSubscriberInterfa
             return;
         }
                         
-        $this->addEvents($event, 'dcodesenderengine.gdprcompiancy.lead_unsubscribed', 'mautic.plugin.gdprcompliancy.timeline.lead.unsubscribed');        
+        $this->addEvents($event, 'dcode.gdprcompiancy.gdpr_clean', 'mautic.plugin.gdprcompliancy.timeline.lead.gdpr_clean');        
     }
 
     /**
@@ -101,7 +101,7 @@ class GDPRCompliancyTimelineEventLogSubscriber implements EventSubscriberInterfa
             return;
         }
 
-        $action = str_replace('dcodesenderengine.bouncecallback.', '', $eventType);
+        $action = str_replace('dcode.gdprcompiancy.', '', $eventType);
         $events = $this->leadEventLogRepository->getEventsByAction($action, $event->getLead(), $event->getQueryOptions());
 
         // Add to counter
@@ -148,8 +148,8 @@ class GDPRCompliancyTimelineEventLogSubscriber implements EventSubscriberInterfa
     private function getLabel(array $log, $eventType)
     {
         switch ($eventType){           
-            case "dcodesenderengine.bouncecallback.lead_unsubscribed":
-                return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.unsubscribed.label');   
+            case "dcode.gdprcompiancy.gdpr_clean":
+                return $this->translator->trans('mautic.plugin.bounce_callback.timeline.lead.gdpr_clean.label');   
             break;           
         }        
     }
@@ -163,7 +163,7 @@ class GDPRCompliancyTimelineEventLogSubscriber implements EventSubscriberInterfa
     private function getIcon(array $log, $eventType)
     {
         switch ($eventType){           
-            case "dcodesenderengine.bouncecallback.lead_unsubscribed":
+            case "ddcode.gdprcompiancy.gdpr_clean":
                 return "fa-user-times";
             break;  
         }

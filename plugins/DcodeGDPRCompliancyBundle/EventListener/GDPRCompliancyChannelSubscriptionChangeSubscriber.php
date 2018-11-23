@@ -61,13 +61,15 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
         LoggerInterface $logger,
         LeadEventLogRepository $LeadEventLogRepository,
         IntegrationHelper $integrationHelper,
-        FieldModel $fieldModel
+        FieldModel $fieldModel,
+        LeadModel $leadModel
     ) {
         $this->translator             = $translator;
         $this->logger             = $logger;
         $this->leadEventLogRepository = $LeadEventLogRepository;
         $this->integrationHelper      = $integrationHelper;
         $this->fieldModel             = $fieldModel;
+        $this->leadModel             = $leadModel;
     }     
 
 
@@ -146,7 +148,22 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                     break;                
                 }                
             }
-            $this->fieldModel->saveEntity($lead);
+            
+
+            $manipulationLog = new LeadEventLog();
+            $manipulationLog->setLead($lead);
+
+            $manipulationLog->setAction('gdpr_clean');
+            /*            
+             $manipulationLog->setProperties([
+                'threshold' => $status,                                    
+                'bounce_points' => $newBouncePoints
+            ]);
+            */
+
+            $lead->addEventLog($manipulationLog);
+
+            $this->leadModel->saveEntity($lead);
         }           
     }
 }

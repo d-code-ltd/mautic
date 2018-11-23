@@ -40,7 +40,8 @@ return [
                     'monolog.logger.mautic',
                     'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
                     'mautic.helper.integration',
-                    'mautic.lead.model.field'
+                    'mautic.lead.model.field',
+                    'mautic.lead.model.lead'
                 ],
             ],  
             'mauticplugin.dcodegdprcompliancy.timeline_events.subscriber' => [
