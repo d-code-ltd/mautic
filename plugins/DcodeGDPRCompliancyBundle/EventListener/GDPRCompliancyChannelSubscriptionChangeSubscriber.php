@@ -25,6 +25,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\LeadBundle\Entity\LeadEventLogRepository;
 use Mautic\LeadBundle\Model\FieldModel;
+use Mautic\LeadBundle\Model\LeadModel;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -113,7 +114,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
             $lead = $event->getLead();
             $channel = $event->getChannel();
             
-            foreach ($availableFields as $leadFieldEntity){
+            foreach ($leadFields as $leadFieldEntity){
                 $fieldAlias = $leadFieldEntity->getAlias();
                 $settingKey = $integration->getFieldSettingKey($fieldAlias);
                 if (!empty($featureSettings[$settingKey])){
@@ -123,28 +124,23 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                 }
 
                 switch ($action){
-                    case "hash":
-                        $getMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));    
-                        $value = $lead->$getMethod();
+                    case "hash":                        
+                        $value = $lead->__get($fieldAlias);
                         if (trim($value)){
-                            $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
                             if (in_array($fieldAlias, $integration::$separateHashFields)){
-                                //acquire hashable value and remove it
-                                $value = $lead->$getMethod();
-                                $lead->$setMethod(null);
+                                //acquire hashable value and remove it                                
+                                $lead->addUpdatedField($fieldAlias,null,$value);
 
-                                //hash the value and store it in special field
-                                $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias.'_hash'))); 
-                                $lead->$setMethod($integration->hashValue(trim($value),$featureSettings['hash_salt']));
+                                //hash the value and store it in special field                                
+                                $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
                             }else{
                                 //hash the value in the field
-                                $lead->$setMethod($integration->hashValue(trim($value),$featureSettings['hash_salt']));
+                                $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
                             }    
                         }
                     break;                
                     case "remove":
-                        $setMethod = 'set'.implode('', array_map('ucfirst', explode('_', $fieldAlias)));
-                        $lead->$method(null);
+                        $lead->addUpdatedField($fieldAlias, null, $value);
                     break;                
                 }                
             }
@@ -152,15 +148,8 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
 
             $manipulationLog = new LeadEventLog();
             $manipulationLog->setLead($lead);
-
             $manipulationLog->setAction('gdpr_clean');
-            /*            
-             $manipulationLog->setProperties([
-                'threshold' => $status,                                    
-                'bounce_points' => $newBouncePoints
-            ]);
-            */
-
+    
             $lead->addEventLog($manipulationLog);
 
             $this->leadModel->saveEntity($lead);
