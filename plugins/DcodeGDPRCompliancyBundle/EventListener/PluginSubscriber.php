@@ -104,7 +104,23 @@ class PluginSubscriber extends CommonSubscriber
                     }
                 }
 
-                var_dump($fieldsToHash, $fieldsToRemove);
+                $dncRepository = $this->em->getRepository('MauticLeadBundle:DoNotContact');
+                $dncList = $dncRepository->getChannelList('email');
+
+                var_dump($dncList);
+
+                if (!empty($dncList)){
+                    $leadRepository = $this->em->getRepository('MauticLeadBundle:Lead');
+                    $dncLeads = $leadRepository->findBy( array('id' => array_keys($dncList)), array('id' => 'DESC') );
+
+                    var_dump($dncLeads);
+                    var_dump($fieldsToHash, $fieldsToRemove);
+                }
+
+                
+
+                
+                
             }
 
 
