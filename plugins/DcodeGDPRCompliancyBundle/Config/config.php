@@ -30,6 +30,7 @@ return [
                 'arguments' => [
                     'mautic.lead.model.lead',
                     'doctrine.orm.entity_manager',
+                    'mautic.helper.integration',
                 ],
             ],
             'mauticplugin.dcodegdprcompliancy.pluginsave.subscriber' => [
