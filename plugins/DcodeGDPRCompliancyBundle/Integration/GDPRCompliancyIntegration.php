@@ -139,7 +139,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         $new_field   = null;
         $integration = $this->getIntegrationSettings();
  
-        $existing = $this->fieldModel->getLeadFields();
+        $existing = $this->fieldModel->getFieldList(false);
         $existing = array_keys($existing);
     
         if ($integration->getIsPublished()) {
