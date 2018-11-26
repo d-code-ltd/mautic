@@ -68,7 +68,7 @@ class PluginSubscriber extends CommonSubscriber
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
         $integration = $event->getIntegration();
         if ($integration->getName() == 'GDPRCompliancy') {
-            if ($integrationHelper->getIsPublished()){
+            if ($integration->getIsPublished()){
                 $integration->buildHashFields();
 
                 $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
