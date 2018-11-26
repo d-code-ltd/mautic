@@ -68,19 +68,25 @@ class PluginSubscriber extends CommonSubscriber
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
         $integration = $event->getIntegration();
         if ($integration->getName() == 'GDPRCompliancy') {
-            if ($integration->getIsPublished()){
-                $integration->buildHashFields();
-
-                $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
-
-                $integrationRepository = $this->em->getRepository('PluginBundle:Integration');
-                var_dump($integration->getId());
-                $oldIntegration = $integrationRepository->find($integration->getId());
-
-                var_dump($integration->getFeatureSettings());
-                var_dump($oldIntegration->getFeatureSettings());
-                
+            $integrationSettings = $integration->getIntegrationSettings();
+            if (!$integration || $integrationSettings->getIsPublished() === false) {
+                return;
             }
+
+            
+            $integration->buildHashFields();
+            $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
+
+
+
+            $integrationRepository = $this->em->getRepository('PluginBundle:Integration');
+            var_dump($integration->getId());
+            $oldIntegrationSettings = $integrationRepository->find($integration->getId());
+
+            var_dump($integrationSettings->getFeatureSettings());
+            var_dump($oldIntegrationSettings->getFeatureSettings());
+                
+            
         }
 
         
