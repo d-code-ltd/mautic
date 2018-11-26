@@ -31,6 +31,7 @@ return [
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
+                    'mautic.lead.model.lead'
                 ],
             ],             
             'mauticplugin.dcodegdprcompliancy.ondonotcontact.channelsubscriptionchange.subscriber' => [

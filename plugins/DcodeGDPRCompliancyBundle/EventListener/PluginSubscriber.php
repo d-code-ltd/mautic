@@ -18,6 +18,7 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Psr\Log\LoggerInterface;
 
 use Mautic\PluginBundle\Entity\Integration;
+use Mautic\LeadBundle\Model\LeadModel;
 
 /**
  * Class PluginSubscriber.
@@ -33,6 +34,11 @@ class PluginSubscriber extends CommonSubscriber
      * @var IntegrationHelper
      */
     protected $logger;
+
+    /**
+     * @var LeadModel
+     */
+    protected $leadModel;
   
     /**
      * CampaignSubscriber constructor.
@@ -42,10 +48,12 @@ class PluginSubscriber extends CommonSubscriber
      */
     public function __construct(
         IntegrationHelper $integrationHelper,
-        LoggerInterface $logger        
+        LoggerInterface $logger,
+        LeadModel $leadModel         
     ) {
         $this->integrationHelper = $integrationHelper;
-        $this->logger = $logger;        
+        $this->logger = $logger;
+        $this->leadModel = $leadModel;
     }
 
     /**
@@ -73,7 +81,8 @@ class PluginSubscriber extends CommonSubscriber
                 return;
             }
 
-            
+            $featureSettings = $integrationSettings->getFeatureSettings();
+
             $integration->buildHashFields();
             $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
 
@@ -104,23 +113,48 @@ class PluginSubscriber extends CommonSubscriber
                     }
                 }
 
-                $dncRepository = $this->em->getRepository('MauticLeadBundle:DoNotContact');
-                $dncList = $dncRepository->getChannelList('email');
+                if (!empty($fieldsToHash) || !empty($fieldsToRemove)){
+                    set_time_limit(0);
+                    $dncRepository = $this->em->getRepository('MauticLeadBundle:DoNotContact');
+                    $dncList = $dncRepository->getChannelList('email');
+                
+                    if (!empty($dncList)){
+                        $leadRepository = $this->em->getRepository('MauticLeadBundle:Lead');
+                        $dncLeads = $leadRepository->findBy( array('id' => array_keys($dncList)), array('id' => 'DESC') );
 
-                var_dump($dncList);
+                        unset($dncList);
 
-                if (!empty($dncList)){
-                    $leadRepository = $this->em->getRepository('MauticLeadBundle:Lead');
-                    $dncLeads = $leadRepository->findBy( array('id' => array_keys($dncList)), array('id' => 'DESC') );
+                        if (!empty($dncLeads)){
+                            foreach ($dncLeads as $lead){
+                                foreach ($fieldsToHash as $fieldAlias){
+                                    $value = $lead->getFieldValue($fieldAlias);
+                                    if (trim($value)){
+                                        if (in_array($fieldAlias, $integration::$separateHashFields)){
+                                            $this->logger->warning("GDPR: {$fieldAlias} member of separateHashFields");
+                                            
+                                            //acquire hashable value and remove it                                
+                                            $lead->addUpdatedField($fieldAlias,null,$value);
 
-                    var_dump(count($dncLeads), get_class($dncLeads[0]));
-                    var_dump($fieldsToHash, $fieldsToRemove);
+                                            //hash the value and store it in special field                                
+                                            $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                        }else{
+                                            //hash the value in the field
+                                            $lead->addUpdatedField($fieldAlias, $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                        }    
+                                    }
+                                }                                
+                                foreach ($fieldsToRemove as $fieldAlias){
+                                    $value = $lead->getFieldValue($fieldAlias);
+                                    if (trim($value)){
+                                        $lead->addUpdatedField($fieldAlias,null,$value);    
+                                    }                                    
+                                }
+
+                                $this->leadModel->saveEntity($lead);
+                            }
+                        }      
+                    }
                 }
-
-                
-
-                
-                
             }
 
 
