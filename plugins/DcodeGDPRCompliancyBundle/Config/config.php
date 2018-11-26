@@ -25,7 +25,13 @@ return [
                 ],
             ],
             */
-           
+            'mauticplugin.dcodegdprcompliancy.search.subscriber' => [
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\SearchSubscriber::class,
+                'arguments' => [
+                    'mautic.lead.model.lead',
+                    'doctrine.orm.entity_manager',
+                ],
+            ],
             'mauticplugin.dcodegdprcompliancy.pluginsave.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\PluginSubscriber',
                 'arguments' => [
