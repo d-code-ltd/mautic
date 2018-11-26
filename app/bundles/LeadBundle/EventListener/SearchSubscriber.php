@@ -461,7 +461,17 @@ class SearchSubscriber extends CommonSubscriber
         $alias = $event->getAlias();
         $q     = $event->getQueryBuilder();
         $expr  = $q->expr()->andX(sprintf('%s = :%s', $config['column'], $alias));
-        
+
+        if (isset($config['params'])) {
+            $params = (array) $config['params'];
+            foreach ($params as $name => $value) {
+                $param = $q->createNamedParameter($value);
+                $expr->add(sprintf('%s = %s', $name, $param));
+            }
+        }
+
+        $this->leadRepo->applySearchQueryRelationship($q, $tables, true, $expr);
+
         $event->setReturnParameters(true); // replace search string
         $event->setStrict(true);           // don't use like
         $event->setSearchStatus(true);     // finish searching

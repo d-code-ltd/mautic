@@ -124,8 +124,21 @@ class SearchSubscriber extends CommonSubscriber
     {
         $q       = $event->getQueryBuilder();
         $string  = $event->getString();
+        $alias = $event->getAlias();
 
         var_dump($string);
+
+        $expr  = $q->expr()->andX(sprintf('%s = :%s', 'email_hash', $alias));
+
+        $query=$q->getQuery();
+        $query->getSQL();
+
+        var_dump($query);
+        var_dump($query->getResult()->getSql());
+
+        $event->setReturnParameters(true); // replace search string
+        $event->setStrict(true);           // don't use like
+        $event->setSearchStatus(true);     // finish searching
     }
 
 
