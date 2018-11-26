@@ -78,14 +78,36 @@ class PluginSubscriber extends CommonSubscriber
             $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
 
 
-
-            //$integrationRepository = $this->em->getRepository('MauticPluginBundle:Integration');            
-            //$oldIntegrationSettings = $integrationRepository->find($integrationSettings->getId());
-
-            var_dump($integrationSettings->getFeatureSettings());
             //var_dump($oldIntegrationSettings->getFeatureSettings());
-            var_dump($integrationSettings->getChanges());    
+            $changes = $integrationSettings->getChanges();
             
+            if (!empty($changes['featureSettings']) && !empty($changes['featureSettings'][0]) && !empty($changes['featureSettings'][1])){
+                $oldValues = $changes['featureSettings'][0];
+                $newValues = $changes['featureSettings'][1];
+
+                $fieldsToHash = [];
+                $fieldsToRemove = [];
+
+                foreach ($newValues as $settingKey => $settingValue){
+                    if (!mb_ereg('-gdpr_behaviour$',$settingKey)){
+                        continue;
+                    }
+
+                    if ($newValues[$settingKey] == 'hash' && $oldValues[$settingKey] != 'hash' ){
+                        $fieldsToHash[] = str_replace('-gdpr_behaviour', '', $settingKey);
+                        $this->logger->addDebug("GDPR: {$settingKey} set to {$newValues[$settingKey]} from {$oldValues[$settingKey]} => {$newValues[$settingKey]}ing {$settingKey} field of all DNC users");
+                    }
+
+                    if ($newValues[$settingKey] == 'remove' && $oldValues[$settingKey] != 'remove' ){
+                        $fieldsToRemove[] = str_replace('-gdpr_behaviour', '', $settingKey);
+                        $this->logger->addDebug("GDPR: {$settingKey} set to {$newValues[$settingKey]} from {$oldValues[$settingKey]} => {$newValues[$settingKey]}ing {$settingKey} field of all DNC users");
+                    }
+                }
+
+                var_dump($fieldsToHash, $fieldsToRemove);
+            }
+
+
         }
 
         
