@@ -113,7 +113,7 @@ class PluginSubscriber extends CommonSubscriber
                     $leadRepository = $this->em->getRepository('MauticLeadBundle:Lead');
                     $dncLeads = $leadRepository->findBy( array('id' => array_keys($dncList)), array('id' => 'DESC') );
 
-                    var_dump($dncLeads);
+                    var_dump(count($dncLeads), get_class($dncLeads[0]));
                     var_dump($fieldsToHash, $fieldsToRemove);
                 }
 
