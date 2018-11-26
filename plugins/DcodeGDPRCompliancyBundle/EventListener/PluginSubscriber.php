@@ -74,6 +74,7 @@ class PluginSubscriber extends CommonSubscriber
                 $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
 
                 $integrationRepository = $this->em->getRepository('PluginBundle:Integration');
+                var_dump($integration->getId());
                 $oldIntegration = $integrationRepository->find($integration->getId());
 
                 var_dump($integration->getFeatureSettings());
