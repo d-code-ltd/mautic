@@ -64,18 +64,25 @@ class PluginSubscriber extends CommonSubscriber
      * @throws \Doctrine\DBAL\DBALException
      */
     public function buildEnhancerFields(PluginIntegrationEvent $event)
-    {
+    {        
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
         $integration = $event->getIntegration();
         if ($integration->getName() == 'GDPRCompliancy') {
-            $integration->buildHashFields();
+            if ($integrationHelper->getIsPublished()){
+                $integration->buildHashFields();
 
-            $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
+                $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
+
+                $integrationRepository = $this->em->getRepository('PluginBundle:Integration');
+                $oldIntegration = $integrationRepository->find($integration->getId());
+
+                var_dump($integration->getFeatureSettings());
+                var_dump($oldIntegration->getFeatureSettings());
+                
+            }
         }
 
-        $integrationSettingsRepository = $this->em->getRepository('PluginBundle:IntegrationEntity');
-
-        //TODO
+        
 
     }
 }
