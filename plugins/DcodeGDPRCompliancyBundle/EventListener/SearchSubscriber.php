@@ -24,7 +24,7 @@ use Mautic\LeadBundle\Event\LeadBuildSearchEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Model\LeadModel;
 
-use Mautic\PluginBundle\Entity\Integration;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class SearchSubscriber.
