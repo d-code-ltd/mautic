@@ -126,8 +126,9 @@ class PluginSubscriber extends CommonSubscriber
 
                         if (!empty($dncLeads)){
                             foreach ($dncLeads as $lead){
+                                $lead  = $this->leadModel->getEntity($lead->getId());
                                 foreach ($fieldsToHash as $fieldAlias){
-                                    $value = $lead->getFieldValue($fieldAlias);
+                                    $value = $lead->__get($fieldAlias);
                                     if (trim($value)){
                                         if (in_array($fieldAlias, $integration::$separateHashFields)){
                                             $this->logger->warning("GDPR: {$fieldAlias} member of separateHashFields");
@@ -144,7 +145,7 @@ class PluginSubscriber extends CommonSubscriber
                                     }
                                 }                                
                                 foreach ($fieldsToRemove as $fieldAlias){
-                                    $value = $lead->getFieldValue($fieldAlias);
+                                    $value = $lead->__get($fieldAlias);
                                     if (trim($value)){
                                         $lead->addUpdatedField($fieldAlias,null,$value);    
                                     }                                    
