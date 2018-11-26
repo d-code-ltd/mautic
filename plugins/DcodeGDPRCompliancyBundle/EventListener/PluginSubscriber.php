@@ -80,8 +80,8 @@ class PluginSubscriber extends CommonSubscriber
 
 
             $integrationRepository = $this->em->getRepository('MauticPluginBundle:Integration');
-            var_dump($integration->getId());
-            $oldIntegrationSettings = $integrationRepository->find($integration->getId());
+            var_dump($integrationSettings->getId());
+            $oldIntegrationSettings = $integrationRepository->find($integrationSettings->getId());
 
             var_dump($integrationSettings->getFeatureSettings());
             var_dump($oldIntegrationSettings->getFeatureSettings());
