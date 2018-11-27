@@ -25,14 +25,7 @@ return [
                 ],
             ],
             */
-            'mauticplugin.dcodegdprcompliancy.search.subscriber' => [
-                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\SearchSubscriber::class,
-                'arguments' => [
-                    'mautic.lead.model.lead',
-                    'doctrine.orm.entity_manager',
-                    'mautic.helper.integration',
-                ],
-            ],
+            
             'mauticplugin.dcodegdprcompliancy.pluginsave.subscriber' => [
                 'class' => 'MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\PluginSubscriber',
                 'arguments' => [
@@ -60,7 +53,22 @@ return [
                     'mautic.helper.integration',                    
                 ],
             ],
-            
+            'mauticplugin.dcodegdprcompliancy.search.subscriber' => [
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\SearchSubscriber::class,
+                'arguments' => [
+                    'mautic.lead.model.lead',
+                    'doctrine.orm.entity_manager',
+                    'mautic.helper.integration',
+                ],
+            ],
+            'mauticplugin.dcodegdprcompliancy.leadtracker.identified.subscriber' => [
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\LeadTrackerIdentifiedSubsciber::class,
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
+                    'mautic.lead.model.lead'
+                ],
+            ],
         ],
         'integrations' => [
             'mauticplugin.dcodegdprcompliancy.integration.dcodegdprcompliancy' => [

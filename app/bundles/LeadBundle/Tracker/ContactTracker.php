@@ -289,6 +289,18 @@ class ContactTracker
             $lead = $this->contactTrackingService->getTrackedLead();
         }
 
+
+        // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
+        if ($lead){
+            if ($this->dispatcher->hasListeners($name)) {
+                $event = new LeadEvent($lead, true);
+                $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
+                $lead = $event->getLead();
+            }
+        }
+        // d-code end
+        
+
         if ($lead) {
             $this->logger->addDebug("CONTACT: Existing lead found with ID# {$lead->getId()}.");
         }
@@ -314,6 +326,16 @@ class ContactTracker
             if (count($leads)) {
                 $lead = $leads[0];
                 $this->logger->addDebug("CONTACT: Existing lead found with ID# {$lead->getId()}.");
+
+                // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
+                if ($lead){
+                    if ($this->dispatcher->hasListeners($name)) {
+                        $event = new LeadEvent($lead, true);
+                        $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
+                        $lead = $event->getLead();
+                    }
+                }
+                // d-code end
 
                 return $lead;
             }
