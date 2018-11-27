@@ -142,11 +142,11 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                                 $lead->addUpdatedField($fieldAlias,null,$value);
 
                                 //hash the value and store it in special field                                
-                                $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
-                                $this->logger->warning("GDPR: {$value} hashed as ".$integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt'])." into {$fieldAlias}_hash");
+                                $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue(trim($value),$featureSettings['hash_salt']), $value);
+                                $this->logger->warning("GDPR: {$value} hashed as ".$integration->hashValue(trim($value),$featureSettings['hash_salt'])." into {$fieldAlias}_hash");
                             }else{
                                 //hash the value in the field
-                                $lead->addUpdatedField($fieldAlias, $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                $lead->addUpdatedField($fieldAlias, $integration->hashValue(trim($value),$featureSettings['hash_salt']), $value);
                             }    
                         }
                     break;                

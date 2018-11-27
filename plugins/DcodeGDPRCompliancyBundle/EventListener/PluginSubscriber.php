@@ -137,10 +137,10 @@ class PluginSubscriber extends CommonSubscriber
                                             $lead->addUpdatedField($fieldAlias,null,$value);
 
                                             //hash the value and store it in special field                                
-                                            $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                            $lead->addUpdatedField($fieldAlias.'_hash', $integration->hashValue(trim($value),$featureSettings['hash_salt']), $value);
                                         }else{
                                             //hash the value in the field
-                                            $lead->addUpdatedField($fieldAlias, $integration->hashValue($lead->getId(), trim($value),$featureSettings['hash_salt']), $value);
+                                            $lead->addUpdatedField($fieldAlias, $integration->hashValue(trim($value),$featureSettings['hash_salt']), $value);
                                         }    
                                     }
                                 }                                

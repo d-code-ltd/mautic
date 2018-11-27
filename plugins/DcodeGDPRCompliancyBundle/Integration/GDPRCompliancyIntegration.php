@@ -218,8 +218,8 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     
     
 
-    public function hashValue($leadId, $value, $salt){
-        return md5($leadId.$value.$salt);
+    public function hashValue($value, $salt){
+        return md5($salt.$value.$salt);
     }
 
     /**

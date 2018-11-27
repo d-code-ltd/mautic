@@ -127,19 +127,21 @@ class SearchSubscriber extends CommonSubscriber
         $q       = $event->getQueryBuilder();
         $string  = $event->getString();
         $alias = $event->getAlias();
+        $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        $integrationSettings = $integration->getIntegrationSettings();
+        $featureSettings = $integrationSettings->getFeatureSettings();
 
         var_dump($string);
 
-        $expr  = $q->expr()->andX(sprintf('%s = :%s', 'email_hash', $alias));
+        $expr  = $q->expr()->andX(sprintf('%s = %s', 'email_hash', $integration->hashValue($string, $featureSettings['hash_salt'])));
+        $event->setSubQuery($expr);
 
-        $query=$q->getQuery();
-        $query->getSQL();
+        //$this->leadRepo->applySearchQueryRelationship($q, $tables, true, $expr);
 
-        var_dump($query);
-        var_dump($query->getResult()->getSql());
 
-        $event->setReturnParameters(true); // replace search string
-        $event->setStrict(true);           // don't use like
+
+        //$event->setReturnParameters(true); // replace search string
+        //$event->setStrict(true);           // don't use like
         $event->setSearchStatus(true);     // finish searching
     }
 
