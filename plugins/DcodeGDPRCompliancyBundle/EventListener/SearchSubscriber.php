@@ -87,12 +87,17 @@ class SearchSubscriber extends CommonSubscriber
             return;
         }
 
+        var_dump('sdfsfsdfsdf');
+
+
         if ($this->security->isGranted(['lead:leads:viewown', 'lead:leads:viewother'], 'MATCH_ONE')) {
             $event->addCommands(
                 'mautic.lead.leads',
                 ['mautic.plugin.gdprcompliancy.lead.searchcommand.emailhash','hello',$this->translator->trans('mautic.plugin.gdprcompliancy.lead.searchcommand.emailhash')]
             );            
         }
+        
+        var_dump($event->getCommands());
     }
 
     /**
