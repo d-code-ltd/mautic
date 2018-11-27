@@ -108,9 +108,6 @@ class SearchSubscriber extends CommonSubscriber
             return;
         }
 
-
-        var_dump($event->getCommand());
-
         switch ($event->getCommand()) {
             case $this->translator->trans('mautic.plugin.gdprcompliancy.lead.searchcommand.emailhash'):
             case $this->translator->trans('mautic.plugin.gdprcompliancy.lead.searchcommand.emailhash', [], null, 'en_US'):
@@ -130,9 +127,7 @@ class SearchSubscriber extends CommonSubscriber
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
         $integrationSettings = $integration->getIntegrationSettings();
         $featureSettings = $integrationSettings->getFeatureSettings();
-
-        var_dump($string);
-
+        
         $expr  = $q->expr()->andX(sprintf('%s = %s', 'email_hash', $integration->hashValue($string, $featureSettings['hash_salt'])));
         $event->setSubQuery($expr);
 
