@@ -292,7 +292,7 @@ class ContactTracker
 
         // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
         if ($lead){
-            if ($this->dispatcher->hasListeners($name)) {
+            if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
                 $event = new LeadEvent($lead, true);
                 $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
                 $lead = $event->getLead();
@@ -329,7 +329,7 @@ class ContactTracker
 
                 // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
                 if ($lead){
-                    if ($this->dispatcher->hasListeners($name)) {
+                    if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
                         $event = new LeadEvent($lead, true);
                         $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
                         $lead = $event->getLead();
