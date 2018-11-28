@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 
 use Mautic\PluginBundle\Entity\Integration;
 use Mautic\LeadBundle\Model\LeadModel;
-use Mautic\LeadBundle\Event\LeadEvent;
+use Mautic\LeadBundle\Event\LeadTrackedEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Entity\DoNotContact;
 
@@ -72,7 +72,7 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
     /**
      * 
      */
-    public function allowDNCLeadTrack(LeadEvent $event)
+    public function allowDNCLeadTrack(LeadTrackedEvent $event)
     {        
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');

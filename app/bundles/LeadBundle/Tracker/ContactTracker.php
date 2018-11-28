@@ -19,6 +19,8 @@ use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Entity\LeadRepository;
 use Mautic\LeadBundle\Event\LeadChangeEvent;
 use Mautic\LeadBundle\Event\LeadEvent;
+use Mautic\LeadBundle\Event\LeadTrackedEvent;
+
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Model\DefaultValueTrait;
 use Mautic\LeadBundle\Model\FieldModel;
@@ -293,7 +295,7 @@ class ContactTracker
         // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
         if ($lead){
             if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
-                $event = new LeadEvent($lead, true);
+                $event = new LeadTrackedEvent($lead, true);
                 $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
                 $lead = $event->getLead();
             }
@@ -330,7 +332,7 @@ class ContactTracker
                 // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
                 if ($lead){
                     if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
-                        $event = new LeadEvent($lead, true);
+                        $event = new LeadTrackedEvent($lead, true);
                         $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
                         $lead = $event->getLead();
                     }
