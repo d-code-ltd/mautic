@@ -91,7 +91,7 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
             var_dump($lead->getId(), count($doNotContactList));
 
             foreach ($doNotContactList as $doNotContact){
-                var_dump($doNotContact->getReason());
+                var_dump($doNotContact->getReason(), $lead->getEmail());
                 switch ($doNotContact->getReason()) {
                     case DoNotContact::BOUNCED:                       
                     case DoNotContact::MANUAL:                        
