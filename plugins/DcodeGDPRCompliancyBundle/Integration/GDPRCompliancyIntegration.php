@@ -59,7 +59,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public function getSupportedFeatures()
     {
         return [
-            'resubscribe_unsubscibed_import',
+            'do_not_resubscribe_unsubscibed_import',
             'do_not_track_unsubscribed',            
         ];
     }
@@ -67,7 +67,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public function getSupportedFeatureTooltips()
     {
         return [
-            'resubscribe_unsubscibed_import'  => 'mautic.plugin.integration.form.features.replace_return_path.tooltip',
+            'do_not_resubscribe_unsubscibed_import'  => 'mautic.plugin.integration.form.features.replace_return_path.tooltip',
             'do_not_track_unsubscribed' => 'mautic.plugin.integration.form.features.bounce_callback.tooltip',
         ];
     }

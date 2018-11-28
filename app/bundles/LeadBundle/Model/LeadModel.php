@@ -1363,6 +1363,15 @@ class LeadModel extends FormModel
         $lead   = $this->checkForDuplicateContact($fieldData);
         $merged = ($lead->getId());
 
+        // Dispatch LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY event (By d-code 2018-11-28)
+        if ($this->dispatcher->hasListeners(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY )) {
+            $event = new LeadImportLeadIdentifyEvent($lead, $fieldData);
+            $this->dispatcher->dispatch(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY, $event);
+            $lead = $event->getLead();
+            $merged = ($lead->getId());
+        }       
+        // d-code end
+
         if (!empty($fields['dateAdded']) && !empty($data[$fields['dateAdded']])) {
             $dateAdded = new DateTimeHelper($data[$fields['dateAdded']]);
             $lead->setDateAdded($dateAdded->getUtcDateTime());
