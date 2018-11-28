@@ -97,8 +97,7 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
                     case DoNotContact::MANUAL:                        
                     case DoNotContact::UNSUBSCRIBED:
                         if (!$lead->getEmail()){
-                            //$event->setLead(null);
-                            var_dump("Itt kéne most törölni a lead-et");
+                            $event->setLead(null);                            
                         }
                     break;
                     default:
