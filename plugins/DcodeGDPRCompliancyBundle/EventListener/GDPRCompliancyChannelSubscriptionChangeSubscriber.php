@@ -151,6 +151,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
                         }
                     break;                
                     case "remove":
+                        $value = $lead->__get($fieldAlias);
                         $lead->addUpdatedField($fieldAlias, null, $value);
                     break;                
                 }
