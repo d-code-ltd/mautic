@@ -86,12 +86,9 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
                 
         if (in_array('do_not_track_unsubscribed', $features)){
             $lead = $event->getLead();
-            $doNotContactList = $lead->getDoNotContact();
+            $doNotContactList = $lead->getDoNotContact();            
 
-            var_dump($lead->getId(), count($doNotContactList));
-
-            foreach ($doNotContactList as $doNotContact){
-                var_dump($doNotContact->getReason(), $lead->getEmail());
+            foreach ($doNotContactList as $doNotContact){                
                 switch ($doNotContact->getReason()) {
                     case DoNotContact::BOUNCED:                       
                     case DoNotContact::MANUAL:                        
