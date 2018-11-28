@@ -84,11 +84,13 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
         $features        = $integrationSettings->getSupportedFeatures();
         $featureSettings = $integrationSettings->getFeatureSettings();
         
-        var_dump($features, $lead->getId());
+        var_dump($features);
 
         if (in_array('do_not_track_unsubscribed', $features)){
             $lead = $event->getLead();
             $doNotContactList = $lead->getDoNotContact();
+
+            var_dump($lead->getId(), count($doNotContactList));
 
             foreach ($dncList as $doNotContact){
                 switch ($doNotContact->getReason()) {
