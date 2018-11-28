@@ -75,7 +75,7 @@ class LeadTrackerIdentifiedSubsciber extends CommonSubscriber
     public function allowDNCLeadTrack(LeadEvent $event)
     {        
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
-        $integration = $event->getIntegration();
+        $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
