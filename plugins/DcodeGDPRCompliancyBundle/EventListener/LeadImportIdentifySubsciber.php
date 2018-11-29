@@ -102,7 +102,7 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
                         'limit'          => 1,
                         'hydration_mode' => 'HYDRATE_ARRAY'
                     ]);
-                    var_dump($result);
+                    var_dump(count($result['results']));
                 }
 
 /*
