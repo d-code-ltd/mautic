@@ -90,14 +90,15 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
 
             if (empty($lead) || !$lead->getId()){
                 if (!empty($fieldData['email'])){
+                    $filter     = ['string' => '', 'force' => []];
+                    $filter['force'][] = [
+                        'column' => 'l.email_hash',
+                        'expr'   => 'eq',
+                        'value'  => $integration->hashValue($fieldData['email'], $featureSettings['hash_salt']),
+                    ];
+            
                     $result = $this->leadModel->getEntities([
-                        'filter' => [
-                            'force' => [
-                                'column' => 'f.email_hash',
-                                'expr'   => 'eq',
-                                'value'  => $integration->hashValue($fieldData['email'], $featureSettings['hash_salt']),
-                            ]
-                        ],
+                        'filter' => $filter,
                         'limit'          => 1,
                         'hydration_mode' => 'HYDRATE_ARRAY'
                     ]);
