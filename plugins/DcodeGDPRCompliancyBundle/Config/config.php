@@ -69,6 +69,14 @@ return [
                     'mautic.lead.model.lead'
                 ],
             ],
+            'mauticplugin.dcodegdprcompliancy.leadimport.identified.subscriber' => [
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\LeadImportLeadIdentifyEvent::class,
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
+                    'mautic.lead.model.lead'
+                ],
+            ],
         ],
         'integrations' => [
             'mauticplugin.dcodegdprcompliancy.integration.dcodegdprcompliancy' => [
