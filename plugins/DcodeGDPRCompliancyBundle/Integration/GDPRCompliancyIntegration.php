@@ -67,8 +67,8 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public function getSupportedFeatureTooltips()
     {
         return [
-            'do_not_resubscribe_unsubscibed_import'  => 'mautic.plugin.integration.form.features.replace_return_path.tooltip',
-            'do_not_track_unsubscribed' => 'mautic.plugin.integration.form.features.bounce_callback.tooltip',
+            'do_not_resubscribe_unsubscibed_import'  => 'mautic.plugin.integration.form.features.do_not_resubscribe_unsubscibed_import.tooltip',
+            'do_not_track_unsubscribed' => 'mautic.plugin.integration.form.features.do_not_track_unsubscribed.tooltip',
         ];
     }
 
