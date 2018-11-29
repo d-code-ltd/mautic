@@ -1364,9 +1364,7 @@ class LeadModel extends FormModel
         $lead   = $this->checkForDuplicateContact($fieldData);
         $merged = ($lead->getId());
 
-        // Dispatch LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY event (By d-code 2018-11-28)
-        var_dump(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY, $this->dispatcher->hasListeners(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY));
-        $this->logger->debug('LEADIMPORT: Dispatching '.LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY);
+        // Dispatch LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY event (By d-code 2018-11-28)                
         if ($this->dispatcher->hasListeners(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY)) {
             $event = new LeadImportLeadIdentifyEvent($lead, $fieldData);
             $this->dispatcher->dispatch(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY, $event);
