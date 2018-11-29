@@ -90,7 +90,7 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
 
             if (empty($lead) || !$lead->getId()){
                 if (!empty($fieldData['email'])){
-                    $result = $model->getEntities([
+                    $result = $this->leadModel->getEntities([
                         'filter' => [
                             'force' => [
                                 'column' => 'f.email_hash',
