@@ -105,7 +105,7 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
                         'hydration_mode' => 'HYDRATE_ARRAY'
                     ]);
                     if (count($result) > 0){
-                        throw new UnsubscribedContactFoundImportException(sprintf('User %d used to be member, but unsubscribed', mb_substr($fieldData['email'],0,4)));
+                        throw new UnsubscribedContactFoundImportException(sprintf('User %s used to be member, but unsubscribed', mb_substr($fieldData['email'],0,4)));
                     }                    
                 }
             }else{
