@@ -70,7 +70,7 @@ return [
                 ],
             ],
             'mauticplugin.dcodegdprcompliancy.leadimport.identified.subscriber' => [
-                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\LeadImportLeadIdentifyEvent::class,
+                'class'     => \MauticPlugin\DcodeGDPRCompliancyBundle\EventListener\LeadImportIdentifySubsciber::class,
                 'arguments' => [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
