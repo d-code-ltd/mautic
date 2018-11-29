@@ -88,7 +88,7 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
             $lead = $event->getLead();
             $fieldData = $event->getFieldData();
 
-            if (empty($lead) || $lead->getId()){
+            if (empty($lead) || !$lead->getId()){
                 if (!empty($fieldData['email'])){
                     $result = $model->getEntities([
                         'filter' => [
