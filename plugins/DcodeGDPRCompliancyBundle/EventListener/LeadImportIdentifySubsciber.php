@@ -23,6 +23,8 @@ use Mautic\LeadBundle\Event\LeadImportLeadIdentifyEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Entity\DoNotContact;
 
+use MauticPlugin\DcodeGDPRCompliancyBundle\Exception\UnsubscribedContactFoundImportException;
+
 /**
  * Class LeadTrackerIdentifiedSubsciber.
  */
@@ -102,47 +104,10 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
                         'limit'          => 1,
                         'hydration_mode' => 'HYDRATE_ARRAY'
                     ]);
-                    var_dump(count($result));
+                    if (count($result) > 0){
+                        throw new UnsubscribedContactFoundImportException(sprintf('User %d used to be member, but unsubscribed', mb_substr($fieldData['email'],0,4)));
+                    }                    
                 }
-
-/*
-                $filter     = ['string' => $search, 'force' => []];
-                //vagy
-                $fields = $this->getModel('lead.field')->getEntities(
-                    [
-                        'filter' => [
-                            'force' => [
-                                [
-                                    'column' => 'f.isPublished',
-                                    'expr'   => 'eq',
-                                    'value'  => true,
-                                ],
-                                [
-                                    'column' => 'f.isShortVisible',
-                                    'expr'   => 'eq',
-                                    'value'  => true,
-                                ],
-                                [
-                                    'column' => 'f.object',
-                                    'expr'   => 'like',
-                                    'value'  => 'lead',
-                                ],
-                            ],
-                        ],
-                        'hydration_mode' => 'HYDRATE_ARRAY',
-                    ]
-                );
-
-
-                $model->getEntities([
-                    'start'          => $start,
-                    'limit'          => $limit,
-                    'filter'         => $filter,
-                    'orderBy'        => $orderBy,
-                    'orderByDir'     => $orderByDir,
-                    'withTotalCount' => true,
-                ]);
-*/
             }else{
                 //lead is already identified by unique identifier. Nothing to do here                
             }
