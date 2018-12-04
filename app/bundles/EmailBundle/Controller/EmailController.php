@@ -61,9 +61,7 @@ class EmailController extends FormController
             return $this->accessDenied();
         }
 
-        if ($this->request->getMethod() == 'POST') {
-            $this->setListFilters();
-        }
+        $this->setListFilters();
 
         $session = $this->get('session');
 
@@ -849,6 +847,11 @@ class EmailController extends FormController
                     'builderAssets'      => trim(preg_replace('/\s+/', ' ', $this->getAssetsForBuilder())), // strip new lines
                     'sectionForm'        => $sectionForm->createView(),
                     'permissions'        => $permissions,
+                    'previewUrl'         => $this->generateUrl(
+                        'mautic_email_preview',
+                        ['objectId' => $entity->getId()],
+                        true
+                    ),
                 ],
                 'contentTemplate' => 'MauticEmailBundle:Email:form.html.php',
                 'passthroughVars' => [
@@ -1062,12 +1065,6 @@ class EmailController extends FormController
 
             $clone = clone $entity;
 
-            //reset
-            $clone->clearStats();
-            $clone->setSentCount(0);
-            $clone->setRevision(0);
-            $clone->setVariantSentCount(0);
-            $clone->setVariantStartDate(null);
             $clone->setIsPublished(false);
             $clone->setEmailType($emailType);
             $clone->setVariantParent($entity);

@@ -129,7 +129,7 @@ class MAConsumerCommand extends ModeratedCommand
                     }catch(\Exception $e){
                         $logger->error("Error occurred while trying to connect to amqp: ".$e->getMessage()."");
                         $output->writeln("<error>Error occurred while trying to connect to amqp: ".$e->getMessage()."</error>");
-                        if($this->baseConnectionTry >= 5){
+                        if($this->baseConnectionTry >= 10){
                             if(!$questionHelper->ask($input, $output, $questionTryAgain)){
                                 $output->writeln("<error>Consumer aborted!</error>");
                                 return;
@@ -408,6 +408,10 @@ class MAConsumerCommand extends ModeratedCommand
                                             foreach($routing_keys as $routing_key) {
                                                 $this->channel->queue_bind('mautic.contact', 'kiazaki', $routing_key);
                                             }
+
+                                            //set prefetch queue size to 10 to avoid acknowledment timeouts                                            
+                                            $this->channel->basic_qos(null, 10, null);
+
                                             $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
                                             $output->writeln("<info>AMQP Reconnected!</info>");
                                             $this->baseConnectionTry = 0;
@@ -418,6 +422,7 @@ class MAConsumerCommand extends ModeratedCommand
                                             $output->writeln("<error>Error occurred while trying to connect to amqp: ".$e->getMessage()."</error>");
                                             $output->writeln("<info>Retrying...</info>");
                                             $this->connection = null;
+                                            sleep(30);
                                         }
                                     }
                                     try{
@@ -428,6 +433,9 @@ class MAConsumerCommand extends ModeratedCommand
                         }
                     }
                 };
+
+                //set prefetch queue size to 10 to avoid acknowledment timeouts                                            
+                $this->channel->basic_qos(null, 10, null);
 
                 $this->channel->basic_consume('mautic.contact', '', false, false, false, false, $this->callback);
 
@@ -442,6 +450,7 @@ class MAConsumerCommand extends ModeratedCommand
                 $this->connection = null;
                 $this->channel = null;
                 $this->baseConnectionTry = 0;
+                sleep(30);
             }
         }
     }

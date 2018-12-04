@@ -31,3 +31,12 @@ With OneSignal the administrator had to setup the plugin with api keys and secre
 
 - Bundles (plugins) in Mautic work on several occasions only if an integration is published. Most functions (mostly those that change appearance of menus) do a check if the integration is present and does nothing if it is not. Other functions lacked these security measures. If only one Notification plugin is present in the application this does not cause any trouble since you would never get to run any of these functions without first setting up the plugin. But with two notifications sender backends implementation of integration checks in the original NotificationBundle send, report, etc functions was necessary.
 
+
+## Installation steps
+- create firebase project
+- setup FCM plugin with basic data: ApiKey, project ID, messagingSenderId
+- acquire service Account json and input it to FCM plugin settings
+	https://console.firebase.google.com/project/researchcenter-209311/settings/serviceaccounts/adminsdk
+	https://cloud.google.com/iam/docs/creating-managing-service-account-keys
+- enable features in the settings as you like
+

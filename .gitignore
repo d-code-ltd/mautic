@@ -72,6 +72,9 @@
 !/plugins/RabbitMQBundle
 !/plugins/MauticZapierBundle
 !/plugins/FCMNotificationBundle
+!/plugins/DcodeWhiteLabelSettingsBundle
+!/plugins/DcodeSenderEngineBundle
+!/plugins/DcodeGDPRCompliancyBundle
 !/plugins/index.html
 
 /themes/*

@@ -60,11 +60,11 @@ class PageSubscriber extends CommonSubscriber
      */
     public function onPageDisplay(PageDisplayEvent $event)
     {
-        $integrationObject = $this->integrationHelper->getIntegrationObject('FCM');
-        $settings          = $integrationObject->getIntegrationSettings();
+        $integration = $this->integrationHelper->getIntegrationObject('FCM');
+        $settings          = $integration->getIntegrationSettings();
         $features          = $settings->getSupportedFeatures();
     
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || !$settings || $settings->getIsPublished() === false) {
             return;
         }
     

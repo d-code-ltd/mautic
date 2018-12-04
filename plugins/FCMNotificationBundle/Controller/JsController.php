@@ -47,8 +47,7 @@ class JsController extends CommonController
      * @return Response
      */
     public function workerAction()
-    {
-        //$this->integrationHelper = new IntegrationHelper();
+    {        
         $this->integrationHelper = $this->get('mautic.helper.integration');       
         $integration = $this->integrationHelper->getIntegrationObject('FCM');
 

@@ -194,9 +194,12 @@ class FormSubscriber extends CommonSubscriber
         }
         */
        
-        /* FCM PHP API uses Guzzlehttp instead of joomla/http thus response differs */
+        /* FCM PHP API uses Guzzlehttp instead of joomla/http therefore response is different */
         if ($response) {
-            return $event->setResult(false);
+            var_dump($response);
+            var_dump($playerID,$notificationId);
+            //return $event->setResult(false); => this causes mautic to try again
+            return $event->setFailed($response);
         }
 
         $this->notificationModel->createStatEntry($notification, $lead);

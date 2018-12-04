@@ -92,8 +92,26 @@ class CampaignSubscriber extends CommonSubscriber
             return;
         }
 
-        $features = $integration->getSupportedFeatures();
-        $settings = $integration->getIntegrationSettings();
+        $integrationSettings = $integration->getIntegrationSettings();
+
+        $features = $integrationSettings->getSupportedFeatures();        
+
+        if (in_array('mobile', $features)) {
+            $event->addAction(
+                'notification.send_mobile_notification',
+                [
+                    'label'            => 'mautic.notification.campaign.send_mobile_notification',
+                    'description'      => 'mautic.notification.campaign.send_mobile_notification.tooltip',
+                    'eventName'        => NotificationEvents::ON_CAMPAIGN_TRIGGER_ACTION,
+                    'formType'         => MobileNotificationSendType::class,
+                    'formTypeOptions'  => ['update_select' => 'campaignevent_properties_notification'],
+                    'formTheme'        => 'MauticNotificationBundle:FormTheme\NotificationSendList',
+                    'timelineTemplate' => 'MauticNotificationBundle:SubscribedEvents\Timeline:index.html.php',
+                    'channel'          => 'mobile_notification',
+                    'channelIdField'   => 'mobile_notification',
+                ]
+            );
+        }
 
         $event->addAction(
             'notification.send_notification',
@@ -147,6 +165,11 @@ class CampaignSubscriber extends CommonSubscriber
         $playerID = [];
 
         foreach ($pushIDs as $pushID) {            
+            // Skip non-mobile PushIDs if this is a mobile event
+            if ($event->checkContext('notification.send_mobile_notification') && $pushID->isMobile() == false) {
+                continue;
+            }
+
             // Skip mobile PushIDs if this is a non-mobile event
             if ($event->checkContext('notification.send_notification') && $pushID->isMobile() == true) {
                 continue;
@@ -212,7 +235,8 @@ class CampaignSubscriber extends CommonSubscriber
         if ($response) {
             var_dump($response);
             var_dump($playerID,$notificationId);
-            return $event->setResult(false);
+            //return $event->setResult(false); => this causes mautic to try again
+            return $event->setFailed($response);
         }
 
         $this->notificationModel->createStatEntry($notification, $lead);
