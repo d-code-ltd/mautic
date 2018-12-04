@@ -121,7 +121,6 @@ class LeadSubscriber extends CommonSubscriber
     public function onLeadPostDelete(Events\LeadEvent $event)
     {
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
-        $lead = $event->getLead()->convertToArray();
         $settings = $integrationObject->getIntegrationSettings();
 
         if (false === $integrationObject || !$settings->getIsPublished()) {
@@ -148,7 +147,6 @@ class LeadSubscriber extends CommonSubscriber
     public function onListPostSave(Events\LeadListEvent $event)
     {
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
-        $lead = $event->getLead()->convertToArray();
         $settings = $integrationObject->getIntegrationSettings();
 
         if (false === $integrationObject || !$settings->getIsPublished()) {
@@ -181,7 +179,6 @@ class LeadSubscriber extends CommonSubscriber
     public function onListPostDelete(Events\LeadListEvent $event)
     {
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
-        $lead = $event->getLead()->convertToArray();
         $settings = $integrationObject->getIntegrationSettings();
 
         if (false === $integrationObject || !$settings->getIsPublished()) {
@@ -206,7 +203,6 @@ class LeadSubscriber extends CommonSubscriber
 
     public function onTagPostSave(Events\TagEvent $event){
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
-        $lead = $event->getLead()->convertToArray();
         $settings = $integrationObject->getIntegrationSettings();
 
         if (false === $integrationObject || !$settings->getIsPublished()) {
@@ -214,6 +210,7 @@ class LeadSubscriber extends CommonSubscriber
         }
 
         $tag = $event->getTag();
+        
         if(!empty($tag->getTag())){
             $data = json_encode([
                 "source" => "mautic",
