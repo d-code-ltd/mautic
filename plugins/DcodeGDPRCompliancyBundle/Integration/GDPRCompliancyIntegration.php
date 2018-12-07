@@ -53,7 +53,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 
     public function getDescription()
     {
-        return 'mautic.plugin.integration.gdprcompliancy.description';
+        return 'GDPR Compliancy plugin makes sure that data of users that got on Do Not Contact list via either bounce, unsubscription or manually are erased from the system leaving only hashed data. Hashed data is required to determine whether an email address was once member of the database while not having the email addresses of unsubscribed users.<br /><br />Hashing algorythm: md5({salt} . {value} . {salt})';
     }
 
     public function getIcon()
@@ -308,26 +308,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
                     ]
                 );                
             }           
-        }
-
-
-        if ($formArea == 'feature_settings') {
-            $builder->add(
-                'asdasdasd',
-                TextType::class,
-                [
-                    'label' => 'mautic.plugin.integration.form.features.hash_salt',
-                    'attr'  => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.hash_salt.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
-                        'readonly'     => true
-                    ],
-                    'required' => true,                        
-                    'empty_data' => mb_substr(md5(time()),0,16)                        
-                ]
-            );
-        }
+        }        
     }
 
     /**
@@ -341,10 +322,6 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     {
         if ('features' === $section) {
            return ['ablak', 'info'];
-        }
-
-        if ('feature_settings' === $section) {
-            return ['zsifár', 'info'];
         }
 
         return parent::getFormNotes($section);        

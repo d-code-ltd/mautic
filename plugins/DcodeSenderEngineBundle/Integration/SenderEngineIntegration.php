@@ -53,7 +53,7 @@ class SenderEngineIntegration extends AbstractIntegration
 
     public function getDescription()
     {
-        return 'mautic.plugin.integration.senderengine.description';
+        return 'SenderEngine handles email bounces via callbacks from SenderEngine senders, adds bounce points to users for each bounce and puts users on Do not Contact list if the set threshold is reached';
     }
 
     public function getIcon()
