@@ -349,4 +349,25 @@ class SenderEngineIntegration extends AbstractIntegration
         }
 
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param $section
+     *
+     * @return string
+     */
+    public function getFormNotes($section)
+    {
+        if ('custom' === $section) {
+            return [
+                'template'   => 'MauticOutlookBundle:Integration:form.html.php',
+                'parameters' => [
+                    'mauticUrl' => UrlHelper::rel2abs('/index.php'),
+                ],
+            ];
+        }
+
+        return parent::getFormNotes($section);
+    }
 }
