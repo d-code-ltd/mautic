@@ -321,7 +321,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public function getFormNotes($section)
     {
         if ('features' === $section) {
-           return ['mautic.plugin.gdprcompliancy.features.notes', 'alert'];
+           return ['mautic.plugin.gdprcompliancy.features.notes', 'warning'];
         }
 
         return parent::getFormNotes($section);        
