@@ -53,7 +53,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
 
     public function getDescription()
     {
-        return 'GDPR Compliancy plugin makes sure that data of users that got on Do Not Contact list via either bounce, unsubscription or manually are erased from the system leaving only hashed data. Hashed data is required to determine whether an email address was once member of the database while not having the email addresses of unsubscribed users.<br /><br />Hashing algorythm: md5({salt} . {value} . {salt})';
+        return 'GDPR Compliancy plugin makes sure that data of users who got on Do Not Contact list via either bounce, unsubscription or manually are erased from the system leaving only hashed data. Hashed data is required to determine whether an email address was once member of the database while not having the email addresses of unsubscribed users.<br /><br />Hashing algorythm: md5({salt} . {value} . {salt})';
     }
 
     public function getIcon()
