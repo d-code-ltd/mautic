@@ -51,6 +51,11 @@ class GDPRCompliancyIntegration extends AbstractIntegration
         return 'GDPR Compliancy';
     }
 
+    public function getDescription()
+    {
+        return 'mautic.plugin.integration.gdprcompliancy.description';
+    }
+
     public function getIcon()
     {
         return 'plugins/DcodeGDPRCompliancyBundle/Assets/img/gdpr-logo.png';
@@ -230,23 +235,7 @@ class GDPRCompliancyIntegration extends AbstractIntegration
     public function appendToForm(&$builder, $data, $formArea)
     {
         if ($formArea == 'features') {
-            /*
-
-            $this->em                     = $factory->getEntityManager();
-            $this->session                = (!defined('IN_MAUTIC_CONSOLE')) ? $factory->getSession() : null;
-            $this->request                = $factory->getRequest();
-            $this->router                 = $factory->getRouter();
-            $this->translator             = $factory->getTranslator();
-            $this->logger                 = $factory->getLogger();
-            $this->encryptionHelper       = $factory->getHelper('encryption');
-            $this->leadModel              = $factory->getModel('lead');
-            $this->companyModel           = $factory->getModel('lead.company');
-            $this->pathsHelper            = $factory->getHelper('paths');
-            $this->notificationModel      = $factory->getModel('core.notification');
-            
-            $this->integrationEntityModel = $factory->getModel('plugin.integration_entity');
-*/
-
+   
             $builder->add(
                 'hash_salt',
                 TextType::class,
@@ -321,6 +310,44 @@ class GDPRCompliancyIntegration extends AbstractIntegration
             }           
         }
 
+
+        if ($formArea == 'feature_settings') {
+            $builder->add(
+                'asdasdasd',
+                TextType::class,
+                [
+                    'label' => 'mautic.plugin.integration.form.features.hash_salt',
+                    'attr'  => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.hash_salt.tooltip',
+                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
+                        'readonly'     => true
+                    ],
+                    'required' => true,                        
+                    'empty_data' => mb_substr(md5(time()),0,16)                        
+                ]
+            );
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param $section
+     *
+     * @return string
+     */
+    public function getFormNotes($section)
+    {
+        if ('features' === $section) {
+           return ['ablak', 'info'];
+        }
+
+        if ('feature_settings' === $section) {
+            return ['zsifár', 'info'];
+        }
+
+        return parent::getFormNotes($section);        
     }
 }
 

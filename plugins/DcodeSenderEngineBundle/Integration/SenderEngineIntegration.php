@@ -53,7 +53,7 @@ class SenderEngineIntegration extends AbstractIntegration
 
     public function getDescription()
     {
-        return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+        return 'mautic.plugin.integration.senderengine.description';
     }
 
     public function getIcon()
@@ -347,27 +347,5 @@ class SenderEngineIntegration extends AbstractIntegration
             );
 */            
         }
-
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param $section
-     *
-     * @return string
-     */
-    public function getFormNotes($section)
-    {
-        if ('custom' === $section) {
-            return [
-                'template'   => 'MauticOutlookBundle:Integration:form.html.php',
-                'parameters' => [
-                    'mauticUrl' => UrlHelper::rel2abs('/index.php'),
-                ],
-            ];
-        }
-
-        return parent::getFormNotes($section);
     }
 }
