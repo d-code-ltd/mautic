@@ -44,7 +44,7 @@ class WhiteLabelIntegration extends AbstractIntegration
      */
     public function getDisplayName()
     {
-        return 'WhiteLabel';
+        return 'White-label';
     }
 
     public function getIcon()

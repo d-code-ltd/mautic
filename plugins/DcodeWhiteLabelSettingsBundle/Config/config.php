@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'name'        => 'Whitelabel',
-    'description' => 'Enables editing whitelabel information',
+    'name'        => 'White-label',
+    'description' => 'Enables editing white-label information',
     'author'      => 'peter.osvath@d-code.hu',
     'version'     => '1.0.0',
 
