@@ -304,7 +304,9 @@ class PluginController extends FormController
                         'enabled'       => $entity->getIsPublished(),
                         'name'          => $integrationObject->getName(),
                         'mauticContent' => 'integrationConfig',
-                        'sidebar'       => $this->get('templating')->render('MauticCoreBundle:LeftPanel:index.html.php'),
+                        'sidebar'       => $this->get('templating')->render('MauticCoreBundle:LeftPanel:index.html.php', [
+                            'whitelabelBrandingLeftLogo' => $this->coreParametersHelper->getParameter('whitelabel_branding_left_logo', 'media/images/apple-touch-icon.png')
+                        ]),
                     ]
                 );
             }
@@ -355,7 +357,9 @@ class PluginController extends FormController
                     'activeLink'    => '#mautic_plugin_index',
                     'mauticContent' => 'integrationConfig',
                     'route'         => false,
-                    'sidebar'       => $this->get('templating')->render('MauticCoreBundle:LeftPanel:index.html.php'),
+                    'sidebar'       => $this->get('templating')->render('MauticCoreBundle:LeftPanel:index.html.php', [
+                        'whitelabelBrandingLeftLogo' => $this->coreParametersHelper->getParameter('whitelabel_branding_left_logo', 'media/images/apple-touch-icon.png')
+                    ]),
                 ],
             ]
         );
