@@ -246,7 +246,7 @@ class SenderEngineIntegration extends AbstractIntegration
                     'label' => 'mautic.plugin.integration.form.features.return_path_domain',
                     'attr'  => [
                         'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
+                        'tooltip'      => 'mautic.plugin.integration.form.features.return_path_domain.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
                         'placeholder'  => 'mailengine.hu'
                     ],
