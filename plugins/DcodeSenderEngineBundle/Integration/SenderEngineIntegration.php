@@ -247,10 +247,11 @@ class SenderEngineIntegration extends AbstractIntegration
                     'attr'  => [
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.return_path_format.tooltip',
-                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',                        
+                        'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
+                        'placeholder'  => 'mailengine.hu'
                     ],
                     'required' => true,
-                    'empty_data' => 'example.com',                    
+                    'empty_data' => 'mailengine.hu',                    
                 ]
             );
             
@@ -264,6 +265,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'placeholder'  => '3'
                     ],
                     'empty_data' => '3'
                 ]
@@ -279,6 +281,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'placeholder'  => '10'
                     ],
                     'empty_data' => '10'
                 ]
@@ -294,6 +297,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'placeholder'  => '20'
                     ],
                     'empty_data' => '20'
                 ]
@@ -309,6 +313,7 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
+                        'placeholder'  => '100'
                     ],
                     'empty_data' => '100'
                 ]
