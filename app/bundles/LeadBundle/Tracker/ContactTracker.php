@@ -19,6 +19,8 @@ use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Entity\LeadRepository;
 use Mautic\LeadBundle\Event\LeadChangeEvent;
 use Mautic\LeadBundle\Event\LeadEvent;
+use Mautic\LeadBundle\Event\LeadTrackedEvent;
+
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Model\DefaultValueTrait;
 use Mautic\LeadBundle\Model\FieldModel;
@@ -289,6 +291,18 @@ class ContactTracker
             $lead = $this->contactTrackingService->getTrackedLead();
         }
 
+
+        // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
+        if ($lead){
+            if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
+                $event = new LeadTrackedEvent($lead, true);
+                $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
+                $lead = $event->getLead();
+            }
+        }
+        // d-code end
+        
+
         if ($lead) {
             $this->logger->addDebug("CONTACT: Existing lead found with ID# {$lead->getId()}.");
         }
@@ -314,6 +328,16 @@ class ContactTracker
             if (count($leads)) {
                 $lead = $leads[0];
                 $this->logger->addDebug("CONTACT: Existing lead found with ID# {$lead->getId()}.");
+
+                // Dispatch LeadEvents::LEAD_TRACKER_IDENTIFIED event (By d-code 2018-11-28)
+                if ($lead){
+                    if ($this->dispatcher->hasListeners(LeadEvents::LEAD_TRACKER_IDENTIFIED)) {
+                        $event = new LeadTrackedEvent($lead, true);
+                        $this->dispatcher->dispatch(LeadEvents::LEAD_TRACKER_IDENTIFIED, $event);
+                        $lead = $event->getLead();
+                    }
+                }
+                // d-code end
 
                 return $lead;
             }

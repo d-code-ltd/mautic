@@ -120,6 +120,15 @@ class LeadSubscriber extends CommonSubscriber
      */
     public function onLeadPostDelete(Events\LeadEvent $event)
     {
+        $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $lead = $event->getLead()->convertToArray();
+        $settings = $integrationObject->getIntegrationSettings();
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+
+
         $lead = $event->getLead();
         // Email is primary key, so if its not set don't send anything to RabbitMQ. (Helps with some unexpected event triggering)
         if(!empty($lead->getEmail())){
@@ -139,6 +148,13 @@ class LeadSubscriber extends CommonSubscriber
     public function onListPostSave(Events\LeadListEvent $event)
     {
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $lead = $event->getLead()->convertToArray();
+        $settings = $integrationObject->getIntegrationSettings();
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+
         $list = $event->getList();
 
         // Geofence segments are not supposed to be updated trough mautic
@@ -164,6 +180,15 @@ class LeadSubscriber extends CommonSubscriber
      */
     public function onListPostDelete(Events\LeadListEvent $event)
     {
+        $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $lead = $event->getLead()->convertToArray();
+        $settings = $integrationObject->getIntegrationSettings();
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+
+
         $list = $event->getList();
         if(!empty($list->getAlias()) && !empty($list->getName())){
             $data = json_encode([
@@ -180,6 +205,14 @@ class LeadSubscriber extends CommonSubscriber
     }
 
     public function onTagPostSave(Events\TagEvent $event){
+        $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $lead = $event->getLead()->convertToArray();
+        $settings = $integrationObject->getIntegrationSettings();
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+
         $tag = $event->getTag();
         if(!empty($tag->getTag())){
             $data = json_encode([

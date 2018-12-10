@@ -92,8 +92,9 @@ class CampaignSubscriber extends CommonSubscriber
             return;
         }
 
-        $features = $integration->getSupportedFeatures();
-        $settings = $integration->getIntegrationSettings();
+        $integrationSettings = $integration->getIntegrationSettings();
+
+        $features = $integrationSettings->getSupportedFeatures();        
 
         if (in_array('mobile', $features)) {
             $event->addAction(

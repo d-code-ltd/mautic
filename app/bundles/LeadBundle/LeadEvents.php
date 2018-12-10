@@ -582,4 +582,23 @@ final class LeadEvents
      * @var string
      */
     const ADD_CHANNEL = 'mautic.bc_add_channel';
+
+    /**
+     * The mautic.tracker.lead_identified event is dispatched when a lead is successfully identified by cookie or device
+     *
+     * The event listener receives a Mautic\LeadBundle\Event\LeadEvent instance.
+     *
+     * @var string
+     */
+    const LEAD_TRACKER_IDENTIFIED = 'mautic.tracker.lead_identified';
+
+
+    /**
+     * The mautic.tracker.lead_identified event is dispatched when a lead is being identified during import
+     *
+     * The event listener receives a Mautic\LeadBundle\Event\LeadEvent instance.
+     *
+     * @var string
+     */
+    const LEAD_IMPORT_LEAD_IDENTIFY = 'mautic.import.lead.identify';    
 }

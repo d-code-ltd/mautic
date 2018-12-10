@@ -186,7 +186,7 @@ class AppKernel extends Kernel
             new Ivory\OrderedFormBundle\IvoryOrderedFormBundle(),
             // These two bundles do DI based on config, so they need to be loaded after config is declared in MauticQueueBundle
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
-            new Leezy\PheanstalkBundle\LeezyPheanstalkBundle(),
+            new Leezy\PheanstalkBundle\LeezyPheanstalkBundle(),            
         ];
 
         //dynamically register Mautic Plugin Bundles
@@ -202,9 +202,9 @@ class AppKernel extends Kernel
             $dirname  = basename($file->getRelativePath());
             $filename = substr($file->getFilename(), 0, -4);
 
-            $class = '\\MauticPlugin'.'\\'.$dirname.'\\'.$filename;
-            if (class_exists($class)) {
-                $plugin = new $class();
+            $class = '\\MauticPlugin'.'\\'.$dirname.'\\'.$filename;            
+            if (class_exists($class)) {            
+                $plugin = new $class();                
 
                 if ($plugin instanceof \Symfony\Component\HttpKernel\Bundle\Bundle) {
                     if (defined($class.'::MINIMUM_MAUTIC_VERSION')) {
