@@ -91,6 +91,10 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
     public function onChannelSubscriptionChange(ChannelSubscriptionChange $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        if (!$integration){
+            return;
+        }
+        
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;

@@ -79,9 +79,6 @@ class BounceCallbackEmailSubscriber implements EventSubscriberInterface
             return;
         }
 
-        //$integrationSettings = $integration->getIntegrationSettings();        
-        //$featureSettings     = $integrationSettings->getFeatureSettings();  
-
 
         $helper = $event->getHelper();
         $lead = $event->getLead();

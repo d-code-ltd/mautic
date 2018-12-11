@@ -82,6 +82,9 @@ class SearchSubscriber extends CommonSubscriber
     public function onBuildCommandList(MauticEvents\CommandListEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        if (!$integration){
+            return;
+        }
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
@@ -103,6 +106,9 @@ class SearchSubscriber extends CommonSubscriber
     public function onBuildSearchCommands(LeadBuildSearchEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        if (!$integration){
+            return;
+        }
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
@@ -124,7 +130,7 @@ class SearchSubscriber extends CommonSubscriber
         $q       = $event->getQueryBuilder();
         $string  = $event->getString();
         $alias = $event->getAlias();
-        $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');        
         $integrationSettings = $integration->getIntegrationSettings();
         $featureSettings = $integrationSettings->getFeatureSettings();
         

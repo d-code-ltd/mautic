@@ -78,6 +78,10 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
     {        
         /** @var \MauticPlugin\DcodeGDPRCompliancyBundle\Integration\AbstractEnhancerIntegration $integration */
         $integration = $this->integrationHelper->getIntegrationObject('GDPRCompliancy');
+        if (!$integration){
+            return;
+        }
+        
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;

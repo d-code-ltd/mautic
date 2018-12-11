@@ -26,6 +26,9 @@ class BounceCallbackController extends CommonController
     {
         $this->integrationHelper = $this->get('mautic.helper.integration');         
         $integration = $this->integrationHelper->getIntegrationObject('SenderEngine');
+        if (!$integration){
+            return;
+        }
         $integrationSettings = $integration->getIntegrationSettings();
         if (!$integration || $integrationSettings->getIsPublished() === false) {
             return;
