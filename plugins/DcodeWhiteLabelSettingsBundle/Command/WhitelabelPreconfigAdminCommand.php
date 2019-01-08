@@ -61,7 +61,7 @@ EOT
     
         //To prevent hijacking the installation we need to check whether at least one administrator user is present
         try {
-            //$adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
+        $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
         } catch (\Exception $e) {
             $adminExist = null;
         }
@@ -78,23 +78,39 @@ EOT
                                 $user = new User();
                                 $encoder = $container->get('security.encoder_factory')->getEncoder($user);
 
-                                if ($input->getOption('dry-run')){
-                                    $output->writeln("username: {$adminArray[2]}");  
-                                    $output->writeln("firstname: {$adminArray[0]}");  
-                                    $output->writeln("lastname: {$adminArray[1]}");  
-                                    $output->writeln("email: {$adminArray[3]}");  
-                                    $output->writeln("password: ".$encoder->encodePassword($adminArray[5], $user->getSalt()));  
-                                }else{                                    
-                                    $user->setFirstName($adminArray[0]);
-                                    $user->setLastName($adminArray[1]);
-                                    $user->setUsername($adminArray[2]);
-                                    $user->setEmail($adminArray[3]);
-                                    $user->setPassword($encoder->encodePassword($adminArray[4], $user->getSalt()));
-                                    $user->setRole($entityManager->getReference('MauticUserBundle:Role', 1));
+                                $validator = $this->container->get('validator');
+                                $constraints = array(
+                                    new \Symfony\Component\Validator\Constraints\Email(),
+                                    new \Symfony\Component\Validator\Constraints\NotBlank()
+                                );
 
-                                    $entityManager->persist($user);
-                                    $entityManager->flush();    
-                                }                                
+                                $error = $validator->validateValue($adminArray[3], $constraints);
+
+                                if (count($error)==0){
+                                    if (!empty(adminArray[4])){
+                                        if ($input->getOption('dry-run')){
+                                            $output->writeln("username: {$adminArray[2]}");  
+                                            $output->writeln("firstname: {$adminArray[0]}");  
+                                            $output->writeln("lastname: {$adminArray[1]}");  
+                                            $output->writeln("email: {$adminArray[3]}");  
+                                            $output->writeln("password: ".$encoder->encodePassword($adminArray[5], $user->getSalt()));  
+                                        }else{                                    
+                                            $user->setFirstName($adminArray[0]);
+                                            $user->setLastName($adminArray[1]);
+                                            $user->setUsername($adminArray[2]);
+                                            $user->setEmail($adminArray[3]);
+                                            $user->setPassword($encoder->encodePassword($adminArray[4], $user->getSalt()));
+                                            $user->setRole($entityManager->getReference('MauticUserBundle:Role', 1));
+
+                                            $entityManager->persist($user);
+                                            $entityManager->flush();    
+                                        }  
+                                    }else{
+                                        $output->writeln('password can not be blank');            
+                                    }
+                                }else{
+                                    $output->writeln($adminArray[3].' email is malformed or empty');        
+                                }                         
                             }else{
                                 $output->writeln($adminData.' has wrong number of parameters. Should be: username;firstname;lastname;email;password');        
                             }
