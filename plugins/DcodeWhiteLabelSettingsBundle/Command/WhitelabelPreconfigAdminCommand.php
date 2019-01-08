@@ -53,8 +53,8 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $container = $this->getContainer();        
+        $entityManager = $container->get('doctrine.orm.entity_manager');
         
         
         $data = $input->getArgument('data');
@@ -76,7 +76,7 @@ EOT
                         if (is_array($adminArray)){
                             if (count($adminArray) == 5){                        
                                 $user = new User();
-                                $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+                                $encoder = $container->get('security.encoder_factory')->getEncoder($user);
 
                                 if ($input->getOption('dry-run')){
                                     $output->writeln("username: {$adminArray[2]}");  
