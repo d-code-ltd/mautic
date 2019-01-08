@@ -60,8 +60,8 @@ EOT
         $data = $input->getArgument('data');
     
         //To prevent hijacking the installation we need to check whether at least one administrator user is present
-         try {
-            $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
+        try {
+            //$adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
         } catch (\Exception $e) {
             $adminExist = null;
         }
