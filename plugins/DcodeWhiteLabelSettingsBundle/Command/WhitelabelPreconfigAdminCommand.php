@@ -37,11 +37,11 @@ class WhitelabelPreconfigAdminCommand extends ContainerAwareCommand
             ->setName('whitelabel:preconfig:admin')
             ->setDescription('Whitelabel preconfig administrator users.')
             ->addArgument('data', InputArgument::REQUIRED, 'Data?')
-            ->addOption('--dry-run', null, InputOption::VALUE_OPTIONAL, 'Do a dry run without actually deleting anything.')            
+            ->addOption('--dry-run', null, InputOption::VALUE_NONE, 'Do a dry run without actually deleting anything.')            
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command is used to create administrator users
 
-<info>php %command.full_name%</info>
+<info>php %command.full_name% [--dry-run] -- [data]</info>
 EOT
     );
         
@@ -53,8 +53,9 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $entityManager = $this->get('doctrine.orm.entity_manager');
         $container = $this->getContainer();
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        
         
         $data = $input->getArgument('data');
     
@@ -75,7 +76,7 @@ EOT
                         if (is_array($adminArray)){
                             if (count($adminArray) == 5){                        
                                 $user = new User();
-                                $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+                                $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
 
                                 if ($input->getOption('dry-run')){
                                     $output->writeln("username: {$adminArray[2]}");  
