@@ -61,12 +61,12 @@ EOT
     
         //To prevent hijacking the installation we need to check whether at least one administrator user is present
         try {
-        $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
+            $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
         } catch (\Exception $e) {
             $adminExist = null;
         }
 
-        if (empty($adminExist)){
+        if (empty($adminExist) || $input->getOption('dry-run')){
             if (!empty($data)){
                 $dataArray = explode("|", $data);
                 if (is_array($dataArray)){
