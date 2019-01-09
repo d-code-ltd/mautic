@@ -36,7 +36,7 @@ class DcodeSenderEngineBundlePreconfigEnableCommand extends ContainerAwareComman
     protected function configure()
     {
         $this
-            ->setName('whitelabel:preconfig:enable')
+            ->setName('senderengine:preconfig:enable')
             ->setDescription('Whitelabel preconfig plugin enabled.')            
             ->addOption('--dry-run', null, InputOption::VALUE_NONE, 'Do a dry run without actually deleting anything.')            
             ->setHelp(<<<'EOT'
