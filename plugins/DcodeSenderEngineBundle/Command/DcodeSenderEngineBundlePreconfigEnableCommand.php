@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\Command;
+namespace MauticPlugin\DcodeSenderEngineBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +26,7 @@ use Mautic\PluginBundle\Event\PluginIntegrationEvent;
  *
  * php app/console rabbitmq:consumer:mautic
  */
-class WhitelabelPreconfigEnableCommand extends ContainerAwareCommand
+class DcodeSenderEngineBundlePreconfigEnableCommand extends ContainerAwareCommand
 {    
     /**
      * {@inheritdoc}
@@ -65,11 +65,26 @@ EOT
         // Verify that the requested integration exists
         if (!empty($integrationObject)) {
             $integrationSettings = $integrationObject->getIntegrationSettings();
+
+            var_dump($integrationSettings->getSupportedFeatures());
+            var_dump($integrationSettings->getFeatureSettings());
+
             if (!$integrationSettings->getIsPublished()){
 
                 //do the actual settings 
                 $integrationSettings->setIsPublished(true);                
+
+                $integrationSettings->setSupportedFeatures($integrationObject->getFeatures);
+                $integrationSettings->setFeatureSettings($integrationObject::$defaultValues);
+
                 $integrationRepo->saveEntity($integrationSettings,true);
+
+
+
+
+
+
+
 
 
                 //dispatch PLUGIN_ON_INTEGRATION_CONFIG_SAVE event as if the administrator would have set
