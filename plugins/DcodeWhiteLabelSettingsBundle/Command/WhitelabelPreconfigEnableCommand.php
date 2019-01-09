@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration;
+use Mautic\PluginBundle\PluginEvents;
+use Mautic\PluginBundle\Event\PluginIntegrationEvent;
 
 /**
  * CLI Command : RabbitMQ consumer.
@@ -64,90 +66,27 @@ EOT
         if (!empty($integrationObject)) {
             $integrationSettings = $integrationObject->getIntegrationSettings();
             if (!$integrationSettings->getIsPublished()){
-                $integrationSettings->setPublished(true);
+                $integrationSettings->setIsPublished(true);
                 $integrationRepo->saveEntity($integrationSettings,true);
+
+                $dispatcher = $container->get('event_dispatcher');                
+                if ($dispatcher->hasListeners(PluginEvents::PLUGIN_ON_INTEGRATION_CONFIG_SAVE)) {
+                    
+                    $event = new PluginIntegrationEvent($integrationObject);
+
+                    $dispatcher->dispatch(PluginEvents::PLUGIN_ON_INTEGRATION_CONFIG_SAVE, $event);
+
+                    $entity = $event->getEntity();
+                }
+
+                $entityManager->persist($entity);
+                $entityManager->flush();
+
+
+                
             }
         }else{
             $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
         }
-
- 
-
-
-
-
-
-/*
-
-        //To prevent hijacking the installation we need to check whether at least one administrator user is present
-        try {
-            $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
-        } catch (\Exception $e) {
-            $adminExist = null;
-        }
-
-        if (empty($adminExist) || $input->getOption('dry-run')){
-            if (!empty($data)){
-                $dataArray = explode("|", $data);
-                if (is_array($dataArray)){
-                    foreach ($dataArray as $adminData){
-                        $adminData = trim($adminData);
-                        $adminArray = explode(",", $adminData);
-                        if (is_array($adminArray)){
-                            if (count($adminArray) == 5){                        
-                                $user = new User();
-                                $encoder = $container->get('security.encoder_factory')->getEncoder($user);
-
-                                $validator = $container->get('validator');
-                                $constraints = array(
-                                    new \Symfony\Component\Validator\Constraints\Email(),
-                                    new \Symfony\Component\Validator\Constraints\NotBlank()
-                                );
-
-                                $error = $validator->validateValue($adminArray[3], $constraints);
-
-                                if (count($error)==0){
-                                    if (!empty(adminArray[4])){
-                                        if ($input->getOption('dry-run')){
-                                            $output->writeln("username: {$adminArray[2]}");  
-                                            $output->writeln("firstname: {$adminArray[0]}");  
-                                            $output->writeln("lastname: {$adminArray[1]}");  
-                                            $output->writeln("email: {$adminArray[3]}");  
-                                            $output->writeln("password: ".$encoder->encodePassword($adminArray[5], $user->getSalt()));  
-                                        }else{                                    
-                                            $user->setFirstName($adminArray[0]);
-                                            $user->setLastName($adminArray[1]);
-                                            $user->setUsername($adminArray[2]);
-                                            $user->setEmail($adminArray[3]);
-                                            $user->setPassword($encoder->encodePassword($adminArray[4], $user->getSalt()));
-                                            $user->setRole($entityManager->getReference('MauticUserBundle:Role', 1));
-
-                                            $entityManager->persist($user);
-                                            $entityManager->flush();    
-                                        }  
-                                    }else{
-                                        $output->writeln('password can not be blank');            
-                                    }
-                                }else{
-                                    $output->writeln($adminArray[3].' email is malformed or empty');        
-                                }                         
-                            }else{
-                                $output->writeln($adminData.' has wrong number of parameters. Should be: username,firstname,lastname,email,password');        
-                            }
-                        }else{
-                            $output->writeln($adminData.' is not explodeable by ;');        
-                        }
-                    }
-                }else{
-                    $output->writeln('The data provided is not explodeable by |');
-                }    
-            }else{
-                $output->writeln('No data provided');
-            }
-            
-        }else{
-            $output->writeln('This Mautic installation already has Administrator configured');
-        }
-*/
     }    
 }
