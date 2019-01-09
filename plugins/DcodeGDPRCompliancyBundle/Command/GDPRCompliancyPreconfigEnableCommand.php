@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\GDPRCompliancyIntegration;
+use MauticPlugin\DcodeGDPRCompliancyBundle\Integration\GDPRCompliancyIntegration;
 use Mautic\PluginBundle\PluginEvents;
 use Mautic\PluginBundle\Event\PluginIntegrationEvent;
 
