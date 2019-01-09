@@ -55,7 +55,7 @@ EOT
         $container = $this->getContainer();        
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
-        $integrationHelper = $this->getHelper('integration');
+        $integrationHelper = $this->get('mautic.helper.integration');
         
         // Verify that the requested integration exists
         if (empty($integrationObject)) {
