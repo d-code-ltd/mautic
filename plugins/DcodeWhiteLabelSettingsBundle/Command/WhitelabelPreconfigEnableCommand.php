@@ -59,25 +59,14 @@ EOT
         $integrationObject = $integrationHelper->getIntegrationObject(WhiteLabelIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
-        $result = $integrationRepo->getEntities([
-            'filter' => [
-                'force' => [
-                    [
-                        'column' => 'name',
-                        'expr'   => 'eq',
-                        'value'  => WhiteLabelIntegration::INTEGRATION_NAME,
-                    ],
-                ],
-            ],
-            'hydration_mode' => 'hydrate_array',
-        ]);
-
-        var_dump($result);
-
+        
         // Verify that the requested integration exists
         if (!empty($integrationObject)) {
             $integrationSettings = $integrationObject->getIntegrationSettings();
-            var_dump($integrationSettings->getIsPublished());    
+            if (!$integrationSettings->getIsPublished()){
+                $integrationSettings->setPublished(true);
+                $integrationRepo->saveEntity($integrationSettings,true);
+            }
         }else{
             $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
         }
