@@ -74,7 +74,7 @@ EOT
                 //do the actual settings 
                 $integrationSettings->setIsPublished(true);                
 
-                $integrationSettings->setSupportedFeatures($integrationObject->getFeatures);
+                $integrationSettings->setSupportedFeatures($integrationObject->getSupportedFeatures());
                 $integrationSettings->setFeatureSettings($integrationObject::$defaultValues);
 
                 $integrationRepo->saveEntity($integrationSettings,true);
