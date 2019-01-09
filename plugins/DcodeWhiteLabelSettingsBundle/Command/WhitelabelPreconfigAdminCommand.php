@@ -78,7 +78,7 @@ EOT
                                 $user = new User();
                                 $encoder = $container->get('security.encoder_factory')->getEncoder($user);
 
-                                $validator = $this->container->get('validator');
+                                $validator = $container->get('validator');
                                 $constraints = array(
                                     new \Symfony\Component\Validator\Constraints\Email(),
                                     new \Symfony\Component\Validator\Constraints\NotBlank()
