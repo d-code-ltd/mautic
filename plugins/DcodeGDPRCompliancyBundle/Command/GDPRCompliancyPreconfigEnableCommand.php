@@ -69,6 +69,17 @@ EOT
 
                 //do the actual settings 
                 $integrationSettings->setIsPublished(true);                
+
+                $currentSuppertedFeatures = $integrationSettings->getSupportedFeatures();
+                $currentFeatureSettings = $integrationSettings->getFeatureSettings();
+
+                if (empty($currentSuppertedFeatures)){
+                    $integrationSettings->setSupportedFeatures($integrationObject->getSupportedFeatures());
+                }
+                if (empty($currentFeatureSettings)){
+                    $integrationSettings->setFeatureSettings($integrationObject::$defaultValues);
+                }
+                
                 $integrationRepo->saveEntity($integrationSettings,true);
 
 
