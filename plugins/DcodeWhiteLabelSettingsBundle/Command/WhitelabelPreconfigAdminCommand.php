@@ -72,7 +72,7 @@ EOT
                 if (is_array($dataArray)){
                     foreach ($dataArray as $adminData){
                         $adminData = trim($adminData);
-                        $adminArray = explode(";", $adminData);
+                        $adminArray = explode(",", $adminData);
                         if (is_array($adminArray)){
                             if (count($adminArray) == 5){                        
                                 $user = new User();
@@ -112,7 +112,7 @@ EOT
                                     $output->writeln($adminArray[3].' email is malformed or empty');        
                                 }                         
                             }else{
-                                $output->writeln($adminData.' has wrong number of parameters. Should be: username;firstname;lastname;email;password');        
+                                $output->writeln($adminData.' has wrong number of parameters. Should be: username,firstname,lastname,email,password');        
                             }
                         }else{
                             $output->writeln($adminData.' is not explodeable by ;');        
