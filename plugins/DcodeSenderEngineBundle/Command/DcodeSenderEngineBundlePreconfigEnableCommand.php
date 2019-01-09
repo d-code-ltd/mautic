@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration;
+use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\SenderEngineIntegration;
 use Mautic\PluginBundle\PluginEvents;
 use Mautic\PluginBundle\Event\PluginIntegrationEvent;
 
@@ -58,7 +58,7 @@ EOT
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
         $integrationHelper = $container->get('mautic.helper.integration');        
-        $integrationObject = $integrationHelper->getIntegrationObject(WhiteLabelIntegration::INTEGRATION_NAME);
+        $integrationObject = $integrationHelper->getIntegrationObject(SenderEngineIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
         
