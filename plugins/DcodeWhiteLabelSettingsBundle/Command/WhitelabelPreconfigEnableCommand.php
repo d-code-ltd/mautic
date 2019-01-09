@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Mautic\UserBundle\Entity\User;
+use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration;
 
 /**
  * CLI Command : RabbitMQ consumer.
@@ -55,15 +55,17 @@ EOT
         $container = $this->getContainer();        
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
-        $integrationHelper = $container->get('mautic.helper.integration');
+        $integrationHelper = $container->get('mautic.helper.integration');        
+        $integrationObject = $integrationHelper->getIntegrationObject(WhiteLabelIntegration::INTEGRATION_NAME);
         
         // Verify that the requested integration exists
-        if (empty($integrationObject)) {
-            throw $this->createNotFoundException($this->get('translator')->trans('mautic.core.url.error.404'));
+        if (!empty($integrationObject)) {
+            $integrationSettings = $integrationObject->getIntegrationSettings();
+            var_dump($integrationSettings);    
+        }else{
+            $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
         }
-
-        $integrationSettings = $integrationObject->getIntegrationSettings();
-        var_dump($integrationSettings);
+ 
 
 
 

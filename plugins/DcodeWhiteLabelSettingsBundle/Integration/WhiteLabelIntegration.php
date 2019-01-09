@@ -24,6 +24,8 @@ use Symfony\Component\Form\FormBuilder;
  */
 class WhiteLabelIntegration extends AbstractIntegration
 { 
+    const INTEGRATION_NAME         = 'WhiteLabel';
+
     /**
      * @var bool
      */
@@ -36,7 +38,7 @@ class WhiteLabelIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'WhiteLabel';
+        return self::INTEGRATION_NAME;
     }
 
      /**

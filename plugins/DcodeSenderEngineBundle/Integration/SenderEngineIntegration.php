@@ -28,6 +28,8 @@ use Mautic\LeadBundle\Entity\LeadField;
  */
 class SenderEngineIntegration extends AbstractIntegration
 { 
+    const INTEGRATION_NAME         = 'SenderEngine';
+
     /**
      * @var bool
      */
@@ -40,7 +42,7 @@ class SenderEngineIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'SenderEngine';
+        return self::INTEGRATION_NAME;
     }
 
      /**
