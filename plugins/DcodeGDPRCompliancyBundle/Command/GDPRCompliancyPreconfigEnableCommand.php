@@ -61,7 +61,7 @@ EOT
         $integrationObject = $integrationHelper->getIntegrationObject(GDPRCompliancyIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
-        $fieldModel = $entityManager->getModel('MauticLeadBundle:Field');
+        $fieldModel = $container->get('mautic.lead.model.lead');
         
         // Verify that the requested integration exists
         if (!empty($integrationObject)) {
@@ -121,7 +121,7 @@ EOT
                         }
                         $featureSettings[$integrationObject->getFieldSettingKey($leadFieldEntity->getAlias())] = $defaultValue;
                     }
-                    
+
                     $integrationSettings->setFeatureSettings($featureSettings);
                 }
                 
@@ -142,9 +142,11 @@ EOT
                 $entityManager->persist($entity);
                 $entityManager->flush();
                 
+            }else{
+                $output->writeln(GDPRCompliancyIntegration::INTEGRATION_NAME. ' is already enabled');    
             }
         }else{
-            $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
+            $output->writeln(GDPRCompliancyIntegration::INTEGRATION_NAME. ' integration not found');
         }
     }    
 }

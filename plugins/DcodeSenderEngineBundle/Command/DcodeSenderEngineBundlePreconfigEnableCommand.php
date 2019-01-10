@@ -106,9 +106,11 @@ EOT
                 $entityManager->persist($entity);
                 $entityManager->flush();
                 
+            }else{
+                $output->writeln(SenderEngineIntegration::INTEGRATION_NAME. ' is already enabled');    
             }
         }else{
-            $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
+            $output->writeln(SenderEngineIntegration::INTEGRATION_NAME. ' integration not found');
         }
     }    
 }

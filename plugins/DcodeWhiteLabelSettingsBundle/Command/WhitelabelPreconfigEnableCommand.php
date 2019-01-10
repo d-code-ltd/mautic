@@ -86,6 +86,8 @@ EOT
                 $entityManager->persist($entity);
                 $entityManager->flush();
                 
+            }else{
+                $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' is already enabled');    
             }
         }else{
             $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
