@@ -79,7 +79,7 @@ EOT
                 }
                 if (empty($currentFeatureSettings)){
                     $featureSettings = [
-                        'hash_salt' => b_substr(md5(time()),0,16)
+                        'hash_salt' => mb_substr(md5(time()),0,16)
                     ];
 
 
