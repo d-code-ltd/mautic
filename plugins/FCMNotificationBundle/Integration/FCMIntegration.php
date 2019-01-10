@@ -24,6 +24,8 @@ use Symfony\Component\Form\FormBuilder;
  */
 class FCMIntegration extends AbstractIntegration
 {
+    const INTEGRATION_NAME         = 'FCM';
+
     /**
      * @var bool
      */
@@ -36,7 +38,7 @@ class FCMIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'FCM';
+        return self::INTEGRATION_NAME;
     }
 
      /**

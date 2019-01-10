@@ -28,6 +28,8 @@ use Mautic\LeadBundle\Entity\LeadField;
  */
 class GDPRCompliancyIntegration extends AbstractIntegration
 { 
+    const INTEGRATION_NAME         = 'GDPRCompliancy';
+
     /**
      * @var bool
      */
@@ -39,8 +41,8 @@ class GDPRCompliancyIntegration extends AbstractIntegration
      * @return string
      */
     public function getName()
-    {
-        return 'GDPRCompliancy';
+    {;
+        return self::INTEGRATION_NAME;
     }
 
      /**

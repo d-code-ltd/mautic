@@ -28,6 +28,16 @@ use Mautic\LeadBundle\Entity\LeadField;
  */
 class SenderEngineIntegration extends AbstractIntegration
 { 
+    const INTEGRATION_NAME         = 'SenderEngine';
+    static $defaultValues = [
+        'return_path_format' => 'postmaster-{idHash}',
+        'return_path_domain' => 'leadengine.hu',
+        'bounce3_value' => 3,
+        'bounce4_value' => 10,
+        'bounce5_value' => 20,
+        'bounce_threshold' => 100
+    ];
+
     /**
      * @var bool
      */
@@ -40,7 +50,7 @@ class SenderEngineIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'SenderEngine';
+        return self::INTEGRATION_NAME;
     }
 
      /**
@@ -239,8 +249,8 @@ class SenderEngineIntegration extends AbstractIntegration
                         'readonly'     => true
                     ],
                     'required' => true,
-                    'empty_data' => 'postmaster-{idHash}',
-                    'data' => 'postmaster-{idHash}'
+                    'empty_data' => self::$defaultValues['return_path_format'],
+                    'data' => self::$defaultValues['return_path_format'],
                 ]
             );
 
@@ -253,10 +263,10 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.integration.form.features.return_path_domain.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_0":"checked"}',
-                        'placeholder'  => 'mailengine.hu'
+                        'placeholder'  => self::$defaultValues['return_path_domain'],
                     ],
                     'required' => true,
-                    'empty_data' => 'mailengine.hu',                    
+                    'empty_data' => self::$defaultValues['return_path_domain'],
                 ]
             );
             
@@ -270,9 +280,9 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce3_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                        'placeholder'  => '3'
+                        'placeholder'  => self::$defaultValues['bounce3_value'],
                     ],
-                    'empty_data' => '3'
+                    'empty_data' => self::$defaultValues['bounce3_value'],
                 ]
             );
 
@@ -286,9 +296,9 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce4_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                        'placeholder'  => '10'
+                        'placeholder'  => self::$defaultValues['bounce4_value'],
                     ],
-                    'empty_data' => '10'
+                    'empty_data' => self::$defaultValues['bounce4_value'],
                 ]
             );
 
@@ -302,9 +312,9 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce5_value.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                        'placeholder'  => '20'
+                        'placeholder'  => self::$defaultValues['bounce5_value'],
                     ],
-                    'empty_data' => '20'
+                    'empty_data' => self::$defaultValues['bounce5_value'],
                 ]
             );
             
@@ -318,9 +328,9 @@ class SenderEngineIntegration extends AbstractIntegration
                         'class' => '',
                         'tooltip'      => 'mautic.plugin.integration.form.features.bounce_callback.bounce_threshold.tooltip',
                         'data-show-on' => '{"integration_details_supportedFeatures_1":"checked"}',
-                        'placeholder'  => '100'
+                        'placeholder'  => self::$defaultValues['bounce_threshold'],
                     ],
-                    'empty_data' => '100'
+                    'empty_data' => self::$defaultValues['bounce_threshold'],
                 ]
             );
                 
