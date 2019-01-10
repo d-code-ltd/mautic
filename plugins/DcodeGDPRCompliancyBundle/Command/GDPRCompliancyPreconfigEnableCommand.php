@@ -61,6 +61,7 @@ EOT
         $integrationObject = $integrationHelper->getIntegrationObject(GDPRCompliancyIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
+        $fieldModel = $entityManager->getModel('MauticLeadBundle:Field');
         
         // Verify that the requested integration exists
         if (!empty($integrationObject)) {
@@ -70,14 +71,58 @@ EOT
                 //do the actual settings 
                 $integrationSettings->setIsPublished(true);                
 
-                $currentSuppertedFeatures = $integrationSettings->getSupportedFeatures();
+                $currentSupportedFeatures = $integrationSettings->getSupportedFeatures();
                 $currentFeatureSettings = $integrationSettings->getFeatureSettings();
 
-                if (empty($currentSuppertedFeatures)){
+                if (empty($currentSupportedFeatures)){
                     $integrationSettings->setSupportedFeatures($integrationObject->getSupportedFeatures());
                 }
                 if (empty($currentFeatureSettings)){
-                    $integrationSettings->setFeatureSettings($integrationObject::$defaultValues);
+                    $featureSettings = [
+                        'hash_salt' => b_substr(md5(time()),0,16)
+                    ];
+
+
+                    $availableFields = $fieldModel->getLeadFields();
+                    foreach ($availableFields as $leadFieldEntity){                
+                        if (mb_ereg('_hash$', $leadFieldEntity->getAlias()) AND in_array(mb_ereg_replace('_hash$','',$leadFieldEntity->getAlias()), $integrationObject::$separateHashFields)){
+                            continue;
+                        }
+
+                   
+                        $readonly = false;
+                        $defaultValue = $integrationObject::$defaultGDPRFieldBehaviour;
+
+                        $allowedBehaviours = $integrationObject::$GDPRFieldBehaviours;
+                        if (in_array($leadFieldEntity->getAlias(),$integrationObject::$fixedHashFields) || in_array($leadFieldEntity->getGroup(),$integrationObject::$fixedHashGroups)){
+                            if (!in_array($leadFieldEntity->getType(),$integrationObject::$nonHashableFieldTypes)){
+                                $readonly = true;
+                                $defaultValue = "hash";
+                                unset($allowedBehaviours['keep']);
+                                unset($allowedBehaviours['remove']);
+                            }else{
+                                $defaultValue = "remove";
+                                unset($allowedBehaviours['keep']);
+                                unset($allowedBehaviours['hash']);
+                            }
+                        }elseif(in_array($leadFieldEntity->getAlias(),$integrationObject::$fixedKeepFields)){
+                            $readonly = true;
+                            $defaultValue = "keep";
+                            unset($allowedBehaviours['remove']);
+                            unset($allowedBehaviours['hash']);
+                        }else{
+                            if (in_array($leadFieldEntity->getType(),$integrationObject::$nonHashableFieldTypes)){
+                                unset($allowedBehaviours['hash']);
+                            }    
+
+                            if ($leadFieldEntity->getIsUniqueIdentifer()){
+                                unset($allowedBehaviours['hash']);
+                            }
+                        }
+                        $featureSettings[$integrationObject->getFieldSettingKey($leadFieldEntity->getAlias())] = $defaultValue;
+                    }
+                    
+                    $integrationSettings->setFeatureSettings($featureSettings);
                 }
                 
                 $integrationRepo->saveEntity($integrationSettings,true);

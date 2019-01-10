@@ -72,10 +72,10 @@ EOT
                 //do the actual settings 
                 $integrationSettings->setIsPublished(true);                
 
-                $currentSuppertedFeatures = $integrationSettings->getSupportedFeatures();
+                $currentSupportedFeatures = $integrationSettings->getSupportedFeatures();
                 $currentFeatureSettings = $integrationSettings->getFeatureSettings();
 
-                if (empty($currentSuppertedFeatures)){
+                if (empty($currentSupportedFeatures)){
                     $integrationSettings->setSupportedFeatures($integrationObject->getSupportedFeatures());
                 }
                 if (empty($currentFeatureSettings)){
