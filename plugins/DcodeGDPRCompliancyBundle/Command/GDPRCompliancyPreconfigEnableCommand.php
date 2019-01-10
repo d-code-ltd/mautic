@@ -61,7 +61,7 @@ EOT
         $integrationObject = $integrationHelper->getIntegrationObject(GDPRCompliancyIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
-        $fieldModel = $container->get('mautic.lead.model.lead');
+        $fieldModel = $container->get('mautic.lead.model.field');
         
         // Verify that the requested integration exists
         if (!empty($integrationObject)) {
