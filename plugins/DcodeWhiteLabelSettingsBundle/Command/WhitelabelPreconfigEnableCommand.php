@@ -57,6 +57,10 @@ EOT
         $container = $this->getContainer();        
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
+        //Reload plugins dir
+        $pluginReloadFacade = $container->get('mautic.plugin.facade.reload');
+        $pluginReloadFacade->reloadPlugins();
+
         $integrationHelper = $container->get('mautic.helper.integration');        
         $integrationObject = $integrationHelper->getIntegrationObject(WhiteLabelIntegration::INTEGRATION_NAME);
         
@@ -92,5 +96,5 @@ EOT
         }else{
             $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
         }
-    }    
+    }
 }
