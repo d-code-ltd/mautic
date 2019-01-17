@@ -19,6 +19,20 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Mautic\UserBundle\Entity\User;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Mautic\CoreBundle\Configurator\Configurator;
+use Mautic\CoreBundle\Configurator\Step\StepInterface;
+use Mautic\CoreBundle\Controller\CommonController;
+use Mautic\CoreBundle\Helper\EncryptionHelper;
+use Mautic\InstallBundle\Helper\SchemaHelper;
+use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+
 /**
  * CLI Command : RabbitMQ consumer.
  *
@@ -53,20 +67,81 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();        
+        $container = $this->getContainer();
+        $configurator = $container->get('mautic.configurator');        
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
+        //Reload plugins dir
+        $pluginReloadFacade = $container->get('mautic.plugin.facade.reload');
+        $pluginReloadFacade->reloadPlugins();
         
+        //Collect input data
+        $params = $this->configurator->getParameters();
         $data = $input->getArgument('data');
     
         //To prevent hijacking the installation we need to check whether at least one administrator user is present
         try {
-            $adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
+            //$adminExist = $entityManager->getRepository('MauticUserBundle:User')->find(1);
+            $adminExist = $entityManager->getRepository('MauticUserBundle:User')->getUserList(null,1);            
         } catch (\Exception $e) {
             $adminExist = null;
         }
 
+
+        
+
+
+
+
+
+
+
+
+
+
         if (empty($adminExist) || $input->getOption('dry-run')){
+            //Install 
+            if ($input->getOption('dry-run')){
+                $output->writeln('running dry: database setup, installSchema');   
+            }else{
+                $schemaHelper = new SchemaHelper($params);
+                $schemaHelper->setEntityManager($this->get('doctrine.orm.entity_manager'));
+
+                
+                try {
+                    $schemaHelper->testConnection();
+                    $output->writeln('Creating database...');
+                    if ($schemaHelper->createDatabase()) {
+                        
+
+                        $this->addFlash('mautic.installer.error.writing.configuration', [], 'error');
+                    } else {
+                        $this->addFlash('mautic.installer.error.creating.database', ['%name%' => $dbParams['name']], 'error');
+                    }
+                } catch (\Exception $exception) {
+                    $output->writeln('Preinstaller failed during database setup'); 
+                    $output->writeln($exception->getMessage());                      
+                }
+
+                try {
+                    $output->writeln('Installing schema');
+                    $schemaHelper->installSchema();
+                } catch (\Exception $exception) {    
+                    $output->writeln('Preinstaller failed during installSchema'); 
+                    $output->writeln($exception->getMessage());                      
+                }
+
+                try {
+                    $output->writeln('Installing database fixtures');
+                    $this->installDatabaseFixtures();
+                } catch (\Exception $exception) {    
+                    $output->writeln('Preinstaller failed during installSchema'); 
+                    $output->writeln($exception->getMessage());                      
+                }
+            }
+
+
+
             if (!empty($data)){
                 $dataArray = explode("|", $data);
                 if (is_array($dataArray)){
@@ -128,5 +203,40 @@ EOT
         }else{
             $output->writeln('This Mautic installation already has Administrator configured');
         }
-    }    
+    }   
+
+    /**
+     * Installs data fixtures for the application.
+     * COPIED FROM app/InstallBundle/Controller/InstallController.php
+     *
+     * @return array|bool Array containing the flash message data on a failure, boolean true on success
+     */
+    private function installDatabaseFixtures()
+    {
+        $container = $this->getContainer();     
+
+        $entityManager = $container->get('doctrine.orm.entity_manager');
+        #GET InstallBundle PATH!%!!!!!!!!
+        $paths         = [dirname(__DIR__).'/InstallFixtures/ORM'];
+        $loader        = new ContainerAwareLoader($container);
+
+        foreach ($paths as $path) {
+            if (is_dir($path)) {
+                $loader->loadFromDirectory($path);
+            }
+        }
+
+        $fixtures = $loader->getFixtures();
+
+        if (!$fixtures) {
+            throw new \InvalidArgumentException(
+                sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $paths))
+            );
+        }
+
+        $purger = new ORMPurger($entityManager);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
+        $executor = new ORMExecutor($entityManager, $purger);
+        $executor->execute($fixtures, true);
+    } 
 }
