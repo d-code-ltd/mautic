@@ -67,7 +67,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        exit("HELLÓ");
+
         $container = $this->getContainer();
         $configurator = $container->get('mautic.configurator');        
         $entityManager = $container->get('doctrine.orm.entity_manager');
@@ -89,7 +89,7 @@ EOT
         }
 
         var_dump($adminExist);
-
+        exit;
 
         
 
