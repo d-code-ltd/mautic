@@ -76,7 +76,7 @@ EOT
         $pluginReloadFacade->reloadPlugins();
         
         //Collect input data
-        $params = $this->configurator->getParameters();
+        $params = $configurator->getParameters();
         $data = $input->getArgument('data');
     
         //To prevent hijacking the installation we need to check whether at least one administrator user is present
@@ -100,49 +100,76 @@ EOT
 
 
         if (empty($adminExist) || $input->getOption('dry-run')){
-            //Install 
-            if ($input->getOption('dry-run')){
-                $output->writeln('running dry: database setup, installSchema');   
-            }else{
-                $schemaHelper = new SchemaHelper($params);
-                $schemaHelper->setEntityManager($this->get('doctrine.orm.entity_manager'));
-
-                
-                try {
-                    $schemaHelper->testConnection();
-                    $output->writeln('Creating database...');
-                    if ($schemaHelper->createDatabase()) {
-                        
-
-                        $this->addFlash('mautic.installer.error.writing.configuration', [], 'error');
-                    } else {
-                        $this->addFlash('mautic.installer.error.creating.database', ['%name%' => $dbParams['name']], 'error');
-                    }
-                } catch (\Exception $exception) {
-                    $output->writeln('Preinstaller failed during database setup'); 
-                    $output->writeln($exception->getMessage());                      
-                }
-
-                try {
-                    $output->writeln('Installing schema');
-                    $schemaHelper->installSchema();
-                } catch (\Exception $exception) {    
-                    $output->writeln('Preinstaller failed during installSchema'); 
-                    $output->writeln($exception->getMessage());                      
-                }
-
-                try {
-                    $output->writeln('Installing database fixtures');
-                    $this->installDatabaseFixtures();
-                } catch (\Exception $exception) {    
-                    $output->writeln('Preinstaller failed during installSchema'); 
-                    $output->writeln($exception->getMessage());                      
-                }
-            }
-
-
-
             if (!empty($data)){
+
+
+                //Install 
+                if ($input->getOption('dry-run')){
+                    $output->writeln('running dry: database setup, installSchema');   
+                }else{
+                    $schemaHelper = new SchemaHelper($params);
+                    $schemaHelper->setEntityManager($this->get('doctrine.orm.entity_manager'));
+
+                    
+                    try {
+                        $schemaHelper->testConnection();
+                        $output->writeln('Creating database...');
+                        if ($schemaHelper->createDatabase()) {
+                            
+
+                            $this->addFlash('mautic.installer.error.writing.configuration', [], 'error');
+                        } else {
+                            $this->addFlash('mautic.installer.error.creating.database', ['%name%' => $dbParams['name']], 'error');
+                        }
+                    } catch (\Exception $exception) {
+                        $output->writeln('Preinstaller failed during database setup'); 
+                        $output->writeln($exception->getMessage());                      
+                    }
+
+                    try {
+                        $output->writeln('Installing schema');
+                        $schemaHelper->installSchema();
+                    } catch (\Exception $exception) {    
+                        $output->writeln('Preinstaller failed during installSchema'); 
+                        $output->writeln($exception->getMessage());                      
+                    }
+
+                    try {
+                        $output->writeln('Installing database fixtures');
+                        $this->installDatabaseFixtures();
+                    } catch (\Exception $exception) {    
+                        $output->writeln('Preinstaller failed during installSchema'); 
+                        $output->writeln($exception->getMessage());                      
+                    }
+
+                    $finalConfigVars = [
+                        'secret_key' => EncryptionHelper::generateKey(),                
+                    ];
+
+                    $configurator->mergeParameters($finalConfigVars);
+
+                    try {
+                        $configurator->write();
+                    } catch (\RuntimeException $exception) {
+                        $output->writeln('writing config file failed');
+                    }
+
+                    
+                    $container->get('mautic.helper.cache')->clearContainerFile(false);
+                    
+
+                    //applying migrations
+                    $input  = new ArgvInput(['console', 'doctrine:migrations:version', '--add', '--all', '--no-interaction']);
+                    $output = new BufferedOutput();
+
+                    $application = new Application($this->container->get('kernel'));
+                    $application->setAutoExit(false);
+                    $application->run($input, $output);                    
+                }
+
+
+
+
                 $dataArray = explode("|", $data);
                 if (is_array($dataArray)){
                     foreach ($dataArray as $adminData){
