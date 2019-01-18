@@ -87,6 +87,8 @@ EOT
             $adminExist = null;
         }
 
+        var_dump($adminExist);
+
 
         
 
