@@ -31,7 +31,7 @@ $loader = require_once __DIR__.'/app/autoload.php';
 //$loader->unregister();
 //$apcLoader->register(true);
 
-\Mautic\CoreBundle\ErrorHandler\ErrorHandler::register('prod');
+\Mautic\CoreBundle\ErrorHandler\ErrorHandler::register('dev');
 
 $kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
