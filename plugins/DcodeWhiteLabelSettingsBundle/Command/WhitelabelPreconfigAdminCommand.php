@@ -71,11 +71,7 @@ EOT
         $container = $this->getContainer();
         $configurator = new Configurator($container->get('mautic.helper.paths'));
         $entityManager = $container->get('doctrine.orm.entity_manager');
-        
-        //Reload plugins dir
-        $pluginReloadFacade = $container->get('mautic.plugin.facade.reload');
-        $pluginReloadFacade->reloadPlugins();
-        
+                        
         //Collect input data
         $params = $configurator->getParameters();
         $data = $input->getArgument('data');
@@ -227,6 +223,10 @@ EOT
                             $output->writeln($adminData.' is not explodeable by ;');        
                         }
                     }
+
+                    //Reload plugins dir
+                    $pluginReloadFacade = $container->get('mautic.plugin.facade.reload');
+                    $pluginReloadFacade->reloadPlugins();
                 }else{
                     $output->writeln('The data provided is not explodeable by |');
                 }    
