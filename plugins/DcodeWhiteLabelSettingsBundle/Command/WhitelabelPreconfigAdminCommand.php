@@ -156,10 +156,7 @@ EOT
                     } catch (\RuntimeException $exception) {
                         $output->writeln('writing config file failed');
                     }
-
-                    
-                    //$container->get('mautic.helper.cache')->clearContainerFile(false);
-                    
+                  
 
                     //applying migrations
                     $consoleInput  = new ArgvInput(['console', 'doctrine:migrations:version', '--add', '--all', '--no-interaction']);
@@ -167,7 +164,7 @@ EOT
 
                     $application = new Application($container->get('kernel'));
                     $application->setAutoExit(false);
-                    $application->run($consoleInput, $consoleOutput);                    
+                    $application->run($consoleInput, $consoleOutput);            
                 }
 
 
@@ -227,6 +224,22 @@ EOT
                     //Reload plugins dir
                     $pluginReloadFacade = $container->get('mautic.plugin.facade.reload');
                     $pluginReloadFacade->reloadPlugins();
+
+                    if ($input->getOption('dry-run')){
+                        $output->writeln('Running one-time built-in plugin installers');
+                    }else{
+                        //applying migrations
+                        $output->writeln('Running one-time built-in plugin installers');
+                        $output->writeln('mautic:integration:enhancer:installcspcdata');
+
+                        $consoleInput  = new ArgvInput(['console', 'mautic:integration:enhancer:installcspcdata']);
+                        $consoleOutput = new BufferedOutput();
+
+                        $application = new Application($container->get('kernel'));
+                        $application->setAutoExit(false);
+                        $application->run($consoleInput, $consoleOutput);
+                        var_dump($consoleOutput);
+                    }
                 }else{
                     $output->writeln('The data provided is not explodeable by |');
                 }    
