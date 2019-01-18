@@ -116,7 +116,7 @@ EOT
                     }
                     
 
-                    $schemaHelper = new SchemaHelper($params);
+                    $schemaHelper = new SchemaHelper($db_params);
                     $schemaHelper->setEntityManager($container->get('doctrine.orm.entity_manager'));
 
                     
