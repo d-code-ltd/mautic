@@ -69,7 +69,7 @@ EOT
     {
 
         $container = $this->getContainer();
-        $configurator = $container->get('mautic.configurator');        
+        $configurator = new Configurator($container->get('mautic.helper.paths'));
         $entityManager = $container->get('doctrine.orm.entity_manager');
         
         //Reload plugins dir
@@ -89,9 +89,7 @@ EOT
         }
 
         var_dump($adminExist);
-        exit;
 
-        
 
 
 
@@ -110,19 +108,25 @@ EOT
                 if ($input->getOption('dry-run')){
                     $output->writeln('running dry: database setup, installSchema');   
                 }else{
+                    $db_params = [];
+                    foreach ($params as $k => $p){
+                        if (mb_ereg('^db_',$k)){
+                            $db_params[str_replace('db_','',$k)] = $p;
+                        }
+                    }
+                    
+
                     $schemaHelper = new SchemaHelper($params);
-                    $schemaHelper->setEntityManager($this->get('doctrine.orm.entity_manager'));
+                    $schemaHelper->setEntityManager($container->get('doctrine.orm.entity_manager'));
 
                     
                     try {
                         $schemaHelper->testConnection();
                         $output->writeln('Creating database...');
                         if ($schemaHelper->createDatabase()) {
-                            
-
-                            $this->addFlash('mautic.installer.error.writing.configuration', [], 'error');
+                            $output->writeln('Database created'); 
                         } else {
-                            $this->addFlash('mautic.installer.error.creating.database', ['%name%' => $dbParams['name']], 'error');
+                            $output->writeln('mautic.installer.error.creating.database');                             
                         }
                     } catch (\Exception $exception) {
                         $output->writeln('Preinstaller failed during database setup'); 
@@ -158,16 +162,16 @@ EOT
                     }
 
                     
-                    $container->get('mautic.helper.cache')->clearContainerFile(false);
+                    //$container->get('mautic.helper.cache')->clearContainerFile(false);
                     
 
                     //applying migrations
-                    $input  = new ArgvInput(['console', 'doctrine:migrations:version', '--add', '--all', '--no-interaction']);
-                    $output = new BufferedOutput();
+                    $consoleInput  = new ArgvInput(['console', 'doctrine:migrations:version', '--add', '--all', '--no-interaction']);
+                    $consoleOutput = new BufferedOutput();
 
-                    $application = new Application($this->container->get('kernel'));
+                    $application = new Application($container->get('kernel'));
                     $application->setAutoExit(false);
-                    $application->run($input, $output);                    
+                    $application->run($consoleInput, $consoleOutput);                    
                 }
 
 
@@ -246,8 +250,11 @@ EOT
         $container = $this->getContainer();     
 
         $entityManager = $container->get('doctrine.orm.entity_manager');
+        $pathsHelper = $container->get('mautic.helper.paths');
+
+        var_dump($pathsHelper->getSystemPath("_root"));
         #GET InstallBundle PATH!%!!!!!!!!
-        $paths         = [dirname(__DIR__).'/InstallFixtures/ORM'];
+        $paths         = [$pathsHelper->getSystemPath("_root").'/app/bundles/InstallBundle/InstallFixtures/ORM'];
         $loader        = new ContainerAwareLoader($container);
 
         foreach ($paths as $path) {

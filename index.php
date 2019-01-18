@@ -31,9 +31,9 @@ $loader = require_once __DIR__.'/app/autoload.php';
 //$loader->unregister();
 //$apcLoader->register(true);
 
-\Mautic\CoreBundle\ErrorHandler\ErrorHandler::register('dev');
+\Mautic\CoreBundle\ErrorHandler\ErrorHandler::register('prod');
 
-$kernel = new AppKernel('dev', false);
+$kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
 
-Stack\run((new MiddlewareBuilder('dev'))->resolve($kernel));
+Stack\run((new MiddlewareBuilder('prod'))->resolve($kernel));
