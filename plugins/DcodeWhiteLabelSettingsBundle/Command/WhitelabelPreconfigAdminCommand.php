@@ -252,7 +252,7 @@ EOT
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $pathsHelper = $container->get('mautic.helper.paths');
 
-        var_dump($pathsHelper->getSystemPath("_root"));
+        
         #GET InstallBundle PATH!%!!!!!!!!
         $paths         = [$pathsHelper->getSystemPath("_root").'/app/bundles/InstallBundle/InstallFixtures/ORM'];
         $loader        = new ContainerAwareLoader($container);
