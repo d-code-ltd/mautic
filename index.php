@@ -36,4 +36,4 @@ $loader = require_once __DIR__.'/app/autoload.php';
 $kernel = new AppKernel('dev', false);
 $kernel->loadClassCache();
 
-Stack\run((new MiddlewareBuilder('prod'))->resolve($kernel));
+Stack\run((new MiddlewareBuilder('dev'))->resolve($kernel));
