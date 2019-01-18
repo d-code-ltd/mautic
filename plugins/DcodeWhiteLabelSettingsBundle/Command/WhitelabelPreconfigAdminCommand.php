@@ -238,7 +238,7 @@ EOT
                         $application = new Application($container->get('kernel'));
                         $application->setAutoExit(false);
                         $application->run($consoleInput, $consoleOutput);
-                        var_dump($consoleOutput);
+                        echo $consoleOutput->fetch();
                     }
                 }else{
                     $output->writeln('The data provided is not explodeable by |');
