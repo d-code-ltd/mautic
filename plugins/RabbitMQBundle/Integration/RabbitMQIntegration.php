@@ -121,7 +121,11 @@ class RabbitMQIntegration extends AbstractIntegration
             'gender' => 'gender',
             'birthday' => 'birthday',
             'points' => 'points',
-            'stage' => 'stage'
+            'stage' => 'stage',
+            'googleplus'=>'google_id',
+            'facebook'=>'facebook_id',
+            'twitter'=>'twitter_id',
+            'linkedin'=>'linkedin_id',
         ];
     }
 

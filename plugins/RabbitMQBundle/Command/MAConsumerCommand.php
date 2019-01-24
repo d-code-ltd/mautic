@@ -172,14 +172,12 @@ class MAConsumerCommand extends ModeratedCommand
 
                                 if($leadFields['operation']=='new' || $leadFields['operation']=='update'){
                                     $list = $listModel->getRepository()->findOneBy(['alias'=>$gAlias]);
-                                    //var_dump($list);die;
                                     if($list===null){
                                         $output->writeln("New");
                                         $list = new leadList();
                                     }else{
                                         $output->writeln("Updating");
                                     }
-                                    //var_dump($list->getId());die;
                                     $list->setName($gName);
                                     $list->setDescription($gName);
                                     $list->setAlias($gAlias);
@@ -282,7 +280,7 @@ class MAConsumerCommand extends ModeratedCommand
                                         $lead->setStage($stage);
                                     }
 
-                                    $leadModel->saveEntity($lead, true, false);
+                                    $leadModel->saveEntity($lead);
 
                                     // Adding lead to segments (fences)
                                     $fenceIds = [];
