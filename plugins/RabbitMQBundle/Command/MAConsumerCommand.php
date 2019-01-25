@@ -285,7 +285,8 @@ class MAConsumerCommand extends ModeratedCommand
                                     $leadModel->saveEntity($lead, true, false);
 
                                     // Adding lead to segments (fences)
-                                    $fenceIds = [];
+                                    $removeFenceIds = [];
+                                    $addFenceIds = [];
                                     $fenceNames = [];
                                     // Work with fences only when message is sent from kiazaki_ws
                                     if(isset($leadFields['data']['in_fence']) && $leadFields['source']=="kiazaki_ws" ){
@@ -297,20 +298,25 @@ class MAConsumerCommand extends ModeratedCommand
                                         //Removing only geofence segments from lead
                                         foreach ($leadSegments as $key => $value) {
                                             if(substr($value->getAlias(), 0, 9)=="geofence-"){
-                                                $fenceIds[] = $value->getId();   
+                                                $removeFenceIds[] = $value->getId();   
                                             }
                                         }
-                                        $leadModel->removeFromLists($lead, $fenceIds);
-                                        //Reseting array
-                                        $fenceIds = [];
+                                        
                                         //Selecting new segments
                                         $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
                                         //Getting segments ids for adding leads to them
                                         foreach ($fences as $key => $value) {
-                                            $fenceIds[] = $value->getId();
+                                            $addFenceIds[] = $value->getId();
                                         }
-                                        //Adding new segments to lead
-                                        $leadModel->addToLists($lead, $fenceIds);
+
+                                        if (count(array_diff_key($removeFenceIds, $addFenceIds))>0){
+                                            //remove segments from lead
+                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds));
+                                        }
+                                        if (count(array_diff_key($addFenceIds, $removeFenceIds))>0){
+                                            //remove segments to lead
+                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds));
+                                        }
                                     }else if(isset($leadFields['data']['segments']) && $leadFields['source']=="pimcore" ){
                                         foreach ($leadFields['data']['segments'] as $key => $value) {
                                             $fenceNames[] = $value;
@@ -319,19 +325,25 @@ class MAConsumerCommand extends ModeratedCommand
                                         $leadSegments = $leadModel->getLists($lead);
                                         //Removing only geofence segments from lead
                                         foreach ($leadSegments as $key => $value) {
-                                                $fenceIds[] = $value->getId();   
+                                            $removeFenceIds[] = $value->getId();   
                                         }
-                                        $leadModel->removeFromLists($lead, $fenceIds);
-                                        //Reseting array
-                                        $fenceIds = [];
+                                        
+                                        
                                         //Selecting new segments
                                         $fences = $listModel->getRepository()->findBy(['name'=>$fenceNames]);
                                         //Getting segments ids for adding leads to them
                                         foreach ($fences as $key => $value) {
-                                            $fenceIds[] = $value->getId();
+                                            $addFenceIds[] = $value->getId();
                                         }
-                                        //Adding new segments to lead
-                                        $leadModel->addToLists($lead, $fenceIds);
+
+                                        if (count(array_diff_key($removeFenceIds, $addFenceIds))>0){
+                                            //remove segments from lead
+                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds));
+                                        }
+                                        if (count(array_diff_key($addFenceIds, $removeFenceIds))>0){
+                                            //remove segments to lead
+                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds));
+                                        }                                        
                                     }
                                     if($leadFields['source']=="pimcore"){
                                         if(!isset($leadFields['data']['tags'])){
