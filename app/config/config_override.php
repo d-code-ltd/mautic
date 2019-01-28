@@ -7,3 +7,9 @@ $container->loadFromExtension("doctrine", array(
         "query_cache_driver"    => "memcached"
     )
 ));
+
+
+/*
+ * Overrides the configuration from security.php
+ */
+$container->setParameter('mautic.security.disableUpdates', true);
