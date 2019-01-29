@@ -311,11 +311,11 @@ class MAConsumerCommand extends ModeratedCommand
 
                                         if (count(array_diff_key($removeFenceIds, $addFenceIds))>0){
                                             //remove segments from lead
-                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds));
+                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds), false);
                                         }
                                         if (count(array_diff_key($addFenceIds, $removeFenceIds))>0){
                                             //remove segments to lead
-                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds));
+                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds), false);
                                         }
                                     }else if(isset($leadFields['data']['segments']) && $leadFields['source']=="pimcore" ){
                                         foreach ($leadFields['data']['segments'] as $key => $value) {
@@ -338,11 +338,11 @@ class MAConsumerCommand extends ModeratedCommand
 
                                         if (count(array_diff_key($removeFenceIds, $addFenceIds))>0){
                                             //remove segments from lead
-                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds));
+                                            $leadModel->removeFromLists($lead, array_diff_key($removeFenceIds, $addFenceIds), false);
                                         }
                                         if (count(array_diff_key($addFenceIds, $removeFenceIds))>0){
                                             //remove segments to lead
-                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds));
+                                            $leadModel->addToLists($lead, array_diff_key($addFenceIds, $removeFenceIds), false);
                                         }                                        
                                     }
                                     if($leadFields['source']=="pimcore"){
