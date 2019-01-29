@@ -57,6 +57,12 @@ class LeadSubscriber extends CommonSubscriber
      */
     public function onLeadPostSave(Events\LeadEvent $event)
     {
+        foreach (debug_backtrace() as $key => $debug) {
+            if(strpos($debug['class'], "MAConsumerCommand") !== false){
+                return;
+            }
+        }
+
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
         $lead = $event->getLead()->convertToArray();
         $settings = $integrationObject->getIntegrationSettings();
