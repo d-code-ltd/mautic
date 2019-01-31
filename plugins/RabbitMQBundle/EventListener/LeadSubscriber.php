@@ -23,6 +23,9 @@ use PhpAmqpLib\Message\AMQPMessage;
  */
 class LeadSubscriber extends CommonSubscriber
 {
+    static $connection;
+    static $channel;
+
     /**
      * @var IntegrationHelper
      */
@@ -230,9 +233,92 @@ class LeadSubscriber extends CommonSubscriber
         }
     }
 
+    private function connect($integrationObject){
+        try {
+            if (!empty(static::$channel)){
+                static::$channel->close();    
+            }
+            if (!empty(static::$connection)){
+                static::$connection->close();    
+            }                        
+        } catch (\Exception $e) {
+
+        }
+
+        static::$connection = new AMQPSSLConnection(
+            $integrationObject->getLocation(),
+            $integrationObject->getPort(),
+            $integrationObject->getUser(),
+            $integrationObject->getPassword(),
+            $integrationObject->getVirtualHost(),
+            [
+                'cafile'=>getenv("RABBITMQ_SSL_CACERT_FILE"),
+                'local_cert'=>getenv("RABBITMQ_SSL_CERT_FILE"),
+                'local_pk'=>getenv("RABBITMQ_SSL_KEY_FILE"),
+                'verify_peer_name'=>false,
+            ]);
+        static::$channel = static::$connection->channel();
+        // exchange, type, passive, durable, auto_delete
+        static::$channel->exchange_declare('kiazaki', 'topic', false, true, false);
+    
+        register_shutdown_function(['\MauticPlugin\RabbitMQBundle\EventListener\LeadSubscriber', 'shutdown']);
+    }
+
+    public static function shutdown(){
+        static::$channel->close();
+        static::$connection->close();
+    }
+
     /**
      * @param array $data The data/message to be sent.
      */
+    private function publish($data, $dataType='contact'){
+        $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
+        $settings = $integrationObject->getIntegrationSettings();
+
+        if (false === $integrationObject || !$settings->getIsPublished()) {
+            return;
+        }
+         
+        if (empty(static::$channel)){
+            $this->connect($integrationObject);
+        }
+
+    
+        $msg = new AMQPMessage($data);
+        try {
+            switch ($dataType) {
+                case 'list':
+                    static::$channel->basic_publish($msg, 'kiazaki', 'mautic.segment');
+                    break;
+                case 'tag':
+                    static::$channel->basic_publish($msg, 'kiazaki', 'mautic.tag');
+                    break;
+
+                default:
+                    static::$channel->basic_publish($msg, 'kiazaki', 'mautic.contact');
+                    break;
+            }
+        } catch (\Exception $e){
+            $this->connect($integrationObject);
+            switch ($dataType) {
+                    case 'list':
+                        static::$channel->basic_publish($msg, 'kiazaki', 'mautic.segment');
+                        break;
+                    case 'tag':
+                        static::$channel->basic_publish($msg, 'kiazaki', 'mautic.tag');
+                        break;
+
+                    default:
+                        static::$channel->basic_publish($msg, 'kiazaki', 'mautic.contact');
+                        break;
+                }
+        }
+    }
+
+
+
+/*
     private function publish($data, $dataType='contact'){
         $integrationObject = $this->integrationHelper->getIntegrationObject('RabbitMQ');
         $settings = $integrationObject->getIntegrationSettings();
@@ -276,4 +362,5 @@ class LeadSubscriber extends CommonSubscriber
         $channel->close();
         $connection->close();
     }
+*/
 }
