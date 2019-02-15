@@ -117,7 +117,7 @@
         "twig/twig": "~1.35",
 
         "koco/mautic-recaptcha-bundle": "~1.1",
-        "thedmsgroup/mautic-enhancer-bundle": "<=2.14.1"
+        "thedmsgroup/mautic-enhancer-bundle": "<=2.14.2"
     },
     "require-dev": {
         "symfony/web-profiler-bundle": "~2.8",
