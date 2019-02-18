@@ -116,9 +116,9 @@ MauticJS.notification = {
     }
 };
 
-MauticJS.documentReady(MauticJS.notification.init);
-
 MauticJS.conditionalAsyncQueue = MauticJS.conditionalAsyncQueue || function(){ (MauticJS.conditionalAsyncQueue.q=MauticJS.conditionalAsyncQueue.q || [] ).push(arguments)};;
+
+MauticJS.documentReady(MauticJS.notification.init);
 
 setInterval(function(){                         
     //console.log("jiaq queue processor running");
