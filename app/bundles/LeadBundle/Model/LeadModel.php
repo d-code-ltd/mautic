@@ -1366,9 +1366,10 @@ class LeadModel extends FormModel
 
         // Dispatch LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY event (By d-code 2018-11-28)                
         if ($this->dispatcher->hasListeners(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY)) {
-            $event = new LeadImportLeadIdentifyEvent($lead, $fieldData);
+            $event = new LeadImportLeadIdentifyEvent($lead, $fieldData, $fields, $data);
             $this->dispatcher->dispatch(LeadEvents::LEAD_IMPORT_LEAD_IDENTIFY, $event);
             $lead = $event->getLead();
+            $fieldData = $event->getFieldData();
             $merged = ($lead->getId());
         }       
         // d-code end
