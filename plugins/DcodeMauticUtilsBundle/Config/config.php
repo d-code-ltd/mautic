@@ -37,7 +37,7 @@ return [
     	],
         'forms' => [       
             'mauticplugin.dcodemauticutils.whitelabelconfig.config' => [
-                'class'     => 'MauticPlugin\DcodeWMauticUtilsBundle\Form\Type\ConfigType',
+                'class'     => 'MauticPlugin\DcodeMauticUtilsBundle\Form\Type\ConfigType',
                 'arguments' => 'mautic.factory',            
                 'alias'     => 'whitelabelconfig',
             ],
