@@ -88,8 +88,10 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
         if ($event->getFormName() == 'lead_field_import'){
             $formPrepare = function (FormEvent $event) {                
                 $form          = $event->getForm();
-                foreach ($form->all() as $child){
-                    var_dump($child->getName());
+                foreach ($form->all() as $key => $child){
+                    var_dump($key, $child->getName());
+                    var_dump($child->getName()->getConfig());
+                    var_dump($child->getName()->getConfig()->getOption('choices'));                    
                 }            
                 exit;
             };     
