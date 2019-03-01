@@ -54,6 +54,11 @@ class ImportEnhancerIntegration extends AbstractIntegration
         return 'plugins/DcodeMauticUtilsBundle/Assets/img/import-enhancer.png';
     }
 
+    public function getDescription()
+    {
+        return 'Allows for importing varying tags during import.';
+    }
+
     public function getSupportedFeatures()
     {
         return [            

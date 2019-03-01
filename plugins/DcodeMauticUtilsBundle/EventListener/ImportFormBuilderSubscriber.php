@@ -69,14 +69,14 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
     public static function getSubscribedEvents()
     {
         return [            
-            CoreEvents::ON_FORM_TYPE_BUILD => ['onLeadFieldFormBuild', 0],
+            CoreEvents::ON_FORM_TYPE_BUILD => ['onImportFormBuild', 0],
         ];
     }
 
     /**
      * @param ChannelSubscriptionChange $event
      */
-    public function onLeadFieldFormBuild(CustomFormEvent $event)
+    public function onImportFormBuild(CustomFormEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('ImportEnhancer');
         $integrationSettings = $integration->getIntegrationSettings();
