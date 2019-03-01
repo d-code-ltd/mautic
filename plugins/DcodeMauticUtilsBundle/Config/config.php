@@ -30,7 +30,7 @@ return [
                 ],
         	],
             'mauticplugin.dcodemauticutils.integration.importenhancer' => [
-                'class'     => \MauticPlugin\DcodeMauticUtilsBundle\Integration\ImportEnchancerIntegration::class,
+                'class'     => \MauticPlugin\DcodeMauticUtilsBundle\Integration\ImportEnhancerIntegration::class,
                 'arguments' => [
                 ],
             ]
