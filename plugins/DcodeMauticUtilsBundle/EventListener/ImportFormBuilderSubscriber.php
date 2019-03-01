@@ -88,11 +88,14 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
         if ($event->getFormName() == 'lead_field_import'){
             $formPrepare = function (FormEvent $event) {                
                 $form          = $event->getForm();
-                foreach ($form->all() as $key => $child){
-                    var_dump($key, $child->getName());                    
-                    var_dump($child->getConfig()->getOption('choices'));                    
+                foreach ($form->all() as $key => $child){                    
+                    if (isset($child->getConfig()->getOption('choices')['mautic.lead.special_fields'])){
+                        $options = $field->getOptions();            // get the options
+                        $type = $field->getType()->getName();       // get the name of the type
+                        array_push($options['choices']['mautic.lead.special_fields'],'_tags');
+                        $form->add($key, $type, $options); // replace the field            
+                    }
                 }            
-                exit;
             };     
 
             $event->getFormBuilder()->addEventListener(
