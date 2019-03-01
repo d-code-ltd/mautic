@@ -17,7 +17,8 @@ use Mautic\LeadBundle\Event\LeadEvent;
 use Mautic\CoreBundle\Event\CustomFormEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\CoreBundle\CoreEvents;
-
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 use Mautic\LeadBundle\Entity\DoNotContact;
 use Mautic\CoreBundle\Translation\Translator;
