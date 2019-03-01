@@ -89,8 +89,7 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
             $formPrepare = function (FormEvent $event) {                
                 $form          = $event->getForm();
                 foreach ($form->all() as $key => $child){
-                    var_dump($key, $child->getName());
-                    var_dump($child->getConfig());
+                    var_dump($key, $child->getName());                    
                     var_dump($child->getConfig()->getOption('choices'));                    
                 }            
                 exit;
