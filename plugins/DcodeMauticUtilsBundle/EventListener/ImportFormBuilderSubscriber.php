@@ -90,11 +90,23 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
                 $form          = $event->getForm();
                 foreach ($form->all() as $key => $child){                    
                     if (isset($child->getConfig()->getOption('choices')['mautic.lead.special_fields'])){
-                        $options = $child->getOptions();            // get the options
-                        $type = $child->getType()->getName();       // get the name of the type
-                        array_push($options['choices']['mautic.lead.special_fields'],'_tags');
-                        $form->add($key, $type, $options); // replace the field            
+                        $options = $child->getConfig()->getOptions();            // get the options
+                        
+                        $choices = $options['choices'];
+                        foreach ($choices as $groupKey => $group){
+                            foreach ($group as $choiceKey => $value){
+                                $choices[$groupKey][$choiceKey] = $options['choice_label']($choiceKey,$value);
+                            }
+                        }
+                        $choices['mautic.lead.special_fields']['_tags'] = 'tag';
+                        $type = $child->getConfig()->getType()->getName();       // get the name of the type
+                        $options['choices'] = $choices;
+
+                        unset($options['choice_list']);
+                        unset($options['choice_label']);
+                        $form->add($key, $type, $options); // replace the field.                        
                     }
+
                 }            
             };     
 
@@ -103,32 +115,7 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
                 function (FormEvent $event) use ($formPrepare) {
                     $formPrepare($event);
                 }
-            );
-            
-            /*
-            $event->getFormBuilder()->add(
-                'mygroup',
-                'choice',
-                [
-                    'choices' => [
-                        'core'         => 'mautic.lead.field.group.core',
-                        'social'       => 'mautic.lead.field.group.social',
-                        'personal'     => 'mautic.lead.field.group.personal',
-                        'professional' => 'mautic.lead.field.group.professional',
-                    ],
-                    'attr' => [
-                        'class'   => 'form-control',
-                        'tooltip' => 'mautic.lead.field.form.group.help',
-                    ],
-                    'expanded'    => false,
-                    'multiple'    => false,
-                    'label'       => 'mautic.lead.field.group',
-                    'empty_value' => false,
-                    'required'    => false,
-                    'disabled'    => $disabled,
-                ]
-            );
-            */
+            );                
         }     
     }
 }
