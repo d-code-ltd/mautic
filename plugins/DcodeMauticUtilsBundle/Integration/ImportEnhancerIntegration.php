@@ -22,7 +22,7 @@ use Symfony\Component\Form\FormBuilder;
 /**
  * Class WhiteLabelIntegration.
  */
-class ImportEnchancerIntegration extends AbstractIntegration
+class ImportEnhancerIntegration extends AbstractIntegration
 { 
     const INTEGRATION_NAME         = 'ImportEnhancer';
 
