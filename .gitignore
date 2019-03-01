@@ -71,7 +71,7 @@
 !/plugins/MauticSocialBundle
 !/plugins/MauticZapierBundle
 !/plugins/FCMNotificationBundle
-!/plugins/DcodeMauticToolsBundle
+!/plugins/DcodeMauticUtilsBundle
 !/plugins/DcodeSenderEngineBundle
 !/plugins/DcodeGDPRCompliancyBundle
 !/plugins/index.html
