@@ -89,6 +89,7 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
             foreach ($formAll as $child){
                 var_dump($child->getName());
             }
+            exit;
             /*
             $event->getFormBuilder()->add(
                 'mygroup',
