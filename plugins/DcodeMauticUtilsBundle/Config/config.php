@@ -28,7 +28,12 @@ return [
                 'class'     => \MauticPlugin\DcodeMauticUtilsBundle\Integration\WhiteLabelIntegration::class,
                 'arguments' => [
                 ],
-        	]
+        	],
+            'mauticplugin.dcodemauticutils.integration.importenhancer' => [
+                'class'     => \MauticPlugin\DcodeMauticUtilsBundle\Integration\ImportEnchancerIntegration::class,
+                'arguments' => [
+                ],
+            ]
     	],
         'forms' => [       
             'mauticplugin.dcodemauticutils.whitelabelconfig.config' => [
