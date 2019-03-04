@@ -99,6 +99,9 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
             }else{
                 $this->leadModel->modifyTags($lead, $fieldData['_tags'], null, true);
             }
-        }       
+            unset($fieldData['_tags']);
+            $event->setFieldData($fieldData);
+        }
+
     }
 }
