@@ -21,7 +21,15 @@ return [
                     'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
                     'mautic.helper.integration',
                 ],
-            ], 
+            ],
+            'mauticplugin.dcodemauticutils.leadimport.identified.subscriber' => [
+                'class'     => \MauticPlugin\DcodeMauticUtilsBundle\EventListener\LeadImportIdentifySubsciber::class,
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'monolog.logger.mautic',
+                    'mautic.lead.model.lead'
+                ],
+            ],
         ],
         'integrations' => [
             'mauticplugin.dcodemauticutils.integration.dcodewhitelabelsettings' => [
