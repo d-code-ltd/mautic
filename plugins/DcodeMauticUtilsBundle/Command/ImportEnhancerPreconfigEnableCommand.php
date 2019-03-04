@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\Command;
+namespace MauticPlugin\DcodeMauticUtilsBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration\WhiteLabelIntegration;
+use MauticPlugin\DcodeMauticUtilsBundle\Integration\ImportEnhancerIntegration;
 use Mautic\PluginBundle\PluginEvents;
 use Mautic\PluginBundle\Event\PluginIntegrationEvent;
 
@@ -26,7 +26,7 @@ use Mautic\PluginBundle\Event\PluginIntegrationEvent;
  *
  * php app/console rabbitmq:consumer:mautic
  */
-class WhitelabelPreconfigEnableCommand extends ContainerAwareCommand
+class ImportEnhancerPreconfigEnableCommand extends ContainerAwareCommand
 {    
     /**
      * {@inheritdoc}
@@ -36,8 +36,8 @@ class WhitelabelPreconfigEnableCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('whitelabel:preconfig:enable')
-            ->setDescription('Whitelabel preconfig plugin enabled.')            
+            ->setName('importenhancer:preconfig:enable')
+            ->setDescription('importenhancer preconfig plugin enabled.')            
             ->addOption('--dry-run', null, InputOption::VALUE_NONE, 'Do a dry run without actually deleting anything.')            
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command is used to enable plugin by code
@@ -62,7 +62,7 @@ EOT
         $pluginReloadFacade->reloadPlugins();
 
         $integrationHelper = $container->get('mautic.helper.integration');        
-        $integrationObject = $integrationHelper->getIntegrationObject(WhiteLabelIntegration::INTEGRATION_NAME);
+        $integrationObject = $integrationHelper->getIntegrationObject(ImportEnhancerIntegration::INTEGRATION_NAME);
         
         $integrationRepo = $entityManager->getRepository('MauticPluginBundle:Integration');
         
@@ -91,10 +91,10 @@ EOT
                 $entityManager->flush();
                 
             }else{
-                $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' is already enabled');    
+                $output->writeln(ImportEnhancerIntegration::INTEGRATION_NAME. ' is already enabled');    
             }
         }else{
-            $output->writeln(WhiteLabelIntegration::INTEGRATION_NAME. ' integration not found');
+            $output->writeln(ImportEnhancerIntegration::INTEGRATION_NAME. ' integration not found');
         }
     }
 }

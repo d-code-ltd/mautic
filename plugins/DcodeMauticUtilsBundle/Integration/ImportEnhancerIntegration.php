@@ -10,7 +10,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\Integration;
+namespace MauticPlugin\DcodeMauticUtilsBundle\Integration;
 
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,9 +22,9 @@ use Symfony\Component\Form\FormBuilder;
 /**
  * Class WhiteLabelIntegration.
  */
-class WhiteLabelIntegration extends AbstractIntegration
+class ImportEnhancerIntegration extends AbstractIntegration
 { 
-    const INTEGRATION_NAME         = 'WhiteLabel';
+    const INTEGRATION_NAME         = 'ImportEnhancer';
 
     /**
      * @var bool
@@ -46,12 +46,17 @@ class WhiteLabelIntegration extends AbstractIntegration
      */
     public function getDisplayName()
     {
-        return 'White-label';
+        return 'Import enhancer';
     }
 
     public function getIcon()
     {
-        return 'plugins/DcodeWhiteLabelSettingsBundle/Assets/img/white-label.png';
+        return 'plugins/DcodeMauticUtilsBundle/Assets/img/import-enhancer.png';
+    }
+
+    public function getDescription()
+    {
+        return 'Allows for importing varying tags during import.';
     }
 
     public function getSupportedFeatures()

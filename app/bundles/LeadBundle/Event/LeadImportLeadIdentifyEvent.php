@@ -23,10 +23,12 @@ class LeadImportLeadIdentifyEvent extends CommonEvent
      * @param Lead $lead
      * @param bool $isNew
      */
-    public function __construct(&$lead, &$fieldData)
+    public function __construct(&$lead, &$fieldData, &$fields, &$data)
     {
         $this->entity = &$lead;        
         $this->fieldData = &$fieldData;        
+        $this->fields = &$fields;        
+        $this->data = &$data;        
     }
 
     /**
@@ -66,6 +68,22 @@ class LeadImportLeadIdentifyEvent extends CommonEvent
 
     public function setFieldData($fieldData){
         $this->fieldData = $fieldData;
+    }
+
+    public function getFields(){
+        return $this->fields;
+    }
+
+    public function setFields($fields){
+        $this->fields = $fields;
+    }
+
+    public function getData(){
+        return $this->data;
+    }
+
+    public function setData($data){
+        $this->data = $data;
     }
 
 }

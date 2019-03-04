@@ -69,10 +69,9 @@
 !/plugins/MauticGmailBundle
 !/plugins/MauticOutlookBundle
 !/plugins/MauticSocialBundle
-!/plugins/RabbitMQBundle
 !/plugins/MauticZapierBundle
 !/plugins/FCMNotificationBundle
-!/plugins/DcodeWhiteLabelSettingsBundle
+!/plugins/DcodeMauticUtilsBundle
 !/plugins/DcodeSenderEngineBundle
 !/plugins/DcodeGDPRCompliancyBundle
 !/plugins/index.html

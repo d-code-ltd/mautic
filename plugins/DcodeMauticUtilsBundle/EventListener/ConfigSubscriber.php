@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\DcodeWhiteLabelSettingsBundle\EventListener;
+namespace MauticPlugin\DcodeMauticUtilsBundle\EventListener;
 
 use Mautic\ConfigBundle\ConfigEvents;
 use Mautic\ConfigBundle\Event\ConfigBuilderEvent;
@@ -56,10 +56,10 @@ class ConfigSubscriber extends CommonSubscriber
 
 
         $event->addForm([
-            //'bundle'     => 'DcodeWhiteLabelSettingsBundle',
+            //'bundle'     => 'DcodeMauticUtilsBundle',
             'formAlias'  => 'whitelabelconfig',
-            'formTheme'  => 'DcodeWhiteLabelSettingsBundle:FormTheme\Config',
-            'parameters' => $event->getParametersFromConfig('DcodeWhiteLabelSettingsBundle'),
+            'formTheme'  => 'DcodeMauticUtilsBundle:FormTheme\Config',
+            'parameters' => $event->getParametersFromConfig('DcodeMauticUtilsBundle'),
         ]);
     }
 }
