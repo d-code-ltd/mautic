@@ -118,7 +118,7 @@
 
         "koco/mautic-recaptcha-bundle": "~1.1",
         "thedmsgroup/mautic-enhancer-bundle": "<=2.14.2",
-        "facebook/php-ads-sdk": "2.9.*"
+        "facebook/php-ads-sdk": "3.2.*"
     },
     "require-dev": {
         "symfony/web-profiler-bundle": "~2.8",
