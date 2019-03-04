@@ -98,7 +98,7 @@ class ImportFormBuilderSubscriber extends CommonSubscriber
                                 $choices[$groupKey][$choiceKey] = $options['choice_label']($choiceKey,$value);
                             }
                         }
-                        $choices['mautic.lead.special_fields']['_tags'] = 'tag';
+                        $choices['mautic.lead.special_fields']['_tags'] = 'mauticplugin.lead.import.label._tags';
                         $type = $child->getConfig()->getType()->getName();       // get the name of the type
                         $options['choices'] = $choices;
 
