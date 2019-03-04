@@ -92,12 +92,7 @@ class LeadImportIdentifySubsciber extends CommonSubscriber
         $fieldData = $event->getFieldData();
         $fields = $event->getFields();
         $data = $event->getData();
-
-        dump($lead);
-        dump($fieldData);
-        dump($fields);
-        dump($data);
-
+        
         if (!empty($fieldData['_tags'])){
             if (mb_stristr($fieldData['_tags'], "|") !== FALSE){
                 $this->leadModel->modifyTags($lead, explode("|", $fieldData['_tags']), null, true);
