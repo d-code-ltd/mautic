@@ -14,6 +14,14 @@ return [
                     'mautic.helper.integration'
                 ],
             ],
+            'mauticplugin.dcodemauticutils.whitelabelsettings.pagebundle.subscriber' => [
+                'class'     => 'MauticPlugin\DcodeMauticUtilsBundle\EventListener\PageSubscriber',
+                'arguments' => [
+                    'templating.helper.assets',
+                    'mautic.helper.integration',
+                    'mautic.helper.core_parameters',
+                ],
+            ],
             'mauticplugin.dcodemauticutils.imoprtenhancer.importformbuilder.subscriber' => [
                 'class' => 'MauticPlugin\DcodeMauticUtilsBundle\EventListener\ImportFormBuilderSubscriber',
                 'arguments' => [
