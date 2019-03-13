@@ -48,7 +48,11 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xs-6 text-muted"><?php echo $whitelabelBrandingCopyright?:$view['translator']->trans('mautic.core.copyright', ['%date%' => date('Y')]); ?></div>
-                        <div class="col-xs-6 text-muted text-right small">v<?php
+                        <div class="col-xs-6 text-muted text-right small"><?php 
+                            if (getenv('DCODE_MAUTIC_VERSION')){
+                                echo getenv('DCODE_MAUTIC_VERSION')." / ";
+                            }
+                            ?>v<?php
                             /** @var \Mautic\CoreBundle\Templating\Helper\VersionHelper $version */
                             $version = $view['version'];
                             echo $version->getVersion(); ?>
