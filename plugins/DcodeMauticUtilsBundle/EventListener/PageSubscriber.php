@@ -76,12 +76,11 @@ class PageSubscriber extends CommonSubscriber
             return;
         }
     
+        $content = $event->getContent();
+        $content = str_replace('</head>', '<link rel="icon" type="image/x-icon" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico').'" />'."\n</head>", $content);
+        $content = str_replace('</head>', '<link rel="icon" sizes="192x192" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico').'" />'."\n</head>", $content);
+        $content = str_replace('</head>', '<link rel="apple-touch-icon" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_apple_favicon', 'media/images/apple-touch-icon.png').'" />'."\n</head>", $content);
         
-
-
-        $this->assetsHelper->addCustomDeclaration('<link rel="icon" type="image/x-icon" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico').'" />
-                                                   <link rel="icon" sizes="192x192" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico').'" />');
-        $this->assetsHelper->addCustomDeclaration('<link rel="apple-touch-icon" href="'.$this->coreParametersHelper->getParameter('whitelabel_branding_apple_favicon', 'media/images/apple-touch-icon.png').'" />');
-       
+        $event->setContent($content);
     }
 }
