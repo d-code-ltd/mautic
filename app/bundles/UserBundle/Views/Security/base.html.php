@@ -20,7 +20,9 @@
     <link rel="icon" type="image/x-icon" href="<?php echo $view['assets']->getUrl($whitelabelBrandingFavicon) ?>" />
     <link rel="apple-touch-icon" href="<?php echo $view['assets']->getUrl($whitelabelBrandingAppleFavicon) ?>" />
     <?php $view['assets']->outputSystemStylesheets(); ?>
-    <?php echo $view->render('MauticCoreBundle:Default:script.html.php'); ?>
+    <?php echo $view->render('MauticCoreBundle:Default:script.html.php', array(
+        'whitelabelBrandingName' => $whitelabelBrandingName
+    )); ?>
     <?php $view['assets']->outputHeadDeclarations(); ?>    
 </head>
 <body>
