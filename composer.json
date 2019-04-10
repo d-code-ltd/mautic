@@ -144,16 +144,8 @@
             "url": "https://github.com/mautic/BazingaOAuthServerBundle.git"
         },
         {
-            "type":"package",
-            "package": {
-              "name": "d-code-ltd/mautic-recommender-bundle",
-              "version":"master",
-              "source": {
-                  "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git",
-                  "type": "git",
-                  "reference":"master"
-                }
-            }
+            "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git",
+            "type": "git",
         }
 
     ],
