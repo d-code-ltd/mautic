@@ -121,7 +121,7 @@
         "koco/mautic-recaptcha-bundle": "~1.1",
         "thedmsgroup/mautic-enhancer-bundle": "<=2.15.1",
         "facebook/php-ads-sdk": "3.2.*",
-        "mautic-recommender-bundle/mautic-recommender-bundle": "master"        
+        "d-code-ltd/mautic-recommender-bundle": "master"        
     },
     "require-dev": {
         "symfony/web-profiler-bundle": "~2.8",
@@ -144,8 +144,16 @@
             "url": "https://github.com/mautic/BazingaOAuthServerBundle.git"
         },
         {
-            "type": "vcs",
-            "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git"
+            "type":"package",
+            "package": {
+              "name": "d-code-ltd/mautic-recommender-bundle",
+              "version":"master",
+              "source": {
+                  "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git",
+                  "type": "git",
+                  "reference":"master"
+                }
+            }
         }
 
     ],
