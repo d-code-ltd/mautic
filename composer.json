@@ -145,7 +145,7 @@
         },
         {
             "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git",
-            "type": "git",
+            "type": "git"
         }
 
     ],
