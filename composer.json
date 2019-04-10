@@ -121,7 +121,7 @@
         "koco/mautic-recaptcha-bundle": "~1.1",
         "thedmsgroup/mautic-enhancer-bundle": "<=2.15.1",
         "facebook/php-ads-sdk": "3.2.*",
-        "d-code-ltd/mautic-recommender-bundle": "master"        
+        "d-code-ltd/mautic-recommender-bundle": "dev-master"        
     },
     "require-dev": {
         "symfony/web-profiler-bundle": "~2.8",
