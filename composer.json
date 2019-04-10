@@ -121,7 +121,7 @@
         "koco/mautic-recaptcha-bundle": "~1.1",
         "thedmsgroup/mautic-enhancer-bundle": "<=2.15.1",
         "facebook/php-ads-sdk": "3.2.*",
-        //"kuzmany/mautic-recommender-bundle": "1.1.4"
+        "mautic-recommender-bundle/mautic-recommender-bundle": "master"        
     },
     "require-dev": {
         "symfony/web-profiler-bundle": "~2.8",
@@ -142,7 +142,12 @@
         {
             "type": "git",
             "url": "https://github.com/mautic/BazingaOAuthServerBundle.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git"
         }
+
     ],
     "scripts": {
         "post-install-cmd": [
