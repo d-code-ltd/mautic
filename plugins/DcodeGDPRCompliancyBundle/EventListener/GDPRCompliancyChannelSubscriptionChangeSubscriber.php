@@ -81,7 +81,7 @@ class GDPRCompliancyChannelSubscriptionChangeSubscriber extends CommonSubscriber
     public static function getSubscribedEvents()
     {
         return [            
-            LeadEvents::CHANNEL_SUBSCRIPTION_CHANGED => ['onChannelSubscriptionChange', 0],
+            LeadEvents::CHANNEL_SUBSCRIPTION_CHANGED => ['onChannelSubscriptionChange', -999],
         ];
     }
 
