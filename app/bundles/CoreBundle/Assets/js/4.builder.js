@@ -1977,7 +1977,7 @@ Mautic.getPredefinedLinks = function(callback) {
     });
 };
 
-Mautic.getParentWindow(){
+Mautic.getParentWindow = function(){
     try{
         if (parent && parent.document)
             return parent;
