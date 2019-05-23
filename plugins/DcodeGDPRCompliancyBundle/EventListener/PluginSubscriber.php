@@ -86,8 +86,7 @@ class PluginSubscriber extends CommonSubscriber
             $integration->buildHashFields();
             $this->logger->addDebug("GDPR: GDPRCompliancy plugin fields added");
 
-
-            //var_dump($oldIntegrationSettings->getFeatureSettings());
+            
             $changes = $integrationSettings->getChanges();
             
             if (!empty($changes['featureSettings']) && !empty($changes['featureSettings'][0]) && !empty($changes['featureSettings'][1])){
