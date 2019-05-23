@@ -1979,9 +1979,18 @@ Mautic.getPredefinedLinks = function(callback) {
 
 // Init inside the builder's iframe
 mQuery(function() {
-    if (parent && parent.mQuery && parent.mQuery('#builder-template-content').length) {
+    try{
+        if (parent && parent.document)
+            targetWindow = parent;
+        else{
+            targetWindow = window;
+        }
+    }catch{
+        targetWindow = window;
+    }
+    if (targetWindow && targetWindow.mQuery && targetWindow.mQuery('#builder-template-content').length) {
         Mautic.builderContents = mQuery('body');
-        if (!parent.Mautic.codeMode) {
+        if (!targetWindow.Mautic.codeMode) {
             Mautic.initSlotListeners();
             Mautic.initSections();
             Mautic.initSlots();
