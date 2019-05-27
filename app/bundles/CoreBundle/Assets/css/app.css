@@ -1840,8 +1840,7 @@ ul.dropdown-menu-form {
   display: block;
   height: 60px;
   line-height: 60px;
-  padding-left: 35px;
-  padding-right: 32px;
+  text-align: center;
   width: 100%;
   overflow: hidden;
 }
@@ -1870,6 +1869,10 @@ ul.dropdown-menu-form {
 .mautic-brand > svg.mautic-logo-text .i,
 .mautic-brand > svg.mautic-logo-text .c {
   fill: #ffffff;
+}
+.mautic-brand > img{
+  max-width:200px;
+  max-height:50px;
 }
 label {
   font-weight: 600;
