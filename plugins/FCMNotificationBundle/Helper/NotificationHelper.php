@@ -148,11 +148,13 @@ class NotificationHelper
 
 
             $fcmInit = <<<JS
-var scrpt = document.createElement('link');
-scrpt.rel ='manifest';
-scrpt.href ='/manifest.json';
-var head = document.getElementsByTagName('head')[0];
-head.appendChild(scrpt);
+if (document.querySelectorAll(['[rel=manifest]']).length==0){
+    var scrpt = document.createElement('link');
+    scrpt.rel ='manifest';
+    scrpt.href ='/manifest.json';
+    var head = document.getElementsByTagName('head')[0];
+    head.appendChild(scrpt);
+}
 
 
 //using queue might be necessary
@@ -182,10 +184,15 @@ MauticJS.conditionalAsyncQueue(function(){
     MauticJS.notification.postUserIdToMautic = MauticJS.postUserIdToMautic;
     
     MauticJS.notification.requestPermission = function(){
+        if (Notification.permission == "granted"){
+            return true;
+        }
+
+        var showWelcomeNotification = welcomenotificationEnabled && (Notification.permission !== "granted");
         me.messaging.requestPermission().then(function() {
             me.messaging.getToken().then(function(currentToken){
                 if (currentToken) {
-                    if (welcomenotificationEnabled){
+                    if (showWelcomeNotification){
                         MauticJS.notification.postUserIdToMautic(currentToken, function(){                                        
                             var notificationTitle = '{$welcomeNotificationTitle}';
                             var notificationOptions = {
@@ -229,6 +236,16 @@ MauticJS.conditionalAsyncQueue(function(){
                 //console.log(currentToken);
                 if (currentToken) {
                     //console.log('refreshToken');
+                    if (sessionStorage){
+                        if (!sessionStorage.getItem("tokenRefreshedUponArrival")){
+                            MauticJS.notification.postUserIdToMautic(currentToken, function(){
+                                sessionStorage.setItem("tokenRefreshedUponArrival", "1");
+                            });
+                        }
+                    }else{
+                        MauticJS.notification.postUserIdToMautic(currentToken);
+                    }
+
                     MauticJS.notification.postUserIdToMautic(currentToken);          
                 } else {
                     if (fcmTrackingPageAutoprompt){
