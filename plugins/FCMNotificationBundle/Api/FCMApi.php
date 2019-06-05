@@ -205,6 +205,12 @@ class FCMApi extends AbstractNotificationApi
                 'notification_id' => $notificationId
             ];
 
+            if (!empty($this->notificationIcon)){
+                $data['data']['icon'] = $this->notificationIcon;
+                $data['android']['data']['icon'] = $this->notificationIcon;
+                $data['apns']['payload']['aps']['alert']['icon'] = $this->notificationIcon;
+                $data['webpush']['data']['icon'] = $this->notificationIcon;                
+            }
 
 
             if (!empty($url)) {                
@@ -212,6 +218,11 @@ class FCMApi extends AbstractNotificationApi
                 $data['android']['data']['url'] = $url;
                 $data['apns']['payload']['aps']['alert']['url'] = $url;
                 $data['webpush']['data']['url'] = $url;
+
+                $data['data']['click_action'] = $url;
+                $data['android']['data']['click_action'] = $url;
+                $data['apns']['payload']['aps']['alert']['click_action'] = $url;
+                $data['webpush']['data']['click_action'] = $url;
             }             
             
             if (!empty($button)) {
