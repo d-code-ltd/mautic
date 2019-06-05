@@ -62,10 +62,9 @@ class PopupController extends CommonController
     }
 
     public function testAction(){
-        $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');       
-        $result = $this->notificationApi->send(
-            'cJZef0ys8SI:APA91bGB4mfunOWU27S6gRa-ul2AdnLD-ZSqNWvTbNE3DLifjTebZG37mpAp16LSAngv2_kwiScwKcn1slpr4ZeJ2qdzDDq3XPEBLe8s9GOqw4PiJJOrrkTwHiCKTKQW55c4IrNkMG9t',
-            [
+        $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');
+        $token = 'cJZef0ys8SI:APA91bGB4mfunOWU27S6gRa-ul2AdnLD-ZSqNWvTbNE3DLifjTebZG37mpAp16LSAngv2_kwiScwKcn1slpr4ZeJ2qdzDDq3XPEBLe8s9GOqw4PiJJOrrkTwHiCKTKQW55c4IrNkMG9t';
+        $message = [
                 'data' => [
                     'title' => 'My notification title (Data)',
                     'body' => 'Every bádi',
@@ -99,7 +98,13 @@ class PopupController extends CommonController
                         'url' => 'https://www.d-code.hu'
                     ],
                 ]
-            ],
+            ];
+
+        echo json_encode($message);
+
+        $result = $this->notificationApi->send(
+            $token,
+            $message,
             true,
             false
         );
