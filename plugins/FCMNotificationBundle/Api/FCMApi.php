@@ -107,7 +107,7 @@ class FCMApi extends AbstractNotificationApi
         $message->android->data->fill($data['android']['data']);
         $message->apns->headers = $data['apns']['headers'];
         $message->apns->payload->aps->alert = $data['apns']['payload']['aps']['alert'];
-        $message->webpush->data->fill($data['webpush']['data']);
+        $message->webpush->data = $data['webpush']['data'];
 
         $message->setTarget(new Token($token));        
 
