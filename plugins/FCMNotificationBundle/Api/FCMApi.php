@@ -1,4 +1,4 @@
-<?php
+<?ph
 
 /*
  * @copyright   2016 Mautic Contributors. All rights reserved
@@ -103,7 +103,12 @@ class FCMApi extends AbstractNotificationApi
     public function send($token, $data){    
         $message = new Message();        
 
-        $message->data->fill($data);
+        $message->data->fill($data['data']);
+        $message->android->data->fill($data['android']['data']);
+        $message->apns->headers = $data['apns']['headers'];
+        $message->apns->payload->aps->alert = $data['apns']['payload']['aps']['alert'];
+        $message->webpush->data->fill($data['webpush']['data']);
+
         $message->setTarget(new Token($token));        
 
         $client = new Client(['debug'=>false]);
@@ -157,9 +162,7 @@ class FCMApi extends AbstractNotificationApi
      * @throws \Exception
      */
     public function sendNotification($playerId, Notification $notification, $notificationId)
-    {
-        $data = [];
-
+    {        
         $buttonId = $notification->getHeading();
         $title    = $notification->getHeading();
         $url      = $notification->getUrl();
@@ -170,40 +173,66 @@ class FCMApi extends AbstractNotificationApi
             $playerId = [$playerId];
         }
 
-        foreach ($playerId as $token){            
-            $data = [
+        foreach ($playerId as $token){
+            $data = [];
+
+            /*
+            $data['notification'] = [
+                'title' => $title,
+                'body' => $message,
+            ];
+            */
+            $data['data'] = [
                 'title' => $title,
                 'body' => $message,
                 'notification_id' => $notificationId
             ];
-            if (!empty($url)) {
-                $data['click_action'] = $url;
-                $data['url'] = $url;
+            $data['android']['data'] = [
+                'title' => $title,
+                'body' => $message,                
+                'notification_id' => $notificationId
+            ];
+            $data['apns']['headers'] = [
+                "apns-priority": "5";
+            ];
+            $data['apns']['payload']['aps']['alert'] = [
+                'title' => $title,
+                'body' => $message,                
+            ];
+            $data['webpush']['data'] = [
+                'title' => $title,
+                'body' => $message,
+                'notification_id' => $notificationId
+            ]
+
+
+
+            if (!empty($url)) {                
+                $data['data']['url'] = $url;
+                $data['android']['data']['url'] = $url;
+                $data['apns']['payload']['aps']['alert']['url'] = $url;
+                $data['webpush']['data']['url'] = $url;
             }             
-
-            if ($notification->isMobile()) {
-                $this->addMobileData($data, $notification->getMobileSettings());
-
-                if (!empty($button)) {
-                    if (!empty($url)){
-                        $data['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    }else{
-                        $data['buttons'][] = ['id' => $buttonId, 'text' => $button];    
-                    }
-
-                    //$data['button_id'] = $buttonId;
-                    //$data['button_text'] = $button;
-                    //$data['button_url'] = $url;
-                }
-            } else {
-                if (!empty($button)) {
-                    if (!empty($url)){
-                        $data['web_buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    }else{
-                        $data['web_buttons'][] = ['id' => $buttonId, 'text' => $button];    
-                    }
+            
+            if (!empty($button)) {
+                if (!empty($url)){
+                    $data['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['android']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['apns']['payload']['aps']['alert']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['webpush']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                }else{
+                    $data['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    $data['android']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    $data['apns']['payload']['aps']['alert']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    $data['webpush']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
                 }
             }
+            
+            if ($notification->isMobile()) {            
+                $this->addMobileData($data, $notification->getMobileSettings());
+            }
+
+
             $result = $this->send($token, $data);
         }
 
@@ -220,52 +249,52 @@ class FCMApi extends AbstractNotificationApi
         foreach ($mobileConfig as $key => $value) {
             switch ($key) {
                 case 'ios_subtitle':
-                    $data['subtitle'] = $value;
+                    $data['apns']['payload']['aps']['alert']['subtitle'] = $value;
                     break;
                 case 'ios_sound':
-                    $data['ios_sound'] = $value ?: 'default';
+                    $data['apns']['payload']['aps']['alert']['ios_sound'] = $value ?: 'default';
                     break;
                 case 'ios_badges':
-                    $data['ios_badgeType'] = $value;
+                    $data['apns']['payload']['aps']['alert']['ios_badgeType'] = $value;
                     break;
                 case 'ios_badgeCount':
-                    $data['ios_badgeCount'] = (int) $value;
+                    $data['apns']['payload']['aps']['alert']['ios_badgeCount'] = (int) $value;
                     break;
                 case 'ios_contentAvailable':
-                    $data['content_available'] = (bool) $value;
+                    $data['apns']['payload']['aps']['alert']['content_available'] = (bool) $value;
                     break;
                 case 'ios_media':
-                    $data['ios_attachments'] = [uniqid('id_') => $value];
+                    $data['apns']['payload']['aps']['alert']['ios_attachments'] = [uniqid('id_') => $value];
                     break;
                 case 'ios_mutableContent':
-                    $data['mutable_content'] = (bool) $value;
+                    $data['apns']['payload']['aps']['alert']['mutable_content'] = (bool) $value;
                     break;
                 case 'android_sound':
-                    $data['android_sound'] = $value;
+                    $data['android']['data']['android_sound'] = $value;
                     break;
                 case 'android_small_icon':
-                    $data['small_icon'] = $value;
+                    $data['android']['data']['small_icon'] = $value;
                     break;
                 case 'android_large_icon':
-                    $data['large_icon'] = $value;
+                    $data['android']['data']['large_icon'] = $value;
                     break;
                 case 'android_big_picture':
-                    $data['big_picture'] = $value;
+                    $data['android']['data']['big_picture'] = $value;
                     break;
                 case 'android_led_color':
-                    $data['android_led_color'] = 'FF'.strtoupper($value);
+                    $data['android']['data']['android_led_color'] = 'FF'.strtoupper($value);
                     break;
                 case 'android_accent_color':
-                    $data['android_accent_color'] = 'FF'.strtoupper($value);
+                    $data['android']['data']['android_accent_color'] = 'FF'.strtoupper($value);
                     break;
                 case 'android_group_key':
-                    $data['android_group'] = $value;
+                    $data['android']['data']['android_group'] = $value;
                     break;
                 case 'android_lockscreen_visibility':
-                    $data['android_visibility'] = (int) $value;
+                    $data['android']['data']['android_visibility'] = (int) $value;
                     break;
                 case 'additional_data':
-                    $data['data'] = $value['list'];
+                    $data['data'] = array_merge($data['data'], $value['list']);
                     break;
             }
         }
