@@ -105,7 +105,7 @@ class PopupController extends CommonController
         $result = $this->notificationApi->send(
             $token,
             $message,
-            true,
+            false,
             false
         );
 
