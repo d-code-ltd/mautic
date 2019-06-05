@@ -101,7 +101,7 @@ class PopupController extends CommonController
                 ]
             ],
             true,
-            true
+            false
         );
         /*
         $this->integrationHelper = $this->get('mautic.helper.integration');       
