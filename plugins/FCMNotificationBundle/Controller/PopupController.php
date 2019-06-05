@@ -63,7 +63,7 @@ class PopupController extends CommonController
 
     public function testAction(){
         $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');       
-        $this->notificationApi->send(
+        $result = $this->notificationApi->send(
             'cJZef0ys8SI:APA91bGB4mfunOWU27S6gRa-ul2AdnLD-ZSqNWvTbNE3DLifjTebZG37mpAp16LSAngv2_kwiScwKcn1slpr4ZeJ2qdzDDq3XPEBLe8s9GOqw4PiJJOrrkTwHiCKTKQW55c4IrNkMG9t',
             [
                 'data' => [
@@ -103,6 +103,9 @@ class PopupController extends CommonController
             true,
             false
         );
+
+        var_dump($result);
+
         /*
         $this->integrationHelper = $this->get('mautic.helper.integration');       
         $integration = $this->integrationHelper->getIntegrationObject('FCM');
