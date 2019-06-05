@@ -66,8 +66,39 @@ class PopupController extends CommonController
         $this->notificationApi->send(
             'fBiGDEMndMM:APA91bGO9Tz6pfSwl5ZBYXfAC3JeVDCDFZiswEVKxW1N_lhgFKK8zDx9iZ7OS611suC-99I3rKWEvcPppz0F2uodLFPEzu5hPWRKsvWt-baq1GMmyjjp-3L29yPE0K783gsel4-b4bde',
             [
-                'title' => 'My notification title2',
-                'body' => 'bádi',
+                'data' => [
+                    'title' => 'My notification title (Data)',
+                    'body' => 'Every bádi',
+                    'url' => 'https://www.d-code.hu'
+                ],
+                'android' => [
+                    'data' => [
+                        'title' => 'My notification title (android)',
+                        'body' => 'Every bádi',
+                        'url' => 'https://www.d-code.hu'
+                    ],
+                ],
+                "apns" => [
+                    "headers" => [
+                        "apns-priority" => "5",
+                    ],
+                    "payload"=> [
+                        "aps" => [
+                            "alert" => [
+                                "title" => "My notification title (apns)",
+                                "body" => "Every bádi",
+                                "url"=> "https://www.d-code.hu"
+                            ]
+                        ]
+                    ]
+                ],
+                'webpush' => [
+                    'data' => [
+                        'title' => 'My notification title (webpush)',
+                        'body' => 'Every bádi',
+                        'url' => 'https://www.d-code.hu'
+                    ],
+                ]
             ]
         );
         /*
