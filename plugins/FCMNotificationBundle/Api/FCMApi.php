@@ -1,4 +1,4 @@
-<?ph
+<?php
 
 /*
  * @copyright   2016 Mautic Contributors. All rights reserved
@@ -193,7 +193,7 @@ class FCMApi extends AbstractNotificationApi
                 'notification_id' => $notificationId
             ];
             $data['apns']['headers'] = [
-                "apns-priority": "5";
+                "apns-priority"=> "5"
             ];
             $data['apns']['payload']['aps']['alert'] = [
                 'title' => $title,
@@ -203,7 +203,7 @@ class FCMApi extends AbstractNotificationApi
                 'title' => $title,
                 'body' => $message,
                 'notification_id' => $notificationId
-            ]
+            ];
 
 
 
