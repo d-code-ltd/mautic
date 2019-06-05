@@ -701,7 +701,7 @@ Mautic.initSectionListeners = function() {
                     }
                 }
             };
-            var sectionForm = mQuery(autic.getParentWindow().mQuery('script[data-section-form]').html());
+            var sectionForm = mQuery(Mautic.getParentWindow().mQuery('script[data-section-form]').html());
             var sectionFormContainer = Mautic.getParentWindow().mQuery('#section-form-container');
 
             if (previouslyFocused.length) {
