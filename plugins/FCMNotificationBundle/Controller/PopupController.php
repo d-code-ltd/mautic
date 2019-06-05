@@ -63,7 +63,7 @@ class PopupController extends CommonController
 
     public function testAction(){
         $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');
-        $token = 'cJZef0ys8SI:APA91bGB4mfunOWU27S6gRa-ul2AdnLD-ZSqNWvTbNE3DLifjTebZG37mpAp16LSAngv2_kwiScwKcn1slpr4ZeJ2qdzDDq3XPEBLe8s9GOqw4PiJJOrrkTwHiCKTKQW55c4IrNkMG9t';
+        $token = 'cx3q7cFNvHk:APA91bEGE1Y3UE15vF3AfUJf0jGzuGSdRZnu_xfO9KHDG1uHB8nOYc8LwGzEc_ya9BuwKbOBF5eN7OxvgG_vT-uFtk2v-btItoRsMbcFLQbKv_X_q7YRV1iXKGS03xs26ZUWdgZSkoOl';
         $message = [
                 'data' => [
                     'title' => 'My notification title (Data)',
