@@ -69,6 +69,7 @@ class PopupController extends CommonController
                     'title' => 'My notification title (Data)',
                     'body' => 'Every bádi',
                     'url' => 'https://www.d-code.hu',
+                    'click_action' => 'https://www.d-code.hu',
                     'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
                 ],
                 'android' => [
@@ -76,6 +77,7 @@ class PopupController extends CommonController
                         'title' => 'My notification title (android)',
                         'body' => 'Every bádi',
                         'url' => 'https://www.d-code.hu',
+                        'click_action' => 'https://www.d-code.hu',
                         'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
                     ],
                 ],
@@ -89,6 +91,7 @@ class PopupController extends CommonController
                                 "title" => "My notification title (apns)",
                                 "body" => "Every bádi",
                                 "url"=> "https://www.d-code.hu",
+                                'click_action' => 'https://www.d-code.hu',
                                 'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
                             ]
                         ]
@@ -99,6 +102,7 @@ class PopupController extends CommonController
                         'title' => 'My notification title (webpush)',
                         'body' => 'Every bádi',
                         'url' => 'https://www.d-code.hu',
+                        'click_action' => 'https://www.d-code.hu',
                         'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
                     ],
                 ]
