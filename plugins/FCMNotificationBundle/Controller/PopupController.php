@@ -99,7 +99,9 @@ class PopupController extends CommonController
                         'url' => 'https://www.d-code.hu'
                     ],
                 ]
-            ]
+            ],
+            true,
+            true
         );
         /*
         $this->integrationHelper = $this->get('mautic.helper.integration');       

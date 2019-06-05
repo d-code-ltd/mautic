@@ -100,7 +100,7 @@ class FCMApi extends AbstractNotificationApi
      * @throws MissingAppIDException
      * @throws MissingApiKeyException
      */
-    public function send($token, $data){    
+    public function send($token, $data, $validate_only = false, $debug = false){    
         $message = new Message();        
 
         $message->data->fill($data['data']);
@@ -111,10 +111,10 @@ class FCMApi extends AbstractNotificationApi
 
         $message->setTarget(new Token($token));        
 
-        $client = new Client(['debug'=>false]);
+        $client = new Client(['debug' => $debug]);
 
         //If true the validate_only is set to true the message will not be submitted but just checked with FCM
-        $validate_only = false;
+                
         //Create a request
         $rq = new Request($this->serviceAccount,$validate_only,$client);
         
