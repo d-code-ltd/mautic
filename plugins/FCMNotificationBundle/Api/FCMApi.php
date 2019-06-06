@@ -102,8 +102,7 @@ class FCMApi extends AbstractNotificationApi
      */
     public function send($token, $data, $validate_only = false, $debug = false){    
         $message = new Message();        
-        
-        //$message->data->fill($data['data']);
+              
         $message->android->data->fill($data['android']['data']);
         $message->apns->headers = $data['apns']['headers'];
         $message->apns->payload->aps->alert = $data['apns']['payload']['aps']['alert'];
@@ -176,19 +175,6 @@ class FCMApi extends AbstractNotificationApi
         foreach ($playerId as $token){
             $data = [];
            
-           /* 
-            $data['notification'] = [
-                'title' => $title,
-                'body' => $message,
-            ];  
-            */
-            /*          
-            $data['data'] = [
-                'title' => $title,
-                'body' => $message,
-                'notification_id' => $notificationId
-            ];
-            */
             $data['android']['data'] = [
                 //'title' => $title,
                 //'body' => $message,                
