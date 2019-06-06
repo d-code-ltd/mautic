@@ -216,15 +216,15 @@ class FCMApi extends AbstractNotificationApi
             
             if (!empty($button)) {
                 if (!empty($url)){
-                    $data['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['android']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['apns']['payload']['aps']['alert']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['webpush']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['android']['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['apns']['payload']['aps']['alert']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['webpush']['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
                 }else{
-                    $data['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
-                    $data['android']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
-                    $data['apns']['payload']['aps']['alert']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
-                    $data['webpush']['data']['buttons'][] = ['id' => $buttonId, 'text' => $button];    
+                    $data['data']['button']= ['id' => $buttonId, 'text' => $button];    
+                    $data['android']['data']['button'] = ['id' => $buttonId, 'text' => $button];    
+                    $data['apns']['payload']['aps']['alert']['button'] = ['id' => $buttonId, 'text' => $button];    
+                    $data['webpush']['data']['button'] = ['id' => $buttonId, 'text' => $button];    
                 }
             }
             
