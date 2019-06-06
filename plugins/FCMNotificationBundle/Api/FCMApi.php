@@ -216,15 +216,33 @@ class FCMApi extends AbstractNotificationApi
             
             if (!empty($button)) {
                 if (!empty($url)){
-                    $data['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['android']['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['apns']['payload']['aps']['alert']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
-                    $data['webpush']['data']['button'] = ['id' => $buttonId, 'text' => $button, 'url' => $url];    
+                    $data['data']['button_id'] = $buttonId;
+                    $data['data']['button_text'] = $button;
+                    $data['data']['button_url'] = $url;
+
+                    $data['android']['data']['button_id'] = $buttonId;
+                    $data['android']['data']['button_text'] = $button;
+                    $data['android']['data']['button_url'] = $url;
+
+                    $data['apns']['payload']['aps']['alert']['button_id'] = $buttonId;
+                    $data['apns']['payload']['aps']['alert']['button_text'] = $button;
+                    $data['apns']['payload']['aps']['alert']['button_url'] = $url;
+
+                    $data['webpush']['data']['button_id'] = $buttonId;
+                    $data['webpush']['data']['button_text'] = $button;
+                    $data['webpush']['data']['button_url'] = $url;                
                 }else{
-                    $data['data']['button']= ['id' => $buttonId, 'text' => $button];    
-                    $data['android']['data']['button'] = ['id' => $buttonId, 'text' => $button];    
-                    $data['apns']['payload']['aps']['alert']['button'] = ['id' => $buttonId, 'text' => $button];    
-                    $data['webpush']['data']['button'] = ['id' => $buttonId, 'text' => $button];    
+                    $data['data']['button_id'] = $buttonId;
+                    $data['data']['button_text'] = $button;
+
+                    $data['android']['data']['button_id'] = $buttonId;
+                    $data['android']['data']['button_text'] = $button;
+
+                    $data['apns']['payload']['aps']['alert']['button_id'] = $buttonId;
+                    $data['apns']['payload']['aps']['alert']['button_text'] = $button;
+
+                    $data['webpush']['data']['button_id'] = $buttonId;
+                    $data['webpush']['data']['button_text'] = $button;
                 }
             }
             

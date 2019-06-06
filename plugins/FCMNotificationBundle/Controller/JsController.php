@@ -95,10 +95,10 @@ class JsController extends CommonController
                     notificationOptions.icon = payload.data.icon;
                 }
 
-                if (payload.data.web_button_id){
+                if (payload.data.button_id){
                     notificationOptions.actions = [{
-                        action: payload.data.web_button_id,
-                        title: payload.data.web_button_text,                        
+                        action: payload.data.button_id,
+                        title: payload.data.button_text,                        
                     }];
                 }   
 
