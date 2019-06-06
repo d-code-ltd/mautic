@@ -178,7 +178,7 @@ class FCMApi extends AbstractNotificationApi
             $data['android']['data'] = [
                 //'title' => $title,
                 //'body' => $message,                
-                'notification_id' => $notificationId
+                'notification_id' => (string)$notificationId
             ];
             $data['apns']['headers'] = [
                 "apns-priority"=> "5"
@@ -186,12 +186,12 @@ class FCMApi extends AbstractNotificationApi
             $data['apns']['payload']['aps']['alert'] = [
                 //'title' => $title,
                 //'body' => $message,                
-                'notification_id' => $notificationId
+                'notification_id' => (string)$notificationId
             ];
             $data['webpush']['data'] = [
                 'title' => $title,
                 'body' => $message,
-                'notification_id' => $notificationId
+                'notification_id' => (string)$notificationId
             ];
 
             if (!empty($this->notificationIcon)){
@@ -231,6 +231,7 @@ class FCMApi extends AbstractNotificationApi
             if ($notification->isMobile()) {            
                 $this->addMobileData($data, $notification->getMobileSettings());
             }
+
 
 
             $result = $this->send($token, $data);
