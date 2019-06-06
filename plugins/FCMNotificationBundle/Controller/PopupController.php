@@ -74,10 +74,12 @@ class PopupController extends CommonController
                     'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
                 ],
             */
+           /*
                 'notification' => [
                     'title' => 'My notification title (notification)',
                     'body' => 'Every bádi',
                 ],
+                */
                 'android' => [
                     'data' => [
                         'title' => 'My notification title (android)',
