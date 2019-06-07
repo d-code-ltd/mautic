@@ -62,14 +62,71 @@ class PopupController extends CommonController
     }
 
     public function testAction(){
-        $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');       
-        $this->notificationApi->send(
-            'fBiGDEMndMM:APA91bGO9Tz6pfSwl5ZBYXfAC3JeVDCDFZiswEVKxW1N_lhgFKK8zDx9iZ7OS611suC-99I3rKWEvcPppz0F2uodLFPEzu5hPWRKsvWt-baq1GMmyjjp-3L29yPE0K783gsel4-b4bde',
-            [
-                'title' => 'My notification title2',
-                'body' => 'bádi',
-            ]
+        $this->notificationApi = $this->get('mauticplugin.fcmnotification.notification.api');
+        $token = 'cx3q7cFNvHk:APA91bEGE1Y3UE15vF3AfUJf0jGzuGSdRZnu_xfO9KHDG1uHB8nOYc8LwGzEc_ya9BuwKbOBF5eN7OxvgG_vT-uFtk2v-btItoRsMbcFLQbKv_X_q7YRV1iXKGS03xs26ZUWdgZSkoOl';
+        $message = [
+            /*
+                'data' => [
+                    'title' => 'My notification title (Data)',
+                    'body' => 'Every bádi',
+                    'url' => 'https://www.d-code.hu',
+                    'click_action' => 'https://www.d-code.hu',
+                    'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
+                ],
+            */
+           /*
+                'notification' => [
+                    'title' => 'My notification title (notification)',
+                    'body' => 'Every bádi',
+                ],
+                */
+                'android' => [
+                    'data' => [
+                        'title' => 'My notification title (android)',
+                        'body' => 'Every bádi',
+                        'url' => 'https://www.d-code.hu',
+                        'click_action' => 'https://www.d-code.hu',
+                        'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
+                    ],
+                ],
+                "apns" => [
+                    "headers" => [
+                        "apns-priority" => "5",
+                    ],
+                    "payload"=> [
+                        "aps" => [
+                            "alert" => [
+                                "title" => "My notification title (apns)",
+                                "body" => "Every bádi",
+                                "url"=> "https://www.d-code.hu",
+                                'click_action' => 'https://www.d-code.hu',
+                                'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
+                            ]
+                        ]
+                    ]
+                ],
+                'webpush' => [
+                    'data' => [
+                        'title' => 'My notification title (webpush)',
+                        'body' => 'Every bádi',
+                        'url' => 'https://www.d-code.hu',
+                        'click_action' => 'https://www.d-code.hu',
+                        'icon' => 'https://www.foliavagas.hu/shop_seopic/82612/szkt_22/behajtani_tilos.jpg'
+                    ],
+                ]
+            ];
+
+        echo json_encode($message);
+
+        $result = $this->notificationApi->send(
+            $token,
+            $message,
+            false,
+            false
         );
+
+        var_dump($result);
+
         /*
         $this->integrationHelper = $this->get('mautic.helper.integration');       
         $integration = $this->integrationHelper->getIntegrationObject('FCM');
