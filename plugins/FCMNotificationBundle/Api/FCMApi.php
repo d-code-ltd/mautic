@@ -176,16 +176,16 @@ class FCMApi extends AbstractNotificationApi
             $data = [];
            
             $data['android']['data'] = [
-                //'title' => $title,
-                //'body' => $message,                
+                'title' => $title,
+                'body' => $message,                
                 'notification_id' => (string)$notificationId
             ];
             $data['apns']['headers'] = [
                 "apns-priority"=> "5"
             ];
             $data['apns']['payload']['aps']['alert'] = [
-                //'title' => $title,
-                //'body' => $message,                
+                'title' => $title,
+                'body' => $message,                
                 'notification_id' => (string)$notificationId
             ];
             $data['webpush']['data'] = [
@@ -266,55 +266,57 @@ class FCMApi extends AbstractNotificationApi
     protected function addMobileData(array &$data, array $mobileConfig)
     {
         foreach ($mobileConfig as $key => $value) {
-            switch ($key) {
-                case 'ios_subtitle':
-                    $data['apns']['payload']['aps']['alert']['subtitle'] = $value;
-                    break;
-                case 'ios_sound':
-                    $data['apns']['payload']['aps']['alert']['ios_sound'] = $value ?: 'default';
-                    break;
-                case 'ios_badges':
-                    $data['apns']['payload']['aps']['alert']['ios_badgeType'] = $value;
-                    break;
-                case 'ios_badgeCount':
-                    $data['apns']['payload']['aps']['alert']['ios_badgeCount'] = (int) $value;
-                    break;
-                case 'ios_contentAvailable':
-                    $data['apns']['payload']['aps']['alert']['content_available'] = (bool) $value;
-                    break;
-                case 'ios_media':
-                    $data['apns']['payload']['aps']['alert']['ios_attachments'] = [uniqid('id_') => $value];
-                    break;
-                case 'ios_mutableContent':
-                    $data['apns']['payload']['aps']['alert']['mutable_content'] = (bool) $value;
-                    break;
-                case 'android_sound':
-                    $data['android']['data']['android_sound'] = $value;
-                    break;
-                case 'android_small_icon':
-                    $data['android']['data']['small_icon'] = $value;
-                    break;
-                case 'android_large_icon':
-                    $data['android']['data']['large_icon'] = $value;
-                    break;
-                case 'android_big_picture':
-                    $data['android']['data']['big_picture'] = $value;
-                    break;
-                case 'android_led_color':
-                    $data['android']['data']['android_led_color'] = 'FF'.strtoupper($value);
-                    break;
-                case 'android_accent_color':
-                    $data['android']['data']['android_accent_color'] = 'FF'.strtoupper($value);
-                    break;
-                case 'android_group_key':
-                    $data['android']['data']['android_group'] = $value;
-                    break;
-                case 'android_lockscreen_visibility':
-                    $data['android']['data']['android_visibility'] = (int) $value;
-                    break;
-                case 'additional_data':
-                    $data['data'] = array_merge($data['data'], $value['list']);
-                    break;
+            if (!empty($value)){
+                switch ($key) {
+                    case 'ios_subtitle':
+                        $data['apns']['payload']['aps']['alert']['subtitle'] = $value;
+                        break;
+                    case 'ios_sound':
+                        $data['apns']['payload']['aps']['alert']['ios_sound'] = $value ?: 'default';
+                        break;
+                    case 'ios_badges':
+                        $data['apns']['payload']['aps']['alert']['ios_badgeType'] = $value;
+                        break;
+                    case 'ios_badgeCount':
+                        $data['apns']['payload']['aps']['alert']['ios_badgeCount'] = (int) $value;
+                        break;
+                    case 'ios_contentAvailable':
+                        $data['apns']['payload']['aps']['alert']['content_available'] = (bool) $value;
+                        break;
+                    case 'ios_media':
+                        $data['apns']['payload']['aps']['alert']['ios_attachments'] = [uniqid('id_') => $value];
+                        break;
+                    case 'ios_mutableContent':
+                        $data['apns']['payload']['aps']['alert']['mutable_content'] = (bool) $value;
+                        break;
+                    case 'android_sound':
+                        $data['android']['data']['android_sound'] = $value;
+                        break;
+                    case 'android_small_icon':
+                        $data['android']['data']['small_icon'] = $value;
+                        break;
+                    case 'android_large_icon':
+                        $data['android']['data']['large_icon'] = $value;
+                        break;
+                    case 'android_big_picture':
+                        $data['android']['data']['big_picture'] = $value;
+                        break;
+                    case 'android_led_color':
+                        $data['android']['data']['android_led_color'] = 'FF'.strtoupper($value);
+                        break;
+                    case 'android_accent_color':
+                        $data['android']['data']['android_accent_color'] = 'FF'.strtoupper($value);
+                        break;
+                    case 'android_group_key':
+                        $data['android']['data']['android_group'] = $value;
+                        break;
+                    case 'android_lockscreen_visibility':
+                        $data['android']['data']['android_visibility'] = (int) $value;
+                        break;
+                    case 'additional_data':
+                        $data['data'] = array_merge($data['data'], $value['list']);
+                        break;
+                }
             }
         }
     }
