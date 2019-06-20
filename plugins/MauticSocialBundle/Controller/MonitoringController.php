@@ -474,6 +474,9 @@ class MonitoringController extends FormController
                             'objectId'   => $monitoringEntity->getId(),
                             'page'       => $page,
                             'ignoreAjax' => true,
+                        ], [
+                            '_forwarded' => true,
+                            'ignoreAjax' => true,
                         ]
                     )->getContent(),
                     'dateRangeForm' => $dateRangeForm->createView(),

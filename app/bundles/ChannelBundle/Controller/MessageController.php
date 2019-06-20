@@ -139,6 +139,9 @@ class MessageController extends AbstractStandardFormController
                             'page'       => $this->get('session')->get('mautic.'.$this->getSessionBase('all').'.contact.page', 1),
                             'ignoreAjax' => true,
                             'channel'    => 'all',
+                        ], [
+                            '_forwarded' => true,
+                            'ignoreAjax' => true,
                         ]
                     )->getContent(),
                 ];
@@ -160,6 +163,9 @@ class MessageController extends AbstractStandardFormController
                                 ),
                                 'ignoreAjax' => true,
                                 'channel'    => $channel->getChannel(),
+                            ], [
+                                '_forwarded' => true,
+                                'ignoreAjax' => true,
                             ]
                         )->getContent();
                     }

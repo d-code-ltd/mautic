@@ -225,6 +225,9 @@ class SmsController extends FormController
                         'objectId'   => $sms->getId(),
                         'page'       => $this->get('session')->get('mautic.sms.contact.page', 1),
                         'ignoreAjax' => true,
+                    ], [
+                        '_forwarded' => true,
+                        'ignoreAjax' => true,
                     ]
                 )->getContent(),
                 'dateRangeForm' => $dateRangeForm->createView(),

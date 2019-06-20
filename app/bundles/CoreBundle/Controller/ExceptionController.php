@@ -44,7 +44,7 @@ class ExceptionController extends CommonController
             if (
                 (strpos($request->getUri(), '/oauth') !== false && strpos($request->getUri(), 'authorize') === false) ||
                 strpos($request->getUri(), '/api') !== false ||
-                (!defined('MAUTIC_AJAX_VIEW') && strpos($request->server->get('HTTP_ACCEPT', ''), 'application/json') !== false)
+                (!defined('MAUTIC_AJAX_VIEW') && strpos($request->server->get('HTTP_ACCEPT', ''), 'application/json') !== false && !$request->get('_forwarded', false))
             ) {
                 $message   = ('dev' === MAUTIC_ENV) ? $exception->getMessage() : $this->get('translator')->trans('mautic.core.error.generic', ['%code%' => $code]);
                 $dataArray = [
@@ -93,16 +93,23 @@ class ExceptionController extends CommonController
             $url      = $request->getRequestUri();
             $urlParts = parse_url($url);
 
+            if (!$exception instanceof FatalThrowableError && $request->get('_forwarded', false)) {
+                $inline = true;
+            } else {
+                $inline = false;
+            }
+
             return $this->delegateView(
                 [
                     'viewParameters' => [
-                        'baseTemplate'   => $baseTemplate,
+                        'baseTemplate'   => $inline ? null : $baseTemplate,
                         'status_code'    => $code,
                         'status_text'    => $statusText,
                         'exception'      => $exception,
                         'logger'         => $logger,
                         'currentContent' => $currentContent,
                         'isPublicPage'   => $anonymous,
+                        'inline'         => $inline,
                     ],
                     'contentTemplate' => $template,
                     'passthroughVars' => [
