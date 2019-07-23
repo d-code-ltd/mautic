@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-6">
                 <?php echo $view['form']->row($form['ios_subtitle']); ?>
-                <?php echo $view['form']->row($form['ios_media']); ?>
+                <?php echo $view['form']->row($form['ios_media_url']); ?>
             </div>
             <div class="col-md-6">
                 <div class="well">
@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-md-6">
                 <?php echo $view['form']->row($form['android_small_icon']); ?>
-                <?php echo $view['form']->row($form['android_large_icon']); ?>
+                <?php echo $view['form']->row($form['android_large_icon']);  ?>
                 <?php echo $view['form']->row($form['android_big_picture']); ?>
             </div>
             <div class="col-md-6">
@@ -46,10 +46,10 @@
                     <h4><?php echo $view['translator']->trans('Advanced Settings'); ?></h4>
                     <hr />
                     <?php echo $view['form']->row($form['android_sound']); ?>
-                    <?php echo $view['form']->row($form['android_group_key']); ?>
+                    <?php /* echo $view['form']->row($form['android_group_key']); */ ?>
                     <?php echo $view['form']->row($form['android_led_color']); ?>
                     <?php echo $view['form']->row($form['android_accent_color']); ?>
-                    <?php echo $view['form']->row($form['android_lockscreen_visibility']); ?>
+                    <?php /* echo $view['form']->row($form['android_lockscreen_visibility']); */ ?>
                 </div>
             </div>
         </div>

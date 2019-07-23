@@ -130,9 +130,22 @@ class MobileNotificationDetailsType extends AbstractType
                 ]
             );
 
+/*
             $builder->add(
                 'ios_media',
                 FileType::class,
+                [
+                    'label' => 'mautic.notification.form.mobile.ios_media',
+                    'attr'  => [
+                        'tooltip' => 'mautic.notification.form.mobile.ios_media.tooltip',
+                    ],
+                    'required' => false,
+                ]
+            );
+*/
+            $builder->add(
+                'ios_media_url',
+                TextType::class,
                 [
                     'label' => 'mautic.notification.form.mobile.ios_media',
                     'attr'  => [
