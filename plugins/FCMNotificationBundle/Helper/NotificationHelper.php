@@ -95,8 +95,8 @@ class NotificationHelper
     {
         if ($this->hasScript()) {            
             return <<<JS
-if (document.querySelectorAll(['script[src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"]']).length == 0){
-    MauticJS.insertScript('https://www.gstatic.com/firebasejs/4.12.1/firebase.js');
+if (document.querySelectorAll(['script[src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"]']).length == 0){
+    MauticJS.insertScript('https://www.gstatic.com/firebasejs/5.10.1/firebase.js');
 }
 JS;
         }
@@ -194,7 +194,7 @@ MauticJS.conditionalAsyncQueue(function(){
 
         var showWelcomeNotification = welcomenotificationEnabled && (Notification.permission !== "granted");
         me.messaging.requestPermission().then(function() {
-            me.messaging.getToken().then(function(currentToken){
+            me.messaging.getIdToken().then(function(currentToken){
                 if (currentToken) {
                     if (showWelcomeNotification){
                         MauticJS.notification.postUserIdToMautic(currentToken, function(){                                        
@@ -236,7 +236,7 @@ MauticJS.conditionalAsyncQueue(function(){
             ||
             (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
             
-            this.messaging.getToken().then(function(currentToken){
+            this.messaging.getIdToken().then(function(currentToken){
                 //console.log(currentToken);
                 if (currentToken) {
                     //console.log('refreshToken');
@@ -262,7 +262,7 @@ MauticJS.conditionalAsyncQueue(function(){
         
             // Just to be sure we've grabbed the ID
             window.onbeforeunload = function() {
-                this.messaging.getToken().then(function(currentToken){
+                this.messaging.getIdToken().then(function(currentToken){
                     if (currentToken) {
                         MauticJS.notification.postUserIdToMautic(currentToken);          
                     } 
@@ -270,7 +270,7 @@ MauticJS.conditionalAsyncQueue(function(){
             };
             
             this.messaging.onTokenRefresh(function() {
-                this.messaging.getToken().then(function(refreshedToken) {
+                this.messaging.getIdToken().then(function(refreshedToken) {
                     MauticJS.notification.postUserIdToMautic(refreshedToken);         
                 }).catch(function(err) {
                     console.log('Unable to retrieve refreshed token ', err);            
