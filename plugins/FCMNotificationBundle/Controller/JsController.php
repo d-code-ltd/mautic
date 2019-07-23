@@ -70,7 +70,7 @@ class JsController extends CommonController
         $trackOpenUrl   = $this->router->generate('mautic_track_notification_open', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return new Response(
-            "importScripts('https://www.gstatic.com/firebasejs/5.10.1/firebase-messaging.js');
+            "importScripts('https://www.gstatic.com/firebasejs/5.10.1/firebase.js');
 
                // Initialize Firebase
               var config = {
