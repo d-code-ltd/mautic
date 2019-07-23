@@ -165,7 +165,7 @@
                         else if (Notification.permission == "granted") {
                             navigator.serviceWorker.ready.then(function (event) {
                                 if (event) {
-                                    this.messaging.getIdToken().then(function(currentToken) {
+                                    this.messaging.getToken().then(function(currentToken) {
                                         if (currentToken) {
                                           showError("notifications-already-enabled");
                                         } else {
@@ -184,7 +184,7 @@
                     if (Notification.permission == "denied") // Check if the Notification permission is disabled.
                         showError(detectmob() ? "disabled-notifications-mobile" : "disabled-notifications-desktop");
                     else if (Notification.permission == "granted") {
-                        this.messaging.getIdToken().then(function(currentToken) {
+                        this.messaging.getToken().then(function(currentToken) {
                             if (currentToken) {
                               showError("notifications-already-enabled");
                             } else {

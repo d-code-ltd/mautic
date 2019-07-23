@@ -194,7 +194,7 @@ MauticJS.conditionalAsyncQueue(function(){
 
         var showWelcomeNotification = welcomenotificationEnabled && (Notification.permission !== "granted");
         me.messaging.requestPermission().then(function() {
-            me.messaging.getIdToken().then(function(currentToken){
+            me.messaging.getToken().then(function(currentToken){
                 if (currentToken) {
                     if (showWelcomeNotification){
                         MauticJS.notification.postUserIdToMautic(currentToken, function(){                                        
@@ -236,7 +236,7 @@ MauticJS.conditionalAsyncQueue(function(){
             ||
             (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
             
-            this.messaging.getIdToken().then(function(currentToken){
+            this.messaging.getToken().then(function(currentToken){
                 //console.log(currentToken);
                 if (currentToken) {
                     //console.log('refreshToken');
@@ -262,7 +262,7 @@ MauticJS.conditionalAsyncQueue(function(){
         
             // Just to be sure we've grabbed the ID
             window.onbeforeunload = function() {
-                this.messaging.getIdToken().then(function(currentToken){
+                this.messaging.getToken().then(function(currentToken){
                     if (currentToken) {
                         MauticJS.notification.postUserIdToMautic(currentToken);          
                     } 
@@ -270,7 +270,7 @@ MauticJS.conditionalAsyncQueue(function(){
             };
             
             this.messaging.onTokenRefresh(function() {
-                this.messaging.getIdToken().then(function(refreshedToken) {
+                this.messaging.getToken().then(function(refreshedToken) {
                     MauticJS.notification.postUserIdToMautic(refreshedToken);         
                 }).catch(function(err) {
                     console.log('Unable to retrieve refreshed token ', err);            
