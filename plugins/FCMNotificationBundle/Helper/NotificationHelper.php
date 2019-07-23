@@ -95,8 +95,8 @@ class NotificationHelper
     {
         if ($this->hasScript()) {            
             return <<<JS
-if (document.querySelectorAll(['script[src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"]']).length == 0){
-    MauticJS.insertScript('https://www.gstatic.com/firebasejs/5.10.1/firebase.js');
+if (document.querySelectorAll(['script[src="https://www.gstatic.com/firebasejs/5.10.1/firebase-messaging.js"]']).length == 0){
+    MauticJS.insertScript('https://www.gstatic.com/firebasejs/5.10.1/firebase-messaging.js');
 }
 JS;
         }
