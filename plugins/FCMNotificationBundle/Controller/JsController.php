@@ -71,7 +71,7 @@ class JsController extends CommonController
 
         return new Response(
             "importScripts('https://www.gstatic.com/firebasejs/5.10.1/firebase.js');
-
+             
                // Initialize Firebase
               var config = {
                 apiKey: '{$apiKey}',
