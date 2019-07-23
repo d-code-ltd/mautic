@@ -60,6 +60,7 @@ class MobileNotificationType extends AbstractType
                 'label'      => 'mautic.notification.form.mobile.heading',
                 'label_attr' => ['class' => 'control-label'],
                 'attr'       => ['class' => 'form-control'],
+                'required'   => true,
             ]
         );
 
@@ -73,6 +74,7 @@ class MobileNotificationType extends AbstractType
                     'class' => 'form-control',
                     'rows'  => 6,
                 ],
+                'required'   => true,
             ]
         );
 
