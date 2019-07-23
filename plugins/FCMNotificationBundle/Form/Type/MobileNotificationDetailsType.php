@@ -249,7 +249,7 @@ class MobileNotificationDetailsType extends AbstractType
                     'required' => false,
                 ]
             );
-
+/*
             $builder->add(
                 'android_group_key',
                 TextType::class,
@@ -282,7 +282,9 @@ class MobileNotificationDetailsType extends AbstractType
                     'multiple'    => false,
                 ]
             );
+*/
         }
+
     }
 
     /**
