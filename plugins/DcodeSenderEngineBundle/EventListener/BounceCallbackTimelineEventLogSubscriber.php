@@ -98,21 +98,14 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
     {
         $eventTypeName = $this->translator->trans($eventTypeName);
         $event->addEventType($eventType, $eventTypeName);
-     
-        /*
-        $citrixEvents = $this->model->getRepository()->getEventsForTimeline(
-                    [$product, $type],
-                    $event->getLeadId(),
-                    $event->getQueryOptions()
-                );
-         */
-
+          
         if (!$event->isApplicable($eventType)) {
             return;
         }
 
         $action = str_replace('dcodesenderengine.bouncecallback.', '', $eventType);
-        $events = $this->leadEventLogRepository->getEventsByAction($action, $event->getLead(), $event->getQueryOptions());
+        $events = $this->getEvents($event->getLead(), null, null, $action, $event->getQueryOptions());
+
 
         // Add to counter
         $event->addToCounter($eventType, $events);
