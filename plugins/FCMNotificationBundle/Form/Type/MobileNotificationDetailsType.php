@@ -149,6 +149,7 @@ class MobileNotificationDetailsType extends AbstractType
                 [
                     'label' => 'mautic.notification.form.mobile.ios_media',
                     'attr'  => [
+                        'class'   => 'form-control',
                         'tooltip' => 'mautic.notification.form.mobile.ios_media.tooltip',
                     ],
                     'required' => false,
