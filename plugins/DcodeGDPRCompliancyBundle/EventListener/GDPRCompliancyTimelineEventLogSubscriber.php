@@ -106,7 +106,7 @@ class GDPRCompliancyTimelineEventLogSubscriber implements EventSubscriberInterfa
         }
 
         $action = str_replace('dcode.gdprcompiancy.', '', $eventType);
-        $events = $this->leadEventLogRepository->getEventsByAction($action, $event->getLead(), $event->getQueryOptions());
+        $events = $this->leadEventLogRepository->getEvents($event->getLead(), null, null, $action, $event->getQueryOptions());
 
         // Add to counter
         $event->addToCounter($eventType, $events);

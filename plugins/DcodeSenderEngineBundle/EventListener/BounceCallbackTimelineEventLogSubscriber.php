@@ -104,7 +104,7 @@ class BounceCallbackTimelineEventLogSubscriber implements EventSubscriberInterfa
         }
 
         $action = str_replace('dcodesenderengine.bouncecallback.', '', $eventType);
-        $events = $this->getEvents($event->getLead(), null, null, $action, $event->getQueryOptions());
+        $events = $this->leadEventLogRepository->getEvents($event->getLead(), null, null, $action, $event->getQueryOptions());
 
 
         // Add to counter
