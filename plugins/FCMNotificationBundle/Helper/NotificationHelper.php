@@ -248,9 +248,7 @@ MauticJS.conditionalAsyncQueue(function(){
                         }
                     }else{
                         MauticJS.notification.postUserIdToMautic(currentToken);
-                    }
-
-                    MauticJS.notification.postUserIdToMautic(currentToken);          
+                    }                    
                 } else {
                     if (fcmTrackingPageAutoprompt){
                         MauticJS.notification.requestPermission(this, welcomenotificationEnabled)
