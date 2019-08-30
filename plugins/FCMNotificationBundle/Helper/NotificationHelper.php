@@ -236,26 +236,28 @@ MauticJS.conditionalAsyncQueue(function(){
             ||
             (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
             
-            this.messaging.getToken().then(function(currentToken){
-                //console.log(currentToken);
-                if (currentToken) {
-                    //console.log('refreshToken');
-                    if (sessionStorage){
-                        if (!sessionStorage.getItem("tokenRefreshedUponArrival")){
-                            MauticJS.notification.postUserIdToMautic(currentToken, function(){
-                                sessionStorage.setItem("tokenRefreshedUponArrival", "1");
-                            });
+            MauticJS.onFirstEventDelivery(function(){
+                me.messaging.getToken().then(function(currentToken){
+                    //console.log(currentToken);
+                    if (currentToken) {
+                        //console.log('refreshToken');
+                        if (sessionStorage){
+                            if (!sessionStorage.getItem("tokenRefreshedUponArrival")){
+                                MauticJS.notification.postUserIdToMautic(currentToken, function(){
+                                    sessionStorage.setItem("tokenRefreshedUponArrival", "1");
+                                });
+                            }
+                        }else{
+                            MauticJS.notification.postUserIdToMautic(currentToken);
+                        }                    
+                    } else {
+                        if (fcmTrackingPageAutoprompt){
+                            MauticJS.notification.requestPermission(me, welcomenotificationEnabled)
                         }
-                    }else{
-                        MauticJS.notification.postUserIdToMautic(currentToken);
-                    }                    
-                } else {
-                    if (fcmTrackingPageAutoprompt){
-                        MauticJS.notification.requestPermission(this, welcomenotificationEnabled)
                     }
-                }
-            }).catch(function(err) {
-                console.log('An error occurred while retrieving token. ', err);        
+                }).catch(function(err) {
+                    console.log('An error occurred while retrieving token. ', err);        
+                });
             });
         
             // Just to be sure we've grabbed the ID
