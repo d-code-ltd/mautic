@@ -19,15 +19,15 @@ return [
                 'arguments' => [
                     'templating.helper.assets',
                     'mautic.helper.integration',
-                    'mautic.helper.core_parameters',
-                ],
-            ],
-            'mauticplugin.dcodemauticutils.imoprtenhancer.importformbuilder.subscriber' => [
-                'class' => 'MauticPlugin\DcodeMauticUtilsBundle\EventListener\ImportFormBuilderSubscriber',
-                'arguments' => [
-                    'translator',
-                    'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
-                    'mautic.helper.integration',
+					'mautic.helper.core_parameters',
+				],
+			],
+			'mauticplugin.dcodemauticutils.imoprtenhancer.importformbuilder.subscriber' => [
+				'class' => 'MauticPlugin\DcodeMauticUtilsBundle\EventListener\ImportFormBuilderSubscriber',
+				'arguments' => [
+					'translator',
+					'mauticplugin.dcodegdprcompliancy.repository.lead_event_log',
+					'mautic.helper.integration',
                 ],
             ],
             'mauticplugin.dcodemauticutils.leadimport.identified.subscriber' => [
@@ -59,13 +59,21 @@ return [
             ],
         ], 
     ],
-    'parameters' => [
-        'whitelabel_branding_name' => '',
-        'whitelabel_branding_version' => '',
-        'whitelabel_branding_copyright' => '',
-        'whitelabel_branding_favicon' => '',
-        'whitelabel_branding_apple_favicon' => '',
-        'whitelabel_branding_logo' => '',
-        'whitelabel_branding_left_logo' => '',
-    ],
+	'parameters' => [
+		'whitelabel_branding_name' => '',
+		'whitelabel_branding_version' => '',
+		'whitelabel_branding_copyright' => '',
+		'whitelabel_branding_favicon' => '',
+		'whitelabel_branding_apple_favicon' => '',
+		'whitelabel_branding_logo' => '',
+		'whitelabel_branding_left_logo' => '',
+	],
+	'routes' => [
+		'public' => [
+			'mautic_clear_tracking_cookies' => [
+				'path' => '/mtc/clear_tracking_cookies',
+				'controller' => 'DcodeMauticUtilsBundle:Tracking:clearTrackingCookies',
+			],
+		],
+	],
 ];
