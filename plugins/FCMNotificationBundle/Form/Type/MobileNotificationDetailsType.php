@@ -130,12 +130,26 @@ class MobileNotificationDetailsType extends AbstractType
                 ]
             );
 
+/*
             $builder->add(
                 'ios_media',
                 FileType::class,
                 [
                     'label' => 'mautic.notification.form.mobile.ios_media',
                     'attr'  => [
+                        'tooltip' => 'mautic.notification.form.mobile.ios_media.tooltip',
+                    ],
+                    'required' => false,
+                ]
+            );
+*/
+            $builder->add(
+                'ios_media_url',
+                TextType::class,
+                [
+                    'label' => 'mautic.notification.form.mobile.ios_media',
+                    'attr'  => [
+                        'class'   => 'form-control',
                         'tooltip' => 'mautic.notification.form.mobile.ios_media.tooltip',
                     ],
                     'required' => false,
@@ -235,7 +249,7 @@ class MobileNotificationDetailsType extends AbstractType
                     'required' => false,
                 ]
             );
-
+/*
             $builder->add(
                 'android_group_key',
                 TextType::class,
@@ -268,7 +282,9 @@ class MobileNotificationDetailsType extends AbstractType
                     'multiple'    => false,
                 ]
             );
+*/
         }
+
     }
 
     /**

@@ -82,7 +82,7 @@ class FCMApi extends AbstractNotificationApi
         $featureSettings   = $settings->getFeatureSettings(); 
 
         if (!empty($featureSettings['notification_icon'])){
-            $this->notificationIcon = $featureSettings['notification_icon'];
+            $this->notificationDefaultIcon = $featureSettings['notification_icon'];
         }
     }
 
@@ -194,11 +194,11 @@ class FCMApi extends AbstractNotificationApi
                 'notification_id' => (string)$notificationId
             ];
 
-            if (!empty($this->notificationIcon)){
-                $data['data']['icon'] = $this->notificationIcon;
-                $data['android']['data']['icon'] = $this->notificationIcon;
-                $data['apns']['payload']['aps']['alert']['icon'] = $this->notificationIcon;
-                $data['webpush']['data']['icon'] = $this->notificationIcon;                
+            if (!empty($this->notificationDefaultIcon)){
+                $data['data']['icon'] = $this->notificationDefaultIcon;
+                $data['android']['data']['icon'] = $this->notificationDefaultIcon;
+                $data['apns']['payload']['aps']['alert']['icon'] = $this->notificationDefaultIcon;
+                $data['webpush']['data']['icon'] = $this->notificationDefaultIcon;                
             }
 
 
@@ -272,40 +272,46 @@ class FCMApi extends AbstractNotificationApi
                         $data['apns']['payload']['aps']['alert']['subtitle'] = $value;
                         break;
                     case 'ios_sound':
-                        $data['apns']['payload']['aps']['alert']['ios_sound'] = $value ?: 'default';
+                        $data['apns']['payload']['aps']['sound'] = $value ?: 'default';
                         break;
                     case 'ios_badges':
                         $data['apns']['payload']['aps']['alert']['ios_badgeType'] = $value;
                         break;
                     case 'ios_badgeCount':
-                        $data['apns']['payload']['aps']['alert']['ios_badgeCount'] = (int) $value;
+                        $data['apns']['payload']['aps']['badge'] = (int) $value;
                         break;
                     case 'ios_contentAvailable':
-                        $data['apns']['payload']['aps']['alert']['content_available'] = (bool) $value;
+                        $data['apns']['payload']['aps']['content-available'] = (int) $value;
                         break;
                     case 'ios_media':
-                        $data['apns']['payload']['aps']['alert']['ios_attachments'] = [uniqid('id_') => $value];
+                        $data['apns']['payload']['data']['ios_attachments'] = [uniqid('id_') => $value];
+                        break;
+                    case 'ios_media_url':
+                        $data['apns']['payload']['data']['media-url'] = $value;
                         break;
                     case 'ios_mutableContent':
-                        $data['apns']['payload']['aps']['alert']['mutable_content'] = (bool) $value;
+                        $data['apns']['payload']['aps']['mutable-content'] = (int) $value;
                         break;
+
                     case 'android_sound':
-                        $data['android']['data']['android_sound'] = $value;
+                        $data['android']['data']['sound'] = $value;
                         break;
                     case 'android_small_icon':
-                        $data['android']['data']['small_icon'] = $value;
+                        if (empty($mobileConfig['android_large_icon'])){
+                            $data['android']['data']['icon'] = $value;    
+                        }                        
                         break;
                     case 'android_large_icon':
-                        $data['android']['data']['large_icon'] = $value;
+                        $data['android']['data']['icon'] = $value;
                         break;
                     case 'android_big_picture':
-                        $data['android']['data']['big_picture'] = $value;
+                        $data['android']['data']['image'] = $value;
                         break;
                     case 'android_led_color':
-                        $data['android']['data']['android_led_color'] = 'FF'.strtoupper($value);
+                        $data['android']['data']['led_color'] = '#'.strtoupper($value);
                         break;
                     case 'android_accent_color':
-                        $data['android']['data']['android_accent_color'] = 'FF'.strtoupper($value);
+                        $data['android']['data']['color'] = '#'.strtoupper($value);
                         break;
                     case 'android_group_key':
                         $data['android']['data']['android_group'] = $value;
@@ -313,11 +319,17 @@ class FCMApi extends AbstractNotificationApi
                     case 'android_lockscreen_visibility':
                         $data['android']['data']['android_visibility'] = (int) $value;
                         break;
+
                     case 'additional_data':
                         $data['data'] = array_merge($data['data'], $value['list']);
                         break;
                 }
             }
         }
+
+        if (isset($data['apns']['payload']['data']['media-url'])){
+            $data['apns']['payload']['aps']['mutable-content'] = 1;
+        }
+
     }
 }
