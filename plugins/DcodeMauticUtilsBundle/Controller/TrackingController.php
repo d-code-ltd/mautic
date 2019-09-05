@@ -14,7 +14,6 @@ class TrackingController extends CommonController {
 
 		try {
 			$deviceTrackingService->clearTrackingCookies();
-			$deviceTrackingService->clearBcTrackingCookies();
 		} catch (\Exception $e) {
 			$response = new JsonResponse(array('success' => false, 'error' => 'Couldn\'t remove cookies!'));
 		}
