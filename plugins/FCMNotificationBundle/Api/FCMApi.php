@@ -13,10 +13,10 @@ namespace MauticPlugin\FCMNotificationBundle\Api;
 
 use Joomla\Http\Response;
 use Mautic\NotificationBundle\Entity\Notification;
-use Mautic\FCMNotificationBundle\Exception\MissingApiKeyException;
-use Mautic\FCMNotificationBundle\Exception\MissingProjectIDException;
-use Mautic\FCMNotificationBundle\Exception\MissingMessagingSenderIdException;
-use Mautic\FCMNotificationBundle\Exception\MissingServiceAccountJsonException;
+use MauticPlugin\FCMNotificationBundle\Exception\MissingApiKeyException;
+use MauticPlugin\FCMNotificationBundle\Exception\MissingProjectIDException;
+use MauticPlugin\FCMNotificationBundle\Exception\MissingMessagingSenderIdException;
+use MauticPlugin\FCMNotificationBundle\Exception\MissingServiceAccountJsonException;
 use Mautic\NotificationBundle\Api\AbstractNotificationApi;
 
 use GuzzleHttp\Client;
