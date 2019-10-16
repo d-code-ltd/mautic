@@ -141,12 +141,7 @@
         {
             "type": "git",
             "url": "https://github.com/mautic/BazingaOAuthServerBundle.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/d-code-ltd/mautic-recommender-bundle.git"
         }
-
     ],
     "scripts": {
         "post-install-cmd": [
