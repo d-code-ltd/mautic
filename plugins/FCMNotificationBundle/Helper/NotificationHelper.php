@@ -171,12 +171,19 @@ MauticJS.conditionalAsyncQueue(function(){
         storageBucket: "",
         messagingSenderId: "{$messagingSenderId}"
       };      
-      firebase.initializeApp(config);
-      
-      this.messaging = firebase.messaging();            
+    firebase.initializeApp(config);
+    
+    if (firebase.messaging.isSupported())  
+        this.messaging = firebase.messaging();
+    }
+
     var me = this;
 
     MauticJS.postUserIdToMautic = function(userId, successCallback) {
+        if (firebase.messaging.isSupported() == false){
+            return false;
+        }
+
         var data = [];
         data['fcm_id'] = userId;
         if (typeof successCallback == 'function'){
@@ -188,6 +195,10 @@ MauticJS.conditionalAsyncQueue(function(){
     MauticJS.notification.postUserIdToMautic = MauticJS.postUserIdToMautic;
     
     MauticJS.notification.requestPermission = function(){
+        if (firebase.messaging.isSupported() == false){
+            return false;
+        }
+
         if (Notification.permission == "granted"){
             return true;
         }
@@ -227,101 +238,105 @@ MauticJS.conditionalAsyncQueue(function(){
         return null;
     }
 
-        var fcmLandingPageEnabled = {$landingPageEnabled};
-        var fcmTrackingPageEnabled = {$trackingPageEnabled};
-        var welcomenotificationEnabled = {$welcomenotificationEnabled};
-        var fcmTrackingPageAutoprompt = {$trackingPageAutoprompt};
+    var fcmLandingPageEnabled = {$landingPageEnabled};
+    var fcmTrackingPageEnabled = {$trackingPageEnabled};
+    var welcomenotificationEnabled = {$welcomenotificationEnabled};
+    var fcmTrackingPageAutoprompt = {$trackingPageAutoprompt};
 
-        if ((MauticDomain.replace(/https?:\/\//,'') == location.host && (fcmLandingPageEnabled || location == '{$notificationPopupUrl}'))
-            ||
-            (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
-            
-            MauticJS.onFirstEventDelivery(function(){
-                me.messaging.getToken().then(function(currentToken){
-                    //console.log(currentToken);
-                    if (currentToken) {
-                        //console.log('refreshToken');
-                        if (sessionStorage){
-                            if (!sessionStorage.getItem("tokenRefreshedUponArrival")){
-                                MauticJS.notification.postUserIdToMautic(currentToken, function(){
-                                    sessionStorage.setItem("tokenRefreshedUponArrival", "1");
-                                });
-                            }
-                        }else{
-                            MauticJS.notification.postUserIdToMautic(currentToken);
-                        }                    
-                    } else {
-                        if (fcmTrackingPageAutoprompt){
-                            MauticJS.notification.requestPermission(me, welcomenotificationEnabled)
-                        }
-                    }
-                }).catch(function(err) {
-                    console.log('An error occurred while retrieving token. ', err);        
-                });
-            });
+    if (firebase.messaging.isSupported() == false){
+        return false;
+    }
+
+    if ((MauticDomain.replace(/https?:\/\//,'') == location.host && (fcmLandingPageEnabled || location == '{$notificationPopupUrl}'))
+        ||
+        (MauticDomain.replace(/https?:\/\//,'') != location.host && fcmTrackingPageEnabled) ){
         
-            // Just to be sure we've grabbed the ID
-            window.onbeforeunload = function() {
-                this.messaging.getToken().then(function(currentToken){
-                    if (currentToken) {
-                        MauticJS.notification.postUserIdToMautic(currentToken);          
-                    } 
-                });        
-            };
-            
-            this.messaging.onTokenRefresh(function() {
-                this.messaging.getToken().then(function(refreshedToken) {
-                    MauticJS.notification.postUserIdToMautic(refreshedToken);         
-                }).catch(function(err) {
-                    console.log('Unable to retrieve refreshed token ', err);            
-                });
-            });
-        }
-          
-        messaging.onMessage(function(payload){
-            console.log('onMessage', payload);
-            var notificationTitle = payload.data.title;
-            var notificationOptions = {
-                body: payload.data.body,                    
-                requireInteraction: true,
-            };
-            if (payload.data.icon){
-                notificationOptions.icon = payload.data.icon;
-            }
-
-            var notification = new Notification(
-                notificationTitle,
-                notificationOptions
-            );
-
-            if (payload.data.click_action){
-                notification.onclick = function(event){
-                    event.preventDefault();
-                    window.open(payload.data.click_action);
-                }
-            }
-
-            if (payload.data.notification_id){
-                notification.onshow = function(){
-                    fetch('{$trackOpenUrl}', {  
-                        credentials: 'include',  
-                        method: 'post',                              
-                        body: JSON.stringify({notification_id: payload.data.notification_id}),
-                        headers: {
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
+        MauticJS.onFirstEventDelivery(function(){
+            me.messaging.getToken().then(function(currentToken){
+                //console.log(currentToken);
+                if (currentToken) {
+                    //console.log('refreshToken');
+                    if (sessionStorage){
+                        if (!sessionStorage.getItem("tokenRefreshedUponArrival")){
+                            MauticJS.notification.postUserIdToMautic(currentToken, function(){
+                                sessionStorage.setItem("tokenRefreshedUponArrival", "1");
+                            });
                         }
-                      })
-                      .then(response => response.json())  
-                      .then(function (data) {  
-                        console.log('Request succeeded with JSON response', data);  
-                      })  
-                      .catch(function (error) {  
-                        console.log('Request failed', error);  
-                      });
+                    }else{
+                        MauticJS.notification.postUserIdToMautic(currentToken);
+                    }                    
+                } else {
+                    if (fcmTrackingPageAutoprompt){
+                        MauticJS.notification.requestPermission(me, welcomenotificationEnabled)
+                    }
                 }
-            }
+            }).catch(function(err) {
+                console.log('An error occurred while retrieving token. ', err);        
+            });
         });
+    
+        // Just to be sure we've grabbed the ID
+        window.onbeforeunload = function() {
+            this.messaging.getToken().then(function(currentToken){
+                if (currentToken) {
+                    MauticJS.notification.postUserIdToMautic(currentToken);          
+                } 
+            });        
+        };
+        
+        this.messaging.onTokenRefresh(function() {
+            this.messaging.getToken().then(function(refreshedToken) {
+                MauticJS.notification.postUserIdToMautic(refreshedToken);         
+            }).catch(function(err) {
+                console.log('Unable to retrieve refreshed token ', err);            
+            });
+        });
+    }
+      
+    messaging.onMessage(function(payload){
+        console.log('onMessage', payload);
+        var notificationTitle = payload.data.title;
+        var notificationOptions = {
+            body: payload.data.body,                    
+            requireInteraction: true,
+        };
+        if (payload.data.icon){
+            notificationOptions.icon = payload.data.icon;
+        }
+
+        var notification = new Notification(
+            notificationTitle,
+            notificationOptions
+        );
+
+        if (payload.data.click_action){
+            notification.onclick = function(event){
+                event.preventDefault();
+                window.open(payload.data.click_action);
+            }
+        }
+
+        if (payload.data.notification_id){
+            notification.onshow = function(){
+                fetch('{$trackOpenUrl}', {  
+                    credentials: 'include',  
+                    method: 'post',                              
+                    body: JSON.stringify({notification_id: payload.data.notification_id}),
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    }
+                  })
+                  .then(response => response.json())  
+                  .then(function (data) {  
+                    console.log('Request succeeded with JSON response', data);  
+                  })  
+                  .catch(function (error) {  
+                    console.log('Request failed', error);  
+                  });
+            }
+        }
+    });
 }, function(){
     return (typeof firebase !== 'undefined' && firebase)?true:false;
 });    
