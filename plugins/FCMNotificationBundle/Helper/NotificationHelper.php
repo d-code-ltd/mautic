@@ -173,7 +173,7 @@ MauticJS.conditionalAsyncQueue(function(){
       };      
     firebase.initializeApp(config);
     
-    if (firebase.messaging.isSupported())  
+    if (firebase.messaging.isSupported()){
         this.messaging = firebase.messaging();
     }
 
