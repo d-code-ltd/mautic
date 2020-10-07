@@ -115,13 +115,12 @@
         "sendgrid/sendgrid": "~6.0",
         "noxlogic/ratelimit-bundle": "^1.11",
         "cweagans/composer-patches": "^1.6",
-        "sensio/framework-extra-bundle": "~3.0"
+        "sensio/framework-extra-bundle": "~3.0",
 
-        "plokko/firebase-php": "~0.1.3",
-        "twig/twig": "~1.35",
+        "plokko/firebase-php": "~0.1.3",        
 
         "koco/mautic-recaptcha-bundle": "~1.1",
-        "thedmsgroup/mautic-enhancer-bundle": "<=2.15.3",
+        "thedmsgroup/mautic-enhancer-bundle": "<=2.16.3",
         "facebook/php-ads-sdk": "3.3.*"
     },
     "require-dev": {
