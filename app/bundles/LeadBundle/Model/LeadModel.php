@@ -508,6 +508,10 @@ class LeadModel extends FormModel
             $details = $ips->first()->getIpDetails();
             // Only update with IP details if none of the following are set to prevent wrong combinations
             if (empty($fields['core']['city']['value']) && empty($fields['core']['state']['value']) && empty($fields['core']['country']['value']) && empty($fields['core']['zipcode']['value'])) {
+                if ($this->coreParametersHelper->getParameter('anonymize_ip') && $this->ipLookupHelper->getRealIp()) {
+                    $details = $this->ipLookupHelper->getIpDetails($this->ipLookupHelper->getRealIp());
+                }
+
                 if (!empty($details['city'])) {
                     $entity->addUpdatedField('city', $details['city']);
                     $companyFieldMatches['city'] = $details['city'];
@@ -695,6 +699,9 @@ class LeadModel extends FormModel
 
         //update existing values
         foreach ($fieldValues as $group => &$groupFields) {
+            if ('all' === $group) {
+                continue;
+            }
             foreach ($groupFields as $alias => &$field) {
                 if (!isset($field['value'])) {
                     $field['value'] = null;
@@ -872,22 +879,24 @@ class LeadModel extends FormModel
             if ($field instanceof LeadField) {
                 $alias = $field->getAlias();
                 if ($field->isPublished() and $field->getObject() === 'Lead') {
-                    $group                          = $field->getGroup();
-                    $array[$group][$alias]['id']    = $field->getId();
-                    $array[$group][$alias]['group'] = $group;
-                    $array[$group][$alias]['label'] = $field->getLabel();
-                    $array[$group][$alias]['alias'] = $alias;
-                    $array[$group][$alias]['type']  = $field->getType();
+                    $group                                = $field->getGroup();
+                    $array[$group][$alias]['id']          = $field->getId();
+                    $array[$group][$alias]['group']       = $group;
+                    $array[$group][$alias]['label']       = $field->getLabel();
+                    $array[$group][$alias]['alias']       = $alias;
+                    $array[$group][$alias]['type']        = $field->getType();
+                    $array[$group][$alias]['properties']  = $field->getProperties();
                 }
             } else {
                 $alias = $field['alias'];
                 if ($field['isPublished'] and $field['object'] === 'lead') {
-                    $group                          = $field['group'];
-                    $array[$group][$alias]['id']    = $field['id'];
-                    $array[$group][$alias]['group'] = $group;
-                    $array[$group][$alias]['label'] = $field['label'];
-                    $array[$group][$alias]['alias'] = $alias;
-                    $array[$group][$alias]['type']  = $field['type'];
+                    $group                                = $field['group'];
+                    $array[$group][$alias]['id']          = $field['id'];
+                    $array[$group][$alias]['group']       = $group;
+                    $array[$group][$alias]['label']       = $field['label'];
+                    $array[$group][$alias]['alias']       = $alias;
+                    $array[$group][$alias]['type']        = $field['type'];
+                    $array[$group][$alias]['properties']  = $field['properties'];
                 }
             }
         }
@@ -1537,9 +1546,9 @@ class LeadModel extends FormModel
                 // The email must be set for successful unsubscribtion
                 $lead->addUpdatedField('email', $data[$fields['email']]);
                 if ($doNotEmail) {
-                    $this->addDncForLead($lead, 'email', $reason, DNC::MANUAL);
+                    $this->addDncForLead($lead, 'email', $reason, DNC::MANUAL, false);
                 } else {
-                    $this->removeDncForLead($lead, 'email', true);
+                    $this->removeDncForLead($lead, 'email', false);
                 }
             }
         }
@@ -1850,8 +1859,8 @@ class LeadModel extends FormModel
         $this->logger->debug('CONTACT: Adding '.implode(', ', $tags).' to contact ID# '.$lead->getId());
 
         array_walk($tags, function (&$val) {
-            $val = trim($val);
-            InputHelper::clean($val);
+            $val = html_entity_decode(trim($val), ENT_QUOTES);
+            $val = InputHelper::clean($val);
         });
 
         // See which tags already exist
@@ -1871,7 +1880,7 @@ class LeadModel extends FormModel
                 $tagToBeAdded = null;
 
                 if (!array_key_exists($tag, $foundTags)) {
-                    $tagToBeAdded = new Tag($tag);
+                    $tagToBeAdded = new Tag($tag, false);
                 } elseif (!$leadTags->contains($foundTags[$tag])) {
                     $tagToBeAdded = $foundTags[$tag];
                 }
@@ -1888,8 +1897,8 @@ class LeadModel extends FormModel
             $this->logger->debug('CONTACT: Removing '.implode(', ', $removeTags).' for contact ID# '.$lead->getId());
 
             array_walk($removeTags, function (&$val) {
-                $val = trim($val);
-                InputHelper::clean($val);
+                $val = html_entity_decode(trim($val), ENT_QUOTES);
+                $val = InputHelper::clean($val);
             });
 
             // See which tags really exist
