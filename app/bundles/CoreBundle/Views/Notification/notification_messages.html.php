@@ -15,11 +15,11 @@
     <div class="pull-right">
     <?php if (isset($updateMessage['isMautic3Upgrade']) && $updateMessage['isMautic3Upgrade'] === true) {
     ?>
-        <a class="btn btn-danger" href="<?php echo $updateMessage['mautic3UpgradeUrl'] ?>"><?php echo $view['translator']->trans('mautic.core.update.now'); ?></a>
+        <a class="btn btn-danger disabled" href="<?php echo $updateMessage['mautic3UpgradeUrl'] ?>"><?php echo $view['translator']->trans('mautic.core.update.now'); ?></a>
     <?php
 } else {
         ?>
-        <a class="btn btn-danger" href="<?php echo $view['router']->path('mautic_core_update'); ?>" data-toggle="ajax"><?php echo $view['translator']->trans('mautic.core.update.now'); ?></a>
+        <a class="btn btn-danger disabled" href="<?php echo $view['router']->path('mautic_core_update'); ?>" data-toggle="ajax"><?php echo $view['translator']->trans('mautic.core.update.now'); ?></a>
     <?php
     } ?>
     </div>
