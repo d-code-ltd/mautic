@@ -19,13 +19,12 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class StatsSubscriber extends CommonStatsSubscriber
 {
-    public function __construct(CorePermissions $security, EntityManager $entityManager)
-    public function __construct(EntityManager $em, integrationHelper $integrationHelper)
+    public function __construct(CorePermissions $security, EntityManager $entityManager, integrationHelper $integrationHelper)
     {
         $this->integrationHelper = $integrationHelper;
 
         $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
