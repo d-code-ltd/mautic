@@ -17,44 +17,42 @@ use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\CoreBundle\Entity\IpAddress;
 use Mautic\LeadBundle\Entity\Lead;
+use Mautic\LeadBundle\Entity\LeadList;
 
-/**
- * Class Stat.
- */
 class Stat
 {
     /**
-     * @var int
+     * @var int|null
      */
     private $id;
 
     /**
-     * @var Email
+     * @var Email|null
      */
     private $email;
 
     /**
-     * @var \Mautic\LeadBundle\Entity\Lead
+     * @var Lead|null
      */
     private $lead;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $emailAddress;
 
     /**
-     * @var \Mautic\LeadBundle\Entity\LeadList
+     * @var LeadList|null
      */
     private $list;
 
     /**
-     * @var \Mautic\CoreBundle\Entity\IpAddress
+     * @var IpAddress|null
      */
     private $ipAddress;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $dateSent;
 
@@ -74,12 +72,12 @@ class Stat
     private $viewedInBrowser = false;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $dateRead;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $trackingHash;
 
@@ -89,12 +87,12 @@ class Stat
     private $retryCount = 0;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $source;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $sourceId;
 
@@ -104,17 +102,17 @@ class Stat
     private $tokens = [];
 
     /**
-     * @var Copy
+     * @var Copy|null
      */
     private $storedCopy;
 
     /**
      * @var int
      */
-    private $openCount;
+    private $openCount = 0;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $lastOpened;
 
@@ -133,9 +131,6 @@ class Stat
         $this->replies = new ArrayCollection();
     }
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
@@ -153,7 +148,7 @@ class Stat
             ->addIndex(['date_read', 'lead_id'], 'email_date_read_lead')
             ->addIndex(['lead_id', 'date_read'], 'email_lead_date_read');
 
-        $builder->addId();
+        $builder->addBigIntIdField();
 
         $builder->createManyToOne('email', 'Email')
             ->inversedBy('stats')
@@ -235,8 +230,6 @@ class Stat
 
     /**
      * Prepares the metadata for API usage.
-     *
-     * @param $metadata
      */
     public static function loadApiMetadata(ApiMetadataDriver $metadata)
     {
@@ -265,7 +258,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return \DateTime|null
      */
     public function getDateRead()
     {
@@ -273,7 +266,7 @@ class Stat
     }
 
     /**
-     * @param mixed $dateRead
+     * @param \DateTime|null $dateRead
      */
     public function setDateRead($dateRead)
     {
@@ -281,7 +274,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return \DateTime|null
      */
     public function getDateSent()
     {
@@ -289,7 +282,7 @@ class Stat
     }
 
     /**
-     * @param mixed $dateSent
+     * @param \DateTime|null $dateSent
      */
     public function setDateSent($dateSent)
     {
@@ -297,23 +290,20 @@ class Stat
     }
 
     /**
-     * @return Email
+     * @return Email|null
      */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * @param mixed $email
-     */
     public function setEmail(Email $email = null)
     {
         $this->email = $email;
     }
 
     /**
-     * @return mixed
+     * @return id|null
      */
     public function getId()
     {
@@ -321,7 +311,7 @@ class Stat
     }
 
     /**
-     * @return IpAddress
+     * @return IpAddress|null
      */
     public function getIpAddress()
     {
@@ -329,7 +319,7 @@ class Stat
     }
 
     /**
-     * @param mixed $ip
+     * @param IpAddress|null $ip
      */
     public function setIpAddress(IpAddress $ip)
     {
@@ -337,7 +327,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getIsRead()
     {
@@ -345,7 +335,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isRead()
     {
@@ -353,7 +343,7 @@ class Stat
     }
 
     /**
-     * @param mixed $isRead
+     * @param bool $isRead
      */
     public function setIsRead($isRead)
     {
@@ -361,23 +351,20 @@ class Stat
     }
 
     /**
-     * @return Lead
+     * @return Lead|null
      */
     public function getLead()
     {
         return $this->lead;
     }
 
-    /**
-     * @param mixed $lead
-     */
     public function setLead(Lead $lead = null)
     {
         $this->lead = $lead;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getTrackingHash()
     {
@@ -385,7 +372,7 @@ class Stat
     }
 
     /**
-     * @param mixed $trackingHash
+     * @param string|null $trackingHash
      */
     public function setTrackingHash($trackingHash)
     {
@@ -393,7 +380,7 @@ class Stat
     }
 
     /**
-     * @return \Mautic\LeadBundle\Entity\LeadList
+     * @return LeadList|null
      */
     public function getList()
     {
@@ -401,7 +388,7 @@ class Stat
     }
 
     /**
-     * @param mixed $list
+     * @param LeadList|null $list
      */
     public function setList($list)
     {
@@ -409,7 +396,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getRetryCount()
     {
@@ -417,7 +404,7 @@ class Stat
     }
 
     /**
-     * @param mixed $retryCount
+     * @param int $retryCount
      */
     public function setRetryCount($retryCount)
     {
@@ -433,7 +420,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getIsFailed()
     {
@@ -441,7 +428,7 @@ class Stat
     }
 
     /**
-     * @param mixed $isFailed
+     * @param bool $isFailed
      */
     public function setIsFailed($isFailed)
     {
@@ -449,7 +436,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function isFailed()
     {
@@ -457,7 +444,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getEmailAddress()
     {
@@ -465,7 +452,7 @@ class Stat
     }
 
     /**
-     * @param mixed $emailAddress
+     * @param string|null $emailAddress
      */
     public function setEmailAddress($emailAddress)
     {
@@ -473,7 +460,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getViewedInBrowser()
     {
@@ -481,7 +468,7 @@ class Stat
     }
 
     /**
-     * @param mixed $viewedInBrowser
+     * @param bool $viewedInBrowser
      */
     public function setViewedInBrowser($viewedInBrowser)
     {
@@ -489,7 +476,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getSource()
     {
@@ -497,7 +484,7 @@ class Stat
     }
 
     /**
-     * @param mixed $source
+     * @param string|null $source
      */
     public function setSource($source)
     {
@@ -505,7 +492,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return int|null
      */
     public function getSourceId()
     {
@@ -513,7 +500,7 @@ class Stat
     }
 
     /**
-     * @param mixed $sourceId
+     * @param int|null $sourceId
      */
     public function setSourceId($sourceId)
     {
@@ -521,23 +508,20 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getTokens()
     {
         return $this->tokens;
     }
 
-    /**
-     * @param mixed $tokens
-     */
-    public function setTokens($tokens)
+    public function setTokens(array $tokens)
     {
         $this->tokens = $tokens;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getOpenCount()
     {
@@ -545,7 +529,7 @@ class Stat
     }
 
     /**
-     * @param mixed $openCount
+     * @param int $openCount
      *
      * @return Stat
      */
@@ -557,7 +541,7 @@ class Stat
     }
 
     /**
-     * @param $details
+     * @param string $details
      */
     public function addOpenDetails($details)
     {
@@ -580,7 +564,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return \DateTime|null
      */
     public function getLastOpened()
     {
@@ -588,7 +572,7 @@ class Stat
     }
 
     /**
-     * @param mixed $lastOpened
+     * @param \DateTime|null $lastOpened
      *
      * @return Stat
      */
@@ -600,7 +584,7 @@ class Stat
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getOpenDetails()
     {
@@ -608,11 +592,9 @@ class Stat
     }
 
     /**
-     * @param mixed $openDetails
-     *
      * @return Stat
      */
-    public function setOpenDetails($openDetails)
+    public function setOpenDetails(array $openDetails)
     {
         $this->openDetails = $openDetails;
 
@@ -620,7 +602,7 @@ class Stat
     }
 
     /**
-     * @return Copy
+     * @return Copy|null
      */
     public function getStoredCopy()
     {
@@ -628,8 +610,6 @@ class Stat
     }
 
     /**
-     * @param Copy $storedCopy
-     *
      * @return Stat
      */
     public function setStoredCopy(Copy $storedCopy)
@@ -647,9 +627,6 @@ class Stat
         return $this->replies;
     }
 
-    /**
-     * @param EmailReply $reply
-     */
     public function addReply(EmailReply $reply)
     {
         $this->replies[] = $reply;

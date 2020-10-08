@@ -13,23 +13,13 @@ namespace Mautic\NotificationBundle\EventListener;
 
 use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\EventListener\CommonStatsSubscriber;
+use Mautic\CoreBundle\Security\Permissions\CorePermissions;
+use Mautic\NotificationBundle\Entity\Stat;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 
-/**
- * Class StatsSubscriber.
- */
 class StatsSubscriber extends CommonStatsSubscriber
 {
-    /**
-     * @var integrationHelper
-     */
-    protected $integrationHelper;
-
-    /**
-     * StatsSubscriber constructor.
-     *
-     * @param EntityManager $em
-     */
+    public function __construct(CorePermissions $security, EntityManager $entityManager)
     public function __construct(EntityManager $em, integrationHelper $integrationHelper)
     {
         $this->integrationHelper = $integrationHelper;
@@ -39,6 +29,7 @@ class StatsSubscriber extends CommonStatsSubscriber
             return;
         }
 
-        $this->addContactRestrictedRepositories($em, 'MauticNotificationBundle:Stat');
+        parent::__construct($security, $entityManager);
+        $this->addContactRestrictedRepositories([Stat::class]);
     }
 }
