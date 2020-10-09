@@ -88,10 +88,6 @@
 !/plugins/MauticOutlookBundle
 !/plugins/MauticSocialBundle
 !/plugins/MauticZapierBundle
-!/plugins/FCMNotificationBundle
-!/plugins/DcodeMauticUtilsBundle
-!/plugins/DcodeSenderEngineBundle
-!/plugins/DcodeGDPRCompliancyBundle
 !/plugins/index.html
 
 /themes/*
