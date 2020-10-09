@@ -110,7 +110,7 @@
         "tightenco/collect": "^6.13",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
         "barryvdh/elfinder-flysystem-driver": "^0.2.1",
-        "bandwidth-throttle/token-bucket": "^2.0"
+        "bandwidth-throttle/token-bucket": "^2.0",
 
         "plokko/firebase-php": "~0.1.3",        
 
