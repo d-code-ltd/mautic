@@ -692,6 +692,7 @@ class CommonController extends Controller implements MauticController
             $title = $this->coreParametersHelper->getParameter('whitelabel_branding_name','Mautic');;
         }
 
+        if (null == $icon) {
             $icon = $this->coreParametersHelper->getParameter('whitelabel_branding_favicon', 'media/images/favicon.ico');  
         }
 
