@@ -212,8 +212,7 @@ class MessageController extends AbstractStandardFormController
     }
 
     /**
-     * @param Form $form
-     * @param      $view
+     * @param $view
      *
      * @return \Symfony\Component\Form\FormView
      */
