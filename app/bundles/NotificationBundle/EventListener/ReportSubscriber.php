@@ -47,7 +47,7 @@ class ReportSubscriber implements EventSubscriberInterface
      */
     protected $integrationHelper;
 
-    public function __construct(Connection $db, CompanyReportData $companyReportData, StatRepository $statRepository, integrationHelper $integrationHelper)
+    public function __construct(Connection $db, CompanyReportData $companyReportData, StatRepository $statRepository, IntegrationHelper $integrationHelper)
     {
         $this->db                = $db;
         $this->companyReportData = $companyReportData;
