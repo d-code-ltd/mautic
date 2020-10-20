@@ -51,7 +51,7 @@ class NotificationSubscriber implements EventSubscriberInterface
      */
     protected $integrationHelper;
 
-    public function __construct(AuditLogModel $auditLogModel, TrackableModel $trackableModel, PageTokenHelper $pageTokenHelper, AssetTokenHelper $assetTokenHelper, integrationHelper $integrationHelper)
+    public function __construct(AuditLogModel $auditLogModel, TrackableModel $trackableModel, PageTokenHelper $pageTokenHelper, AssetTokenHelper $assetTokenHelper, IntegrationHelper $integrationHelper)
     {
         $this->auditLogModel    = $auditLogModel;
         $this->trackableModel   = $trackableModel;
